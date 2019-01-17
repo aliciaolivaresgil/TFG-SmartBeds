@@ -347,3 +347,6 @@ TSWLatexianTemp*
 *.spl
 
 data/
+*.npy
+*.pdd
+*.pkl
