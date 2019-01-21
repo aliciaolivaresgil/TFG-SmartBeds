@@ -23,6 +23,8 @@ def preprocess(dataframe):
     """Only Datetime and preasures, add target
        Param: dataframe with all data
        Return: new datafram"""
+    datos = dataframe.loc[dataframe['STATUS']==1]
+    
     datos = dataframe.iloc[:,2:16]
     datos = datos.dropna()
     
@@ -55,8 +57,8 @@ def newSeizure(dataframe,datetime,seconds):
     return dataframe
 
 def normalize(data): 
-    maxi = np.max(data)
-    mini = np.min(data)
+    maxi = np.max(np.max(data))
+    mini = np.max(np.min(data))
     rang = maxi-mini   
     dataNorm = (data - mini) / rang
     return dataNorm
