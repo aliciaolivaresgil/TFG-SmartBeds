@@ -58,7 +58,7 @@ def newSeizure(dataframe,datetime,seconds):
 
 def normalize(data): 
     maxi = np.max(np.max(data))
-    mini = np.max(np.min(data))
+    mini = np.min(np.min(data))
     rang = maxi-mini   
     dataNorm = (data - mini) / rang
     return dataNorm
