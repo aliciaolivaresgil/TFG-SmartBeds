@@ -54,11 +54,11 @@ class StatisticsTransformer(TransformerMixin):
         statistics = pd.DataFrame()
         for c in data.columns: 
             if self._mode == 'mean': 
-                statistics[c+' mean'] = data[c].rolling(self._window).mean()
+                statistics[c+' '+self._mode] = data[c].rolling(self._window).mean()
             elif self._mode == 'std': 
-                statistics[c+' std'] = data[c].rolling(self._window).std()
+                statistics[c+' '+self._mode] = data[c].rolling(self._window).std()
             elif self._mode == 'range': 
-                statistics[c+' range'] = data[c].rolling(self._window).max() - data[c].rolling(self._window).min()
+                statistics[c+' '+self._mode] = data[c].rolling(self._window).max() - data[c].rolling(self._window).min()
             else: 
                 raise Exception("mode: '"+self._mode+"' is not correct. Aviable modes are 'mean', 'std' and 'range'.")
         return statistics
