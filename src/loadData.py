@@ -23,7 +23,7 @@ def preprocess(dataframe):
     """Only Datetime and preasures, add target
        Param: dataframe with all data
        Return: new datafram"""
-    datos = dataframe.loc[dataframe['STATUS']==1]
+    datos = dataframe.loc[dataframe['SS']>=400]
     
     datos = dataframe.iloc[:,2:16]
     datos = datos.dropna()
@@ -47,19 +47,42 @@ def newSeizure(dataframe,datetime,seconds):
     """Put true target in datetime to seconds
     Param dataframe: dataframe to change to true
     Param datetime: moment when seizure start
-    Param seconds: seconds of seizures"""
+    Param seconds: seconds of seizures or moment when seizure ends"""
     startDate = pd.to_datetime(datetime)
-    endDate = startDate + pd.to_timedelta(seconds, unit='s')
-
+    
+    if isinstance(seconds,int): 
+        endDate = startDate + pd.to_timedelta(seconds, unit='s')
+    else: 
+        endDate = pd.to_datetime(seconds)   
+            
     mask = (dataframe['DateTime'] > startDate) & (dataframe['DateTime'] <= endDate)
     dataframe.loc[mask,'target']=True
     
     return dataframe
 
-def normalize(data): 
-    maxi = np.max(np.max(data))
-    mini = np.min(np.min(data))
-    rang = maxi-mini   
-    dataNorm = (data - mini) / rang
-    return dataNorm
+
+def segmentNights(datosLimpios): 
+    inicios = list()
+    finales = list()
+
+    anterior = pd.to_datetime('1970-01-01 00:00:00')
+    margen = pd.to_timedelta(1,unit='h')
+    for index,dl in datosLimpios.iterrows():
+        hora = dl['DateTime']
+        diff = hora-anterior
+        if diff >= margen:
+            if len(inicios)>len(finales): #Primera vuelta no introduce la fecha anterior
+                finales.append(anterior)
+            inicios.append(hora)
+        anterior = hora
+ 
+    finales.append(pd.Timestamp.now())
     
+    trozos = []
+    for i in range(len(inicios)):
+        ini = inicios[i]
+        fin = finales[i]
+        mask = (datosLimpios['DateTime'] >= ini) & (datosLimpios['DateTime'] <= fin)
+        trozos.append(datosLimpios.loc[mask])
+        
+    return trozos

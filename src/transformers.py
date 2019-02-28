@@ -29,10 +29,10 @@ class ButterTransformer(FilterTransformer):
         self._btype = btype
         self._analog = analog
         self._output = output
-        #self._fs = fs
+        self._fs = fs
 
     def fit(self, X, y=None):
-        self._b, self._a = sg.butter(self._N,self._Wn,btype=self._btype,analog=self._analog,output=self._output)
+        self._b, self._a = sg.butter(self._N,self._Wn,btype=self._btype,analog=self._analog,output=self._output, fs=self._fs)
         return self
 
     def _filData(self,X):
@@ -137,37 +137,109 @@ class NoiseFilter(TransformerMixin):
         return dataN
     
 class StatisticsTransformer(TransformerMixin): 
-    """
-    Calculates rolling statistics of the columns from data. 
     
-    Parameters: 
-    
-        mode: string, default 'mean'
-            'mean': rolling mean
-            'std': rolling standard deviation
-            'range' : rolling ranges (difference between max and min)
-            
-        window: int, dafault 25. 
-    """
     def __init__(self,mode='mean',window=25):
+        """
+        Calculates rolling statistics of the columns from data. 
+        Parameters
+        ----------
+            mode: string, optional
+                'mean': rolling mean
+                'std': rolling standard deviation
+                'max': rolling maximun value
+                'min': rolling minimum value
+                'range' : rolling ranges (difference between max and min)
+            window: int, optional 
+        """
         self._mode = mode
         self._window = window
+        #Functions
+        mean = lambda x: x.rolling(self._window).mean()
+        std = lambda x: x.rolling(self._window).std()
+        _max = lambda x: x.rolling(self._window).max()
+        _min = lambda x: x.rolling(self._window).min()
+        rang = lambda x: _max(x)-_min(x)
+        self._functions = {'mean':mean,'std':std,'max':_max,'min':_min,'range':rang}
     
     def fit(self, X, y=None): 
         return self
     
     def transform(self, data): 
         statistics = pd.DataFrame()
+        try:
+            func = self._functions[self._mode]
+        except:
+            raise NameError('Unknown mode, use mean, std, max, min or range')
         for c in data.columns: 
-            if self._mode == 'mean': 
-                statistics[c+' '+self._mode+" "+str(self._window)] = data[c].rolling(self._window).mean()
-            elif self._mode == 'std': 
-                statistics[c+' '+self._mode+" "+str(self._window)] = data[c].rolling(self._window).std()
-            elif self._mode == 'range': 
-                statistics[c+' '+self._mode+" "+str(self._window)] = data[c].rolling(self._window).max() - data[c].rolling(self._window).min()
-            else: 
-                raise Exception("mode: '"+self._mode+"' is not correct. Aviable modes are 'mean', 'std' and 'range'.")
+            statistics[c+' '+self._mode+" "+str(self._window)] = func(data[c])
         return statistics
-                    
-            
+
+                  
+class MoveTargetsTransformer(TransformerMixin):
+    
+    def __init__(self,window=25,mode='only'):
+        """
+        Transforms targets for rolling statics transformations
         
+        Parameters
+        ----------
+            window: int, optional
+                rolling static window
+            mode: string, optional
+                Mode of targets transformation.
+                only = if all statics that compound it are true the final target will be true
+                half = if at least statics that compound it are true the final target will be true
+                start = if the first element of rolling are true the final target will be true
+                end = if the last element of rolling are true the final target will be true
+        """
+        self._transformers = {'only':self._only_seizure,'half':self._half_seizure,'start':self._half_seizure,'end':self._end_seizure}
+        self._window = window
+        self._transform = self._transformers[mode]
+        
+    def fit(self, X, y=None):
+        return self
+    
+    def transform(self, data):
+        data = data.copy()
+        
+        return self._transform(data)
+    
+    def _only_seizure(self,data):
+        """
+        Target set to true if all data that compose it are true
+        """
+        trues = data.loc[data['target'] == True]
+        
+        i = trues.first_valid_index()
+        
+        data.loc[i:i+self._window-1, 'target'] = False 
+        return data
+    
+    def _half_seizure(self,data):
+        """
+        Target set to true if at least the half that compose it are true
+        """
+        trues = data.loc[data['target'] == True]
+        
+        i = trues.first_valid_index()
+        j = trues.last_valid_index()
+        
+        data.loc[i:i+int(self._window/2), 'target'] = False    
+        data.loc[j:j+int(self._window/2), 'target'] = True
+        
+        return data
+        
+    def _start_seizure(self,data):
+        """Target set to true if the first data that compose it are true"""
+        data = self._only_seizure(data)
+        trues = data.loc[data['target'] == True]
+        i = trues.last_valid_index()
+        
+        data.loc[i:i+self._window-1,'target']=True
+        return data
+    
+    def _end_seizure(self,data):
+        """
+        Target set to true if the last data that compose it are true
+        """
+        return data
