@@ -350,5 +350,3 @@ data/
 *.npy
 *.pdd
 *.pkl
-*.png
-*.tr
