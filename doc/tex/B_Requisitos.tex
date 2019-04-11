@@ -6,6 +6,52 @@
 
 \section{Catalogo de requisitos}
 
+Se indican los requisitos funcionales y no funcionales de la aplicación.
+
+\subsection{Requisitos funcionales}
+ 
+\begin{itemize}
+	\item \textbf{RF-1 Confidencialidad del sistema:} Solamente los usuarios autorizados podrán acceder al sistema. 
+	
+\begin{itemize}
+		\item \textbf{RF-1.1 Identificación de usuario:} los usuarios se identificarán con un \textit{nickname} y una contraseña 
+		\item \textbf{RF-1.2 Rol de administración:} existirá un usuario especial que podrá administrar el sistema completamente sin restricciones.
+		\item \textbf{RF-1.3 Visualización de una cama:} los usuarios validados deben poder observar los datos en tiempo real de las camas disponibles. 
+		\item \textbf{RF-1.4 Restricción de acceso:} los usuarios solamente podrán tener acceso a los datos de las camas permitidas. 
+		\item \textbf{RF-1.5 Acceso completo al administrador:} el administrador debe poder acceder a los datos de todas las camas existentes.
+\end{itemize}
+	
+	\item \textbf{RF-2 Gestión de las camas:} El administrador ha de gestionar las camas pudiendo añadir, modificar, borrar y dar acceso a un usuario a los datos de una cama determinada. 
+	
+\begin{itemize}
+		\item \textbf{RF-2.1 Añadir cama:} el administrador ha de poder añadir una nueva cama al sistema.
+		\item \textbf{RF-2.2 Modificar cama:} el administrador ha de poder modificar los datos una cama existente.
+		\item \textbf{RF-2.3 Borrar cama:} el administrador ha de poder borrar una cama del sistema.
+		\item \textbf{RF-2.4 Asignar camas a usuarios:} el administrador se encarga de decidir qué usuario puede acceder a los datos de qué cama.
+\end{itemize}
+	
+	\item \textbf{RF-3 Gestión de los usuarios:} el administrador ha de gestionar los usuarios pudiendo añadir, modificar y borrar. El usuario ha de poder gestionar su propia contraseña. 
+
+\begin{itemize}
+		\item \textbf{RF-3.1 Añadir usuario:} el administrador ha de poder añadir un nuevo usuario al sistema.
+		\item \textbf{RF-3.2 Modificar usuario:} el administrador ha de poder modificar los datos un usuario existente. Igualmente el usuario ha de poder modificar su propia contraseña. 
+		\item \textbf{RF-3.3 Borrar usuario:} el administrador ha de poder borrar un usuario del sistema.
+\end{itemize}
+
+	\item \textbf{RF-4 Visualización de los datos:} los usuarios han de poder ver, de las camas disponibles, el estado actual del paciente, la probabilidad de crisis epiléptica, sus constantes vitales y las presiones. 
+	
+\end{itemize}
+
+\subsection{Requisitos no funcionales}
+
+\begin{itemize}
+	\item \textbf{RNF-1 Usabilidad:} la aplicación debe cumplir estándares de usabilidad teniendo una curva de aprendizaje baja y un uso de metáforas adecuado.
+	\item \textbf{RNF-2 Confidencialidad:} los datos de las camas, al ser en parte constantes vitales de pacientes, solamente han de ser accesibles por los usuarios permitidos.
+	\item \textbf{RNF-3 Escalabilidad:} el sistema debe ser escalable para adaptarse mejor a un incremento de carga del sistema.
+	\item \textbf{RNF-4 Seguridad:} los usuarios deben poder identificarse sólidamente con el sistema sin que sus datos o sus credenciales (\textit{tokens}) sean accesibles por terceros, incluso el administrador.
+\end{itemize}
+
+
 \section{Especificación de requisitos}
 
 
