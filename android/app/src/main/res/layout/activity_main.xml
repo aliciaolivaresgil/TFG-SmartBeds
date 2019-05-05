@@ -92,7 +92,6 @@
                     android:visibility="gone"
                     android:layout_marginBottom="16dp"
                     android:layout_marginHorizontal="16dp"
-                    android:text="Error en la identificación del usuario. Pruebe otra vez."
                     android:textSize="18dp"
                     android:textStyle="bold"
                     android:textColor="@android:color/holo_red_dark"/>

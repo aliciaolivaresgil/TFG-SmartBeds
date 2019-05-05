@@ -31,7 +31,7 @@ public class MainActivity extends AppCompatActivity {
         String urlParameters = "user="+user.getText().toString()+"&pass="+pass.getText().toString();
         Log.d("peticion", urlParameters);
 
-        Communication communication = new Communication(urlParameters);
+        Communication communication = new Communication("/api/auth", urlParameters);
         Thread thread = new Thread(communication);
         thread.start();
 
@@ -44,18 +44,28 @@ public class MainActivity extends AppCompatActivity {
         int status = communication.getStatus();
         Log.d("REAL STATUS", ""+status);
 
-        if (status==200) {
-            TextView mensajeError = (TextView) findViewById(R.id.mensaje_error_login);
-            mensajeError.setVisibility(View.GONE);
+        TextView mensajeError = (TextView) findViewById(R.id.mensaje_error_login);;
 
-            Intent intent = new Intent(context, Admin.class);
-            startActivity(intent);
+        switch (status){
+            case 200:
+                mensajeError.setVisibility(View.GONE);
 
-            user.setText("");
-            pass.setText("");
-        } else {
-            TextView mensajeError = (TextView) findViewById(R.id.mensaje_error_login);
-            mensajeError.setVisibility(View.VISIBLE);
+                Intent intent = new Intent(context, Admin.class);
+                startActivity(intent);
+
+                user.setText("");
+                pass.setText("");
+                break;
+            case 500:
+                mensajeError.setText("Error interno del servidor. Inténtelo más tarde.");
+                mensajeError.setVisibility(View.VISIBLE);
+                break;
+            case 401:
+                mensajeError.setText("Error en la identificación del usuario. Usuario o contraseña incorrectos.");
+                mensajeError.setVisibility(View.VISIBLE);
+                break;
         }
+
+
     }
 }

@@ -2,8 +2,12 @@ package com.example.smartbeds;
 
 import android.util.Log;
 
+import org.json.JSONObject;
+
+import java.io.BufferedReader;
 import java.io.DataOutputStream;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -13,16 +17,19 @@ public class Communication implements Runnable{
 
     private int status;
     private String urlParameters;
+    private String path;
+    private JSONObject result;
 
-    public Communication(String urlParameters){
+    public Communication(String path, String urlParameters){
         this.status=0;
         this.urlParameters=urlParameters;
+        this.path=path;
     }
 
     @Override
     public void run() {
         try  {
-            URL url = new URL("http://ubu.joselucross.com/api/auth");
+            URL url = new URL("http://ubu.joselucross.com"+path);
 
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
             connection.setRequestMethod("POST");
@@ -43,6 +50,21 @@ public class Communication implements Runnable{
             Log.d("status", msg);
             Log.d("status", ""+status);
 
+            StringBuilder content;
+
+            try(BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()))){
+                String line;
+                content = new StringBuilder();
+
+                while((line = in.readLine()) != null){
+                    content.append(line);
+                    content.append(System.lineSeparator());
+                }
+            }
+
+            Log.d("resultado", content.toString());
+
+
             connection.disconnect();
 
         } catch (MalformedURLException e) {
@@ -55,5 +77,9 @@ public class Communication implements Runnable{
 
     public int getStatus(){
         return this.status;
+    }
+
+    public JSONObject getResult(){
+        return this.result;
     }
 }
