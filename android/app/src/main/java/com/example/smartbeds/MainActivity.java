@@ -9,6 +9,9 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 
 public class MainActivity extends AppCompatActivity {
 
@@ -33,9 +36,9 @@ public class MainActivity extends AppCompatActivity {
 
         Communication communication = new Communication("/api/auth", urlParameters);
         Thread thread = new Thread(communication);
-        thread.start();
 
         try {
+            thread.start();
             thread.join();
         } catch (InterruptedException e) {
             e.printStackTrace();
@@ -50,8 +53,33 @@ public class MainActivity extends AppCompatActivity {
             case 200:
                 mensajeError.setVisibility(View.GONE);
 
-                Intent intent = new Intent(context, Admin.class);
-                startActivity(intent);
+                JSONObject resultado = communication.getResult();
+                String token = null;
+                String username = null;
+                String role = null;
+                try {
+                    token = (String) resultado.get("token");
+                    username = (String) resultado.get("username");
+                    role = (String) resultado.get("role");
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                Log.d("TOKEN", token);
+
+                Session session = Session.getInstance();
+                session.setUsername(username);
+                session.setToken(token);
+                session.setRole(role);
+
+                Intent intent;
+
+                if(role.equals("admin")){
+                    intent = new Intent(context, AdminActivity.class);
+                    startActivity(intent);
+                }else{
+                    intent = new Intent(context, BedsActivity.class);
+                    startActivity(intent);
+                }
 
                 user.setText("");
                 pass.setText("");
