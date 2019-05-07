@@ -26,4 +26,14 @@ public class AdminActivity extends AppCompatActivity {
         Intent intent = new Intent(context, BedsActivity.class);
         startActivity(intent);
     }
+
+    public void gestionarCamas(View view){
+        Intent intent = new Intent(context, BedsManagementActivity.class);
+        startActivity(intent);
+    }
+
+    public void gestionarUsuarios(View view){
+        Intent intent = new Intent(context, UsersManagementActivity.class);
+        startActivity(intent);
+    }
 }

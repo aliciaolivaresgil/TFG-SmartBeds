@@ -23,6 +23,16 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
     }
 
+    @Override
+    protected void onResume(){
+        super.onResume();
+
+
+        Session session = Session.getInstance();
+        session.resetSession();
+        Log.d("SESION", "sesión reseteada");
+    }
+
     public void iniciarSesion(View view) {
 
         EditText user = (EditText) findViewById(R.id.input_nombre);
