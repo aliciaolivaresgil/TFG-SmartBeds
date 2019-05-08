@@ -39,5 +39,39 @@
 
             </LinearLayout>
         </android.support.v7.widget.Toolbar>
+
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Añadir Usuario"
+            android:textSize="20dp"
+            android:background="@android:color/white"
+            android:padding="16dp"
+            android:layout_margin="16dp"
+            android:elevation="8dp"
+            android:onClick="anadirUsuario"/>
+
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Cambiar contraseña"
+            android:textSize="20dp"
+            android:background="@android:color/white"
+            android:padding="16dp"
+            android:layout_margin="16dp"
+            android:elevation="80dp"
+            android:onClick="cambiarContrasena"/>
+
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Eliminar Usuario"
+            android:textSize="20dp"
+            android:background="@android:color/white"
+            android:padding="16dp"
+            android:layout_margin="16dp"
+            android:elevation="0dp"
+            android:onClick="eliminarUsuario"/>
+
     </LinearLayout>
 </ScrollView>
