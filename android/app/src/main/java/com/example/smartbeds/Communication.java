@@ -2,6 +2,7 @@ package com.example.smartbeds;
 
 import android.util.Log;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
@@ -24,6 +25,7 @@ public class Communication implements Runnable{
         this.status=0;
         this.urlParameters=urlParameters;
         this.path=path;
+        this.result=null;
     }
 
     @Override
@@ -63,23 +65,26 @@ public class Communication implements Runnable{
             }
 
             Log.d("resultado", content.toString());
-
-
+            result = new JSONObject(content.toString());
             connection.disconnect();
 
         } catch (MalformedURLException e) {
             e.printStackTrace();
         } catch(IOException e){
             e.printStackTrace();
+        } catch (JSONException e) {
+            e.printStackTrace();
         }
 
     }
 
     public int getStatus(){
+
         return this.status;
     }
 
     public JSONObject getResult(){
+
         return this.result;
     }
 }
