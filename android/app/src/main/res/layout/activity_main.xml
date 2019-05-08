@@ -86,7 +86,7 @@
                     android:text="" />
 
                 <TextView
-                    android:id="@+id/user_add_mensaje_error"
+                    android:id="@+id/mensaje_error_login"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:visibility="gone"

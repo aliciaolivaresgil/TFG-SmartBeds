@@ -12,7 +12,9 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".UserAddActivity"></activity>
+        <activity android:name=".UserDelActivity"></activity>
+        <activity android:name=".UserPassChangeActivity" />
+        <activity android:name=".UserAddActivity" />
         <activity android:name=".UsersManagementActivity" />
         <activity android:name=".BedsManagementActivity" />
         <activity android:name=".BedsActivity" />

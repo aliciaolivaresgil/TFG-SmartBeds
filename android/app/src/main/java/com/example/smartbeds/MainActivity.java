@@ -55,15 +55,15 @@ public class MainActivity extends AppCompatActivity {
         }
 
         int status = communication.getStatus();
+        JSONObject resultado = communication.getResult();
         Log.d("REAL STATUS", ""+status);
 
-        TextView mensajeError = (TextView) findViewById(R.id.mensaje_error_login);;
+        TextView mensajeError = (TextView) findViewById(R.id.mensaje_error_login);
 
         switch (status){
             case 200:
                 mensajeError.setVisibility(View.GONE);
 
-                JSONObject resultado = communication.getResult();
                 String token = null;
                 String username = null;
                 String role = null;

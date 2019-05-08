@@ -26,4 +26,14 @@ public class UsersManagementActivity extends AppCompatActivity {
         Intent intent = new Intent(context, UserAddActivity.class);
         startActivity(intent);
     }
+
+    protected void cambiarContrasena(View view){
+        Intent intent = new Intent(context, UserPassChangeActivity.class);
+        startActivity(intent);
+    }
+
+    protected void eliminarUsuario(View view){
+        Intent intent = new Intent(context, UserDelActivity.class);
+        startActivity(intent);
+    }
 }
