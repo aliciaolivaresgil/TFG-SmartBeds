@@ -98,6 +98,10 @@ public class MainActivity extends AppCompatActivity {
                 mensajeError.setText("Error interno del servidor. Inténtelo más tarde.");
                 mensajeError.setVisibility(View.VISIBLE);
                 break;
+            case 502:
+                mensajeError.setText("Error de conexión con el servidor. Inténtelo más tarde.");
+                mensajeError.setText(View.VISIBLE);
+                break;
             case 401:
                 mensajeError.setText("Error en la identificación del usuario. Usuario o contraseña incorrectos.");
                 mensajeError.setVisibility(View.VISIBLE);
