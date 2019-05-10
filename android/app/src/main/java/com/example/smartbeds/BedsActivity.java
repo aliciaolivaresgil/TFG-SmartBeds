@@ -49,20 +49,6 @@ public class BedsActivity extends AppCompatActivity {
 
             Log.d("BEDS", bedNames.toString());
 
-            for(int i=0; i< bedNames.length(); i++){
-                String bedName = (String) bedNames.get(i);
-                urlParameters = "token="+session.getToken()+"&bedname="+bedName;
-                communication = new Communication("/api/bed", urlParameters);
-                thread = new Thread(communication);
-
-                try {
-                    thread.start();
-                    thread.join();
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-            }
-
         } catch (JSONException e) {
             e.printStackTrace();
         }
