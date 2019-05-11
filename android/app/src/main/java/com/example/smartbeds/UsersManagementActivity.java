@@ -28,7 +28,7 @@ public class UsersManagementActivity extends AppCompatActivity {
     }
 
     protected void cambiarContrasena(View view){
-        Intent intent = new Intent(context, UserPassChangeActivity.class);
+        Intent intent = new Intent(context, UsersPassChangeActivity.class);
         startActivity(intent);
     }
 

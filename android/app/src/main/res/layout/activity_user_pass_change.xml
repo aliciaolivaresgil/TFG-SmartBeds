@@ -29,9 +29,10 @@
 
 
                 <TextView
+                    android:id="@+id/user_pass_change_title"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Cambiar Contraseña"
+                    android:text="Cambiar contraseña de "
                     android:paddingVertical="18dp"
                     android:textSize="25dp"
                     android:textStyle="bold"
@@ -39,5 +40,94 @@
 
             </LinearLayout>
         </android.support.v7.widget.Toolbar>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="left"
+            android:layout_marginLeft="16dp"
+            android:layout_marginBottom="8dp"
+            android:text="Antigua contraseña"
+            android:textSize="18dp" />
+
+        <EditText
+            android:id="@+id/user_pass_change_input_antigua"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="16dp"
+            android:layout_marginBottom="16dp"
+            android:inputType="textPersonName"
+            android:text="" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="left"
+            android:layout_marginLeft="16dp"
+            android:layout_marginBottom="8dp"
+            android:text="Nueva contraseña"
+            android:textSize="18dp" />
+
+        <EditText
+            android:id="@+id/user_pass_change_input_nueva"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="16dp"
+            android:layout_marginBottom="16dp"
+            android:inputType="textPassword"
+            android:text="" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="left"
+            android:layout_marginLeft="16dp"
+            android:layout_marginBottom="8dp"
+            android:text="Repita la nueva contraseña"
+            android:textSize="18dp" />
+
+        <EditText
+            android:id="@+id/user_pass_change_input_repetir_nueva"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="16dp"
+            android:layout_marginBottom="16dp"
+            android:inputType="textPassword"
+            android:text="" />
+
+        <TextView
+            android:id="@+id/user_pass_change_mensaje_error"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            android:layout_marginBottom="16dp"
+            android:layout_marginHorizontal="16dp"
+            android:textSize="18dp"
+            android:textStyle="bold"
+            android:textColor="@android:color/holo_red_dark"/>
+
+        <TextView
+            android:id="@+id/user_pass_change_mensaje"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            android:layout_marginBottom="16dp"
+            android:layout_marginHorizontal="16dp"
+            android:textSize="18dp"
+            android:textStyle="bold"
+            android:textColor="@android:color/black"/>
+
+        <Button
+            android:id="@+id/user_pass_change_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingHorizontal="16dp"
+            android:background="@color/colorPrimaryLight"
+            android:elevation="18dp"
+            android:textSize="18dp"
+            android:text="Cambiar Contraseña"
+            android:onClick="cambiarContrasena"/>
+
+
     </LinearLayout>
 </ScrollView>

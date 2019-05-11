@@ -14,7 +14,7 @@
         android:gravity="center_horizontal">
 
         <android.support.v7.widget.Toolbar
-            android:id="@+id/user_del_toolbar"
+            android:id="@+id/users_pass_change_toolbar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="?attr/colorPrimary"
@@ -31,7 +31,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Eliminar Usuario"
+                    android:text="Cambiar Contraseña"
                     android:paddingVertical="18dp"
                     android:textSize="25dp"
                     android:textStyle="bold"
@@ -46,15 +46,14 @@
             android:layout_gravity="left"
             android:layout_marginBottom="16dp"
             android:layout_marginHorizontal="16dp"
-            android:text="Escoja el usuario que desea eliminar:"
+            android:text="Escoja el usuario cuya contraseña desea cmbiar:"
             android:textSize="18dp"/>
 
         <ListView
-            android:id="@+id/user_del_list"
+            android:id="@+id/user_pass_change_list"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
         </ListView>
-
     </LinearLayout>
 </ScrollView>
