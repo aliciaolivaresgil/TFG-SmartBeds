@@ -12,12 +12,18 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
+
+import com.github.nkzawa.socketio.client.IO;
+import com.github.nkzawa.socketio.client.Socket;
 
 public class BedsActivity extends AppCompatActivity {
 
     private final Context context = this;
+
+    private Socket mSocket;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,9 +51,42 @@ public class BedsActivity extends AppCompatActivity {
             e.printStackTrace();
         }
 
+        urlParameters = "token="+session.getToken()+"&bedname="+bed_names.get(0);
+        resultado = APIUtil.petitionAPI("/api/bed", urlParameters);
+        status = APIUtil.getStatusFromJSON(resultado);
+
+        String namespace=null;
+        try {
+            namespace = (String) resultado.get("namespace");
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        JSONObject data = new JSONObject();
+        try {
+            data.put("namespace", namespace);
+            data.put("bedname", bed_names.get(0));
+        }catch(JSONException e){
+            e.printStackTrace();
+        }
+        Log.d("data", data.toString());
+
+        try {
+            mSocket = IO.socket("https://ubu.joselucross.com");
+        } catch (URISyntaxException e) {
+            e.printStackTrace();
+        }
+        mSocket.connect();
+        if(mSocket.connected()){
+            Log.d("CONECTADO", "SI");
+        }else{
+            Log.d("CONECTADO", "NO");
+        }
+
         final ArrayAdapter<String> bedsAdapter = new ArrayAdapter<String>(context, android.R.layout.simple_list_item_1, bed_names);
 
         ListView listView = (ListView) findViewById(R.id.beds_list);
         listView.setAdapter(bedsAdapter);
+
     }
 }
