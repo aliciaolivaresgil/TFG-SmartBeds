@@ -18,14 +18,14 @@ import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.HttpsURLConnection;
 import javax.net.ssl.SSLSession;
 
-public class Communication implements Runnable{
+public class APICommunication implements Runnable{
 
     private int status;
     private String urlParameters;
     private String path;
     private JSONObject result;
 
-    public Communication(String path, String urlParameters){
+    public APICommunication(String path, String urlParameters){
         this.status=0;
         this.urlParameters=urlParameters;
         this.path=path;

@@ -4,12 +4,11 @@ import android.content.Context;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import org.w3c.dom.Text;
+import org.json.JSONObject;
 
 public class UserAddActivity extends AppCompatActivity {
 
@@ -46,20 +45,11 @@ public class UserAddActivity extends AppCompatActivity {
 
             Session session = Session.getInstance();
             String token = session.getToken();
+
             String urlParameters = "token="+token+"&username="+user.getText().toString()+"&password="+pass.getText().toString()+"&password-re="+repass.getText().toString();
-            Log.d("peticion", urlParameters);
+            JSONObject resultado = APIUtil.petitionAPI("/api/user/add", urlParameters);
+            int status = APIUtil.getStatusFromJSON(resultado);
 
-            Communication communication = new Communication("/api/user/add", urlParameters);
-            Thread thread = new Thread(communication);
-
-            try {
-                thread.start();
-                thread.join();
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-
-            int status = communication.getStatus();
             if(status==200){
                 mssg.setText("Se ha añadido el usuario "+user.getText().toString()+" correctamente.");
                 mssg.setVisibility(View.VISIBLE);

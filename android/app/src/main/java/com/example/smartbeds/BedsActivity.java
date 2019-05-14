@@ -5,6 +5,8 @@ import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -29,28 +31,23 @@ public class BedsActivity extends AppCompatActivity {
         }
 
         String urlParameters = "token="+session.getToken();
-        Communication communication = new Communication("/api/beds", urlParameters);
-        Thread thread = new Thread(communication);
+        JSONObject resultado = APIUtil.petitionAPI("/api/beds", urlParameters);
+        int status = APIUtil.getStatusFromJSON(resultado);
 
+        List<String> bed_names = new ArrayList<String>();
         try {
-            thread.start();
-            thread.join();
-        } catch (InterruptedException e) {
+            JSONArray beds_info = (JSONArray) resultado.get("beds");
+            for (int i = 0; i < beds_info.length(); i++) {
+                JSONObject bed_info = (JSONObject) beds_info.get(i);
+                bed_names.add( (String) bed_info.get("bed_name"));
+            }
+        }catch (JSONException e){
             e.printStackTrace();
         }
 
-        int status = communication.getStatus();
-        Log.d("STATUS", ""+status);
+        final ArrayAdapter<String> bedsAdapter = new ArrayAdapter<String>(context, android.R.layout.simple_list_item_1, bed_names);
 
-        JSONObject resultado = communication.getResult();
-        JSONArray bedNames=null;
-        try {
-            bedNames = (JSONArray) resultado.get("beds");
-
-            Log.d("BEDS", bedNames.toString());
-
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
+        ListView listView = (ListView) findViewById(R.id.beds_list);
+        listView.setAdapter(bedsAdapter);
     }
 }

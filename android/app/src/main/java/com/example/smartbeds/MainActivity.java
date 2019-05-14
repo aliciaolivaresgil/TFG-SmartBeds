@@ -27,7 +27,6 @@ public class MainActivity extends AppCompatActivity {
     protected void onResume(){
         super.onResume();
 
-
         Session session = Session.getInstance();
         session.resetSession();
         Log.d("SESION", "sesión reseteada");
@@ -37,28 +36,11 @@ public class MainActivity extends AppCompatActivity {
 
         EditText user = (EditText) findViewById(R.id.input_nombre);
         EditText pass = (EditText) findViewById(R.id.input_contrasena);
-
-        Log.d("user", user.getText().toString());
-        Log.d("pass", pass.getText().toString());
+        TextView mensajeError = (TextView) findViewById(R.id.mensaje_error_login);
 
         String urlParameters = "user="+user.getText().toString()+"&pass="+pass.getText().toString();
-        Log.d("peticion", urlParameters);
-
-        Communication communication = new Communication("/api/auth", urlParameters);
-        Thread thread = new Thread(communication);
-
-        try {
-            thread.start();
-            thread.join();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-
-        int status = communication.getStatus();
-        JSONObject resultado = communication.getResult();
-        Log.d("REAL STATUS", ""+status);
-
-        TextView mensajeError = (TextView) findViewById(R.id.mensaje_error_login);
+        JSONObject resultado = APIUtil.petitionAPI("/api/auth", urlParameters);
+        int status = APIUtil.getStatusFromJSON(resultado);
 
         switch (status){
             case 200:

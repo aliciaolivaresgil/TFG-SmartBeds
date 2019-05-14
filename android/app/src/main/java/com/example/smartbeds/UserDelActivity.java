@@ -6,7 +6,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -16,7 +15,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class UserDelActivity extends AppCompatActivity {
@@ -35,31 +33,12 @@ public class UserDelActivity extends AppCompatActivity {
         }
 
         String urlParameters = "token="+session.getToken();
-        Log.d("peticion", urlParameters);
+        JSONObject resultado = APIUtil.petitionAPI("/api/users", urlParameters);
+        int status = APIUtil.getStatusFromJSON(resultado);
 
-        Communication communication = new Communication("/api/users", urlParameters);
-        Thread thread = new Thread(communication);
-
-        try {
-            thread.start();
-            thread.join();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-
-        int status = communication.getStatus();
-        JSONObject resultado = communication.getResult();
-
-        JSONArray namesJSON= null;
         List<String> names = null;
-
         try {
-            namesJSON = (JSONArray) resultado.get("users");
-            names = new ArrayList<String>();
-            for(int i=0; i<namesJSON.length(); i++){
-                names.add((String) namesJSON.get(i));
-            }
-
+            names = APIUtil.JSONArrayToList((JSONArray) resultado.get("users"));
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -103,20 +82,8 @@ public class UserDelActivity extends AppCompatActivity {
     public void delUser(String name){
         Session session = Session.getInstance();
         String urlParameters = "token="+session.getToken()+"&username="+name;
-        Log.d("peticion", urlParameters);
-
-        Communication communication = new Communication("/api/user/del", urlParameters);
-        Thread thread = new Thread(communication);
-
-        try {
-            thread.start();
-            thread.join();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-
-        int status = communication.getStatus();
-        JSONObject resultado = communication.getResult();
+        JSONObject resultado = APIUtil.petitionAPI("/api/user/del", urlParameters);
+        int status = APIUtil.getStatusFromJSON(resultado);
 
         //refrescar Activity
         finish();

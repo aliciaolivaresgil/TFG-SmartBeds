@@ -4,10 +4,11 @@ import android.content.Context;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
+
+import org.json.JSONObject;
 
 public class UserPassChangeActivity extends AppCompatActivity {
 
@@ -24,7 +25,6 @@ public class UserPassChangeActivity extends AppCompatActivity {
             Intent intent = new Intent(context, MainActivity.class);
             startActivity(intent);
         }
-
 
         Bundle b = getIntent().getExtras();
         username = b.getString("username");
@@ -57,19 +57,9 @@ public class UserPassChangeActivity extends AppCompatActivity {
             Session session = Session.getInstance();
             String token = session.getToken();
             String urlParameters = "token="+token+"&username="+username+"&password="+newPass.getText().toString()+"&password-re="+reNewPass.getText().toString();
-            Log.d("peticion", urlParameters);
+            JSONObject resultado = APIUtil.petitionAPI("/api/user/mod", urlParameters);
+            int status = APIUtil.getStatusFromJSON(resultado);
 
-            Communication communication = new Communication("/api/user/mod", urlParameters);
-            Thread thread = new Thread(communication);
-
-            try {
-                thread.start();
-                thread.join();
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-
-            int status = communication.getStatus();
             if(status==200){
                 mssg.setText("La contraseña del usuario "+username+" se ha modificado correctamente.");
                 mssg.setVisibility(View.VISIBLE);
@@ -87,19 +77,9 @@ public class UserPassChangeActivity extends AppCompatActivity {
         Session session = Session.getInstance();
         String token = session.getToken();
         String urlParameters = "user="+username+"&pass="+pass;
-        Log.d("peticion", urlParameters);
+        JSONObject resultado = APIUtil.petitionAPI("/api/auth", urlParameters);
+        int status = APIUtil.getStatusFromJSON(resultado);
 
-        Communication communication = new Communication("/api/auth", urlParameters);
-        Thread thread = new Thread(communication);
-
-        try {
-            thread.start();
-            thread.join();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-
-        int status = communication.getStatus();
         if(status==200){
             return true;
         }else{
