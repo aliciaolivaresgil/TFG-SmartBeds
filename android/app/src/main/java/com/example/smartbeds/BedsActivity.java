@@ -12,11 +12,14 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.github.nkzawa.emitter.Emitter;
 import com.github.nkzawa.socketio.client.IO;
+import com.github.nkzawa.socketio.client.Manager;
 import com.github.nkzawa.socketio.client.Socket;
 
 public class BedsActivity extends AppCompatActivity {
@@ -24,6 +27,17 @@ public class BedsActivity extends AppCompatActivity {
     private final Context context = this;
 
     private Socket mSocket;
+    private Socket inSocket;
+    private Manager manager;
+
+    private JSONObject data;
+
+    @Override
+    protected void onDestroy(){
+        super.onDestroy();
+        mSocket.close();
+        inSocket.close();
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,7 +76,7 @@ public class BedsActivity extends AppCompatActivity {
             e.printStackTrace();
         }
 
-        JSONObject data = new JSONObject();
+        data = new JSONObject();
         try {
             data.put("namespace", namespace);
             data.put("bedname", bed_names.get(0));
@@ -72,16 +86,45 @@ public class BedsActivity extends AppCompatActivity {
         Log.d("data", data.toString());
 
         try {
-            mSocket = IO.socket("https://ubu.joselucross.com");
+            manager = new Manager(new URI("https://ubu.joselucross.com"));
+            manager.open();
+            mSocket = manager.socket("/"); //namespace genérico
+            inSocket = manager.socket("/"+namespace);
+            mSocket.open();
+            inSocket.open();
+
         } catch (URISyntaxException e) {
             e.printStackTrace();
         }
-        mSocket.connect();
-        if(mSocket.connected()){
-            Log.d("CONECTADO", "SI");
-        }else{
-            Log.d("CONECTADO", "NO");
-        }
+
+        mSocket.on(Socket.EVENT_CONNECT, new Emitter.Listener() {
+            @Override
+            public void call(Object... args) {
+                if(mSocket.connected()){
+                    Log.d("CONECTADO", "SI");
+                }
+                mSocket.emit("give_me_data", data);
+                //mSocket.close();
+            }
+        });
+
+        inSocket.on(Socket.EVENT_CONNECT, new Emitter.Listener() {
+            @Override
+            public void call(Object... args) {
+                if(inSocket.connected()){
+                    Log.d("CONECTADO 2", "SI");
+                }
+            }
+        });
+
+        inSocket.on("package", new Emitter.Listener(){
+            @Override
+            public void call(Object... args) {
+                JSONObject resultado = (JSONObject) args[0];
+                Log.d("RESULTADO", resultado.toString());
+            }
+        });
+
 
         final ArrayAdapter<String> bedsAdapter = new ArrayAdapter<String>(context, android.R.layout.simple_list_item_1, bed_names);
 
