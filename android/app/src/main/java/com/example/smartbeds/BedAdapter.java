@@ -30,4 +30,9 @@ public class BedAdapter extends ArrayAdapter<Bed> {
 
         return convertView;
     }
+
+    @Override
+    public Bed getItem(int position){
+        return super.getItem(position);
+    }
 }

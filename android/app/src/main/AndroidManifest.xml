@@ -12,7 +12,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".UserPassChangeActivity"></activity>
+        <activity android:name=".BedChartsActivity"></activity>
+        <activity android:name=".UserPassChangeActivity" />
         <activity android:name=".UserDelActivity" />
         <activity android:name=".UsersPassChangeActivity" />
         <activity android:name=".UserAddActivity" />

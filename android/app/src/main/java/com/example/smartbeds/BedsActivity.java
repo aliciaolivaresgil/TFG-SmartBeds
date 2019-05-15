@@ -5,6 +5,8 @@ import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ListView;
 
 import org.json.JSONArray;
@@ -19,14 +21,16 @@ import java.util.List;
 public class BedsActivity extends AppCompatActivity {
 
     private final Context context = this;
+    private boolean created = false;
+    private int contador = 0;
 
     private List<BedStreaming> threads = new ArrayList<BedStreaming>();
 
-    //private ArrayList<Bed> bedsArray = new ArrayList<Bed>();
     private List<Bed> bedsArray = Collections.synchronizedList(new ArrayList<Bed>());
 
     private BedAdapter adapter;
     private ListView listView;
+
 
     @Override
     protected void onDestroy(){
@@ -37,7 +41,20 @@ public class BedsActivity extends AppCompatActivity {
     }
 
     @Override
+    protected void onResume(){
+        super.onResume();
+        if(created && contador>0) {
+            for (BedStreaming thread : threads) {
+                thread.run();
+            }
+        }
+        this.contador++;
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
+        this.created=true;
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_beds);
 
@@ -46,7 +63,10 @@ public class BedsActivity extends AppCompatActivity {
             Intent intent = new Intent(context, MainActivity.class);
             startActivity(intent);
         }
+        showBeds(session);
+    }
 
+    private void showBeds(Session session){
         String urlParameters = "token="+session.getToken();
         JSONObject resultado = APIUtil.petitionAPI("/api/beds", urlParameters);
         int status = APIUtil.getStatusFromJSON(resultado);
@@ -82,6 +102,23 @@ public class BedsActivity extends AppCompatActivity {
         listView = (ListView) findViewById(R.id.beds_list);
         listView.setAdapter(adapter);
 
+        listView.setClickable(true);
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Bed bed = adapter.getItem(position);
+
+                Intent intent = new Intent(context, BedChartsActivity.class);
+                Bundle b = new Bundle();
+                b.putString("bedName", bed.getBedName());
+                intent.putExtras(b);
+                startActivity(intent);
+
+                for(BedStreaming thread: threads){
+                    thread.stop();
+                }
+            }
+        });
     }
 
     public void refresh(int bedId, int state){

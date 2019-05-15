@@ -23,7 +23,7 @@
             android:id="@+id/beds_bed_state"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="18dp"
+            android:textSize="24dp"
             android:paddingHorizontal="16dp"
             android:paddingVertical="8dp"
             android:textColor="@android:color/black"/>
