@@ -5,38 +5,35 @@ import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.util.ArrayList;
-import java.util.List;
 
-import com.github.nkzawa.emitter.Emitter;
-import com.github.nkzawa.socketio.client.IO;
-import com.github.nkzawa.socketio.client.Manager;
-import com.github.nkzawa.socketio.client.Socket;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 public class BedsActivity extends AppCompatActivity {
 
     private final Context context = this;
 
-    private Socket mSocket;
-    private Socket inSocket;
-    private Manager manager;
+    private List<BedStreaming> threads = new ArrayList<BedStreaming>();
 
-    private JSONObject data;
+    //private ArrayList<Bed> bedsArray = new ArrayList<Bed>();
+    private List<Bed> bedsArray = Collections.synchronizedList(new ArrayList<Bed>());
+
+    private BedAdapter adapter;
+    private ListView listView;
 
     @Override
     protected void onDestroy(){
         super.onDestroy();
-        mSocket.close();
-        inSocket.close();
+        for(BedStreaming thread: threads){
+            thread.stop();
+        }
     }
 
     @Override
@@ -54,82 +51,61 @@ public class BedsActivity extends AppCompatActivity {
         JSONObject resultado = APIUtil.petitionAPI("/api/beds", urlParameters);
         int status = APIUtil.getStatusFromJSON(resultado);
 
-        List<String> bed_names = new ArrayList<String>();
         try {
             JSONArray beds_info = (JSONArray) resultado.get("beds");
+            String namespace=null;
+
+            //por cada cama se lanza un hilo
             for (int i = 0; i < beds_info.length(); i++) {
                 JSONObject bed_info = (JSONObject) beds_info.get(i);
-                bed_names.add( (String) bed_info.get("bed_name"));
+                String bed_name = (String) bed_info.get("bed_name");
+
+                bedsArray.add(new Bed(bed_name, "Estado: ..."));
+
+                urlParameters = "token="+session.getToken()+"&bedname="+bed_name;
+                resultado = APIUtil.petitionAPI("/api/bed", urlParameters);
+                namespace = (String) resultado.get("namespace");
+
+                BedStreaming bedStreaming = new BedStreaming(i, bed_name, namespace, this);
+                threads.add(bedStreaming);
             }
         }catch (JSONException e){
             e.printStackTrace();
         }
 
-        urlParameters = "token="+session.getToken()+"&bedname="+bed_names.get(0);
-        resultado = APIUtil.petitionAPI("/api/bed", urlParameters);
-        status = APIUtil.getStatusFromJSON(resultado);
-
-        String namespace=null;
-        try {
-            namespace = (String) resultado.get("namespace");
-        } catch (JSONException e) {
-            e.printStackTrace();
+        ArrayList<Bed> aux = new ArrayList<>();
+        for(Bed bed: bedsArray){
+            aux.add(bed);
         }
 
-        data = new JSONObject();
-        try {
-            data.put("namespace", namespace);
-            data.put("bedname", bed_names.get(0));
-        }catch(JSONException e){
-            e.printStackTrace();
+        adapter = new BedAdapter(this, aux);
+        listView = (ListView) findViewById(R.id.beds_list);
+        listView.setAdapter(adapter);
+
+    }
+
+    public void refresh(int bedId, int state){
+        Log.d("NUMERO DE CAMAS", this.bedsArray.toString());
+        switch (state){
+            case 0:
+                this.bedsArray.get(bedId).setBedState("Estado: dormido");
+                break;
+            case 1:
+                bedsArray.get(bedId).setBedState("Estado: crisis epiléptica");
+                break;
+            case 2:
+                bedsArray.get(bedId).setBedState("Estado: cama vacía");
+                break;
+            case 3:
+                bedsArray.get(bedId).setBedState("Estado: datos insuficientes");
         }
-        Log.d("data", data.toString());
-
-        try {
-            manager = new Manager(new URI("https://ubu.joselucross.com"));
-            manager.open();
-            mSocket = manager.socket("/"); //namespace genérico
-            inSocket = manager.socket("/"+namespace);
-            mSocket.open();
-            inSocket.open();
-
-        } catch (URISyntaxException e) {
-            e.printStackTrace();
-        }
-
-        mSocket.on(Socket.EVENT_CONNECT, new Emitter.Listener() {
+        runOnUiThread(new Runnable() {
             @Override
-            public void call(Object... args) {
-                if(mSocket.connected()){
-                    Log.d("CONECTADO", "SI");
-                }
-                mSocket.emit("give_me_data", data);
-                //mSocket.close();
+            public void run() {
+                adapter.clear();
+                adapter.addAll(bedsArray);
             }
         });
-
-        inSocket.on(Socket.EVENT_CONNECT, new Emitter.Listener() {
-            @Override
-            public void call(Object... args) {
-                if(inSocket.connected()){
-                    Log.d("CONECTADO 2", "SI");
-                }
-            }
-        });
-
-        inSocket.on("package", new Emitter.Listener(){
-            @Override
-            public void call(Object... args) {
-                JSONObject resultado = (JSONObject) args[0];
-                Log.d("RESULTADO", resultado.toString());
-            }
-        });
-
-
-        final ArrayAdapter<String> bedsAdapter = new ArrayAdapter<String>(context, android.R.layout.simple_list_item_1, bed_names);
-
-        ListView listView = (ListView) findViewById(R.id.beds_list);
-        listView.setAdapter(bedsAdapter);
 
     }
 }
