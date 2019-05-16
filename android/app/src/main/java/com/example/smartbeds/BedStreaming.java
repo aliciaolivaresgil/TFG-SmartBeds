@@ -1,6 +1,5 @@
 package com.example.smartbeds;
 
-import android.content.Context;
 import android.util.Log;
 
 import com.github.nkzawa.emitter.Emitter;
@@ -18,7 +17,8 @@ public class BedStreaming implements Runnable {
 
     private Thread thread;
 
-    private BedsActivity listener;
+    private BedsActivity listener1 = null;
+    private BedChartsActivity listener2 = null;
 
     private int bedId;
     private String bedName;
@@ -33,7 +33,16 @@ public class BedStreaming implements Runnable {
 
     public BedStreaming(int bedId, String bedName, String nameSpace, BedsActivity listener){
         this.bedId=bedId;
-        this.listener=listener;
+        this.listener1=listener;
+        this.bedName=bedName;
+        this.namespace=nameSpace;
+        this.thread = new Thread(this);
+        this.thread.start();
+    }
+
+    public BedStreaming(int bedId, String bedName, String nameSpace, BedChartsActivity listener){
+        this.bedId=bedId;
+        this.listener2=listener;
         this.bedName=bedName;
         this.namespace=nameSpace;
         this.thread = new Thread(this);
@@ -84,26 +93,34 @@ public class BedStreaming implements Runnable {
             }
         });
 
-            inSocket.on("package", new Emitter.Listener() {
-                @Override
-                public void call(Object... args) {
-                    JSONObject resultado = (JSONObject) args[0];
-                    Log.d("RESULTADO", resultado.toString());
+        inSocket.on("package", new Emitter.Listener() {
+            @Override
+            public void call(Object... args) {
+                JSONObject resultado = (JSONObject) args[0];
+                Log.d("RESULTADO", resultado.toString());
 
-                    try {
+                try {
+                    if(listener1!=null) {
                         JSONArray array = (JSONArray) resultado.get("result");
                         state = (int) array.get(0);
-                        listener.refresh(bedId, state);
-                    }catch (JSONException e){
-                        e.printStackTrace();
+                        listener1.refresh(bedId, state);
+                    }else{
+                        listener2.refresh(resultado);
                     }
+                }catch (JSONException e){
+                    e.printStackTrace();
                 }
-            });
+            }
+        });
     }
 
     public void stop(){
-        mSocket.close();
-        inSocket.close();
+        if(mSocket!=null){
+            mSocket.close();
+        }
+        if(inSocket!=null){
+            inSocket.close();
+        }
         thread.interrupt();
     }
 }

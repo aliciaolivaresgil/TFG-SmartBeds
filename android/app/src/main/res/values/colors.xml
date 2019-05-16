@@ -5,4 +5,10 @@
     <color name="colorPrimaryDark">#002425</color>
     <color name="colorAccent">#D81B60</color>
     <color name="background">#FFFFFF</color>
+    <color name="chart_1">#41f48f</color>
+    <color name="chart_2">#30dcff</color>
+    <color name="chart_3">#fc41a8</color>
+    <color name="chart_4">#ffa81c</color>
+    <color name="chart_5">#ff3330</color>
+    <color name="chart_6">#c130ff</color>
 </resources>
