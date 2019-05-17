@@ -65,16 +65,18 @@ public class APICommunication implements Runnable{
             Log.d("status", msg);
             Log.d("status", ""+status);
 
-            StringBuilder content;
+            StringBuilder content= new StringBuilder();
 
-            try(BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()))){
-                String line;
-                content = new StringBuilder();
-
-                while((line = in.readLine()) != null){
-                    content.append(line);
-                    content.append(System.lineSeparator());
+            if(status==200) {
+                try (BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()))) {
+                    String line;
+                    while ((line = in.readLine()) != null) {
+                        content.append(line);
+                        content.append(System.lineSeparator());
+                    }
                 }
+            }else{
+                content.append("{\"status\":"+status+",\"message\":"+msg+"}");
             }
 
             Log.d("resultado", content.toString());

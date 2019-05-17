@@ -36,6 +36,7 @@ public class APIUtil {
         } catch (JSONException e) {
             e.printStackTrace();
         }
+        Log.d("STATUSSSSS", ""+status);
         return status;
     }
 
