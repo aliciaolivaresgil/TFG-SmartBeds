@@ -7,21 +7,27 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.widget.TextView;
 
 import com.github.mikephil.charting.charts.LineChart;
+import com.github.mikephil.charting.components.AxisBase;
+import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.components.YAxis;
-import com.github.mikephil.charting.data.DataSet;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
+import com.github.mikephil.charting.formatter.ValueFormatter;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 
 
@@ -30,6 +36,9 @@ public class BedChartsActivity extends AppCompatActivity {
     private Context context = this;
 
     private TextView stateView;
+    TabLayout.Tab tab1;
+    TabLayout.Tab tab2;
+    TabLayout.Tab tab3;
 
     private int state = -1;
     private double prob=0.0;
@@ -46,7 +55,8 @@ public class BedChartsActivity extends AppCompatActivity {
     private int hrv;
     private int b2b;
 
-    private String date;
+    private  String stringDate;
+    private long timestampDate;
 
     private BedStreaming bedStreaming;
 
@@ -80,6 +90,7 @@ public class BedChartsActivity extends AppCompatActivity {
 
     private int counter=0;
 
+    private SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
     @Override
     protected void onDestroy(){
@@ -105,7 +116,50 @@ public class BedChartsActivity extends AppCompatActivity {
 
         stateView = (TextView) findViewById(R.id.bed_charts_state);
 
-        TabLayout tabLayout = (TabLayout) findViewById(R.id.bed_charts_tabs);
+        TabLayout tabs = (TabLayout) findViewById(R.id.bed_charts_tabs);
+        tab1 = tabs.newTab().setText("PROBABILIDAD");
+        tab2 = tabs.newTab().setText("PRESIONES");
+        tab3 = tabs.newTab().setText("CONSTANTES VITALES");
+        tabs.addTab(tab1, true);
+        tabs.addTab(tab2, false);
+        tabs.addTab(tab3, false);
+
+        tabs.setOnTabSelectedListener(new TabLayout.BaseOnTabSelectedListener() {
+            @Override
+            public void onTabSelected(TabLayout.Tab tab) {
+                if(tab1.isSelected()){
+                    chartProb.setVisibility(View.VISIBLE);
+                    chartPressures.setVisibility(View.GONE);
+                    chartHR.setVisibility(View.GONE);
+                    chartRR.setVisibility(View.GONE);
+                    chartSV.setVisibility(View.GONE);
+                    chartHRV.setVisibility(View.GONE);
+                    chartB2B.setVisibility(View.GONE);
+                }else if(tab2.isSelected()){
+                    chartProb.setVisibility(View.GONE);
+                    chartPressures.setVisibility(View.VISIBLE);
+                    chartHR.setVisibility(View.GONE);
+                    chartRR.setVisibility(View.GONE);
+                    chartSV.setVisibility(View.GONE);
+                    chartHRV.setVisibility(View.GONE);
+                    chartB2B.setVisibility(View.GONE);
+                }else{
+                    chartProb.setVisibility(View.GONE);
+                    chartPressures.setVisibility(View.GONE);
+                    chartHR.setVisibility(View.VISIBLE);
+                    chartRR.setVisibility(View.VISIBLE);
+                    chartSV.setVisibility(View.VISIBLE);
+                    chartHRV.setVisibility(View.VISIBLE);
+                    chartB2B.setVisibility(View.VISIBLE);
+                }
+            }
+
+            @Override
+            public void onTabUnselected(TabLayout.Tab tab) {}
+
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) {}
+        });
 
         String namespace=null;
         try {
@@ -124,38 +178,40 @@ public class BedChartsActivity extends AppCompatActivity {
 
         //crear gráfica p1
         chartPressures = (LineChart) findViewById(R.id.bed_charts_p1);
-        generateChart(chartPressures, 5, 0, 10);
+        generateChart(chartPressures, 5, 0, 100);
 
         //crear gráfica HR
         chartHR = (LineChart) findViewById(R.id.bed_charts_hr);
-        generateChart(chartHR, -1, -1, -1);
+        generateChart(chartHR, -1, 0, -1);
 
         //crear gráfica RR
         chartRR = (LineChart) findViewById(R.id.bed_charts_rr);
-        generateChart(chartRR, -1, -1, -1);
+        generateChart(chartRR, -1, 0, -1);
 
         //crear gráfica SV
         chartSV = (LineChart) findViewById(R.id.bed_charts_sv);
-        generateChart(chartSV, -1, -1, -1);
+        generateChart(chartSV, -1, 0, -1);
 
         //crear gráfica HRV
         chartHRV = (LineChart) findViewById(R.id.bed_charts_hrv);
-        generateChart(chartHRV, -1, -1, -1);
+        generateChart(chartHRV, -1, 0, -1);
 
         //crear gráfica B2B
         chartB2B = (LineChart) findViewById(R.id.bed_charts_b2b);
-        generateChart(chartB2B, -1, -1, -1);
+        generateChart(chartB2B, -1, 0, -1);
 
     }
 
     public void refresh(JSONObject resultado){
         state=0;
+        float secondFloat=0.0f;
         try {
             JSONArray array = (JSONArray) resultado.get("result");
             state = (int) array.get(0);
             prob = (double) array.get(1);
             probFloat = (float) prob;
-            date = (String) resultado.get("instance");
+            stringDate = (String) resultado.get("instance");
+
             JSONArray pressures = (JSONArray) resultado.get("pressure");
             p1 = (int) pressures.get(0);
             p2 = (int) pressures.get(1);
@@ -163,6 +219,7 @@ public class BedChartsActivity extends AppCompatActivity {
             p4 = (int) pressures.get(3);
             p5 = (int) pressures.get(4);
             p6 = (int) pressures.get(5);
+
             JSONArray vitals = (JSONArray) resultado.get("vital");
             hr = (int) vitals.get(0);
             rr = (int) vitals.get(1);
@@ -176,7 +233,7 @@ public class BedChartsActivity extends AppCompatActivity {
             probFloat = 0.0f;
         }
 
-        if(counter>270){
+        if(counter>10){
             listProb.remove(0);
             listP1.remove(0);
             listP2.remove(0);
@@ -203,8 +260,6 @@ public class BedChartsActivity extends AppCompatActivity {
         listHRV.add(new Entry(counter, hrv));
         listB2B.add(new Entry(counter, b2b));
         counter++;
-        Log.d("COUNTER", ""+counter);
-        Log.d("ARRAY", listProb.toString());
 
         runOnUiThread(new Runnable() {
             @Override
@@ -291,8 +346,6 @@ public class BedChartsActivity extends AppCompatActivity {
                 chartPressures.setData(lineDataPressures);
 
                 chartPressures.invalidate();
-
-
             }
 
             private void updateChart(LineChart chart, List<Entry> list, LineDataSet dataSet, LineData lineData, int color, String label){
@@ -305,7 +358,6 @@ public class BedChartsActivity extends AppCompatActivity {
                 chart.setData(lineData);
                 chart.invalidate();
             }
-
         });
 
 
@@ -316,13 +368,20 @@ public class BedChartsActivity extends AppCompatActivity {
         chart.getLegend().setTextSize(20);
         chart.getLegend().setFormSize(20);
         YAxis right = chart.getAxisRight();
+        YAxis left = chart.getAxisLeft();
         right.setEnabled(false);
         if(count!=-1) {
-            YAxis left = chart.getAxisLeft();
             left.setLabelCount(count);
-            left.setAxisMinimum(min);
             left.setAxisMaximum(max);
         }
+        left.setAxisMinimum(min);
+        XAxis xAxis = chart.getXAxis();
+        xAxis.setValueFormatter(new ValueFormatter() {
+            @Override
+            public String getFormattedValue(float value) {
+                return "";
+            }
+        });
         chart.setNoDataText("Esperando datos");
         chart.setNoDataTextColor(ContextCompat.getColor(context, R.color.colorAccent));
     }
