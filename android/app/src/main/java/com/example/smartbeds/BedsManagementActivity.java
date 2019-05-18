@@ -1,11 +1,15 @@
 package com.example.smartbeds;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -70,10 +74,46 @@ public class BedsManagementActivity extends AppCompatActivity {
             public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
                 BottomNavigationView navigation = findViewById(R.id.beds_management_navigation);
                 navigation.setVisibility(View.VISIBLE);
-                view.setBackgroundColor(ContextCompat.getColor(context, R.color.colorAccent));
+                parent.getChildAt(focusedItem).setBackgroundColor(ContextCompat.getColor(context, R.color.background));
+                view.setBackgroundColor(ContextCompat.getColor(context, R.color.colorPrimaryLight));
                 focusedItem=position;
                 return true;
             }
         });
+
+        BottomNavigationView navigation = findViewById(R.id.beds_management_navigation);
+        navigation.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
+                switch((String)menuItem.getTitle()){
+                    case "Eliminar":
+                        showDialog("Eliminar cama");
+                        break;
+                    case "Modificar":
+                        showDialog("Modificar datos de la cama");
+                        break;
+                }
+                return true;
+            }
+        });
+    }
+
+    public void showDialog(String acción){
+
+        AlertDialog dialog = new AlertDialog.Builder(context).create();
+        dialog.setTitle(acción);
+        dialog.setMessage("Esta acción no está disponible en la versión 1.0 de la aplicación.");
+        dialog.setButton(AlertDialog.BUTTON_POSITIVE, "OK", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+
+            }
+        });
+
+        dialog.show();
+    }
+
+    protected void anadirCama(View view){
+        showDialog("Añadir cama");
     }
 }
