@@ -6,12 +6,11 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
 import com.github.mikephil.charting.charts.LineChart;
-import com.github.mikephil.charting.components.AxisBase;
+
 import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.Entry;
@@ -23,11 +22,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Date;
 import java.util.List;
 
 
@@ -56,7 +52,6 @@ public class BedChartsActivity extends AppCompatActivity {
     private int b2b;
 
     private  String stringDate;
-    private long timestampDate;
 
     private BedStreaming bedStreaming;
 
@@ -89,8 +84,6 @@ public class BedChartsActivity extends AppCompatActivity {
     private LineChart chartB2B;
 
     private int counter=0;
-
-    private SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
     @Override
     protected void onDestroy(){
@@ -204,7 +197,6 @@ public class BedChartsActivity extends AppCompatActivity {
 
     public void refresh(JSONObject resultado){
         state=0;
-        float secondFloat=0.0f;
         try {
             JSONArray array = (JSONArray) resultado.get("result");
             state = (int) array.get(0);
@@ -359,8 +351,6 @@ public class BedChartsActivity extends AppCompatActivity {
                 chart.invalidate();
             }
         });
-
-
     }
 
     private void generateChart(LineChart chart, int count, int min, int max){
@@ -385,4 +375,5 @@ public class BedChartsActivity extends AppCompatActivity {
         chart.setNoDataText("Esperando datos");
         chart.setNoDataTextColor(ContextCompat.getColor(context, R.color.colorAccent));
     }
+
 }
