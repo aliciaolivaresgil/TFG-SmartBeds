@@ -9,4 +9,7 @@
     <item android:id="@+id/eliminar"
         android:icon="@drawable/ic_delete"
         android:title="Eliminar"/>
+    <item android:id="@+id/asignar_usuarios"
+        android:icon="@drawable/ic_assign"
+        android:title="Asignar usuarios"/>
 </menu>

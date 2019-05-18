@@ -9,6 +9,7 @@ import android.support.design.widget.BottomNavigationView;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
@@ -26,14 +27,18 @@ public class BedsManagementActivity extends AppCompatActivity {
 
     private Context context = this;
     private int focusedItem=0;
+    private boolean itemSelected=false;
+
+    private BottomNavigationView navigation;
 
     @Override
     public void onBackPressed(){
-        BottomNavigationView navigation = findViewById(R.id.beds_management_navigation);
+        navigation = findViewById(R.id.beds_management_navigation);
         ListView listView = findViewById(R.id.beds_management_list);
         if(navigation.getVisibility()==View.VISIBLE){
             navigation.setVisibility(View.GONE);
             listView.getChildAt(focusedItem).setBackgroundColor(ContextCompat.getColor(context, R.color.background));
+            itemSelected=false;
         }else{
             super.onBackPressed();
         }
@@ -66,22 +71,35 @@ public class BedsManagementActivity extends AppCompatActivity {
         }
 
         final ArrayAdapter<String> bedNamesAdapter = new ArrayAdapter<String>(context, android.R.layout.simple_list_item_1, bedNames);
-        ListView listView = (ListView) findViewById(R.id.beds_management_list);
+        final ListView listView = (ListView) findViewById(R.id.beds_management_list);
         listView.setAdapter(bedNamesAdapter);
+
+        navigation = findViewById(R.id.beds_management_navigation);
 
         listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
             public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-                BottomNavigationView navigation = findViewById(R.id.beds_management_navigation);
                 navigation.setVisibility(View.VISIBLE);
                 parent.getChildAt(focusedItem).setBackgroundColor(ContextCompat.getColor(context, R.color.background));
                 view.setBackgroundColor(ContextCompat.getColor(context, R.color.colorPrimaryLight));
                 focusedItem=position;
+                itemSelected=true;
                 return true;
             }
         });
 
-        BottomNavigationView navigation = findViewById(R.id.beds_management_navigation);
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                if(position!=focusedItem && itemSelected){
+                    parent.getChildAt(focusedItem).setBackgroundColor(ContextCompat.getColor(context, R.color.background));
+                    view.setBackgroundColor(ContextCompat.getColor(context, R.color.colorPrimaryLight));
+                    focusedItem=position;
+                }
+            }
+        });
+
+
         navigation.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
@@ -91,6 +109,13 @@ public class BedsManagementActivity extends AppCompatActivity {
                         break;
                     case "Modificar":
                         showDialog("Modificar datos de la cama");
+                        break;
+                    case "Asignar usuarios":
+                        Intent intent = new Intent(context, BedAsignUsersActivity.class);
+                        Bundle b = new Bundle();
+                        b.putString("bedName", bedNamesAdapter.getItem(focusedItem));
+                        intent.putExtras(b);
+                        startActivity(intent);
                         break;
                 }
                 return true;
