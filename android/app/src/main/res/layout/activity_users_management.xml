@@ -2,14 +2,15 @@
 <ScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fillViewport="true">
+    android:fillViewport="true"
+    android:background="@color/background">
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:background="@color/background">
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -31,15 +32,16 @@
                     android:layout_height="match_parent"
                     android:orientation="horizontal">
 
-
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Gestión de usuarios"
+                        android:fontFamily="@font/roboto"
                         android:paddingVertical="18dp"
-                        android:textSize="25dp"
-                        android:textStyle="bold"
-                        android:textColor="@android:color/white"/>
+                        android:paddingLeft="8dp"
+                        android:text="Gestión de usuarios"
+                        android:textColor="@android:color/white"
+                        android:textSize="24dp"
+                        android:textStyle="bold" />
 
                 </LinearLayout>
             </android.support.v7.widget.Toolbar>
@@ -56,16 +58,18 @@
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:layout_alignParentBottom="true"
-            android:layout_alignParentRight="true">
+            android:layout_alignParentRight="true"
+            android:background="@color/background">
 
             <ImageView
-                android:layout_width="70dp"
-                android:layout_height="70dp"
+                android:layout_width="64dp"
+                android:layout_height="64dp"
                 android:src="@drawable/ic_add"
                 android:tint="@color/colorPrimaryLight"
                 android:layout_margin="16dp"
                 android:layout_gravity="right"
                 android:onClick="anadirUsuario"/>
+
 
             <android.support.design.widget.BottomNavigationView
                 xmlns:android="http://schemas.android.com/apk/res/android"

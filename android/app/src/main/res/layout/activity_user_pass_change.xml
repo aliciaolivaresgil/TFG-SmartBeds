@@ -32,11 +32,13 @@
                     android:id="@+id/user_pass_change_title"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Cambiar contraseña de "
+                    android:fontFamily="@font/roboto"
                     android:paddingVertical="18dp"
-                    android:textSize="25dp"
-                    android:textStyle="bold"
-                    android:textColor="@android:color/white"/>
+                    android:paddingLeft="8dp"
+                    android:text="Cambiar contraseña de "
+                    android:textColor="@android:color/white"
+                    android:textSize="24dp"
+                    android:textStyle="bold" />
 
             </LinearLayout>
         </android.support.v7.widget.Toolbar>

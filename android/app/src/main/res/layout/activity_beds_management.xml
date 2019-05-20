@@ -2,10 +2,10 @@
 <ScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fillViewport="true">
+    android:fillViewport="true"
+    android:background="@color/background">
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -35,11 +35,13 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Gestión de camas"
+                        android:fontFamily="@font/roboto"
                         android:paddingVertical="18dp"
-                        android:textSize="25dp"
-                        android:textStyle="bold"
-                        android:textColor="@android:color/white"/>
+                        android:paddingLeft="8dp"
+                        android:text="Gestión de camas"
+                        android:textColor="@android:color/white"
+                        android:textSize="24dp"
+                        android:textStyle="bold" />
 
                 </LinearLayout>
             </android.support.v7.widget.Toolbar>
@@ -59,8 +61,8 @@
             android:layout_alignParentRight="true">
 
             <ImageView
-                android:layout_width="70dp"
-                android:layout_height="70dp"
+                android:layout_width="64dp"
+                android:layout_height="64dp"
                 android:src="@drawable/ic_add"
                 android:tint="@color/colorPrimaryLight"
                 android:layout_margin="16dp"
@@ -73,6 +75,7 @@
                 android:id="@+id/beds_management_navigation"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:elevation="8dp"
                 android:background="@color/colorPrimary"
                 app:itemTextColor="@android:color/white"
                 app:itemIconTint="@android:color/white"

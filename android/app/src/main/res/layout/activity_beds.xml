@@ -30,11 +30,13 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Camas"
+                    android:fontFamily="@font/roboto"
                     android:paddingVertical="18dp"
-                    android:textSize="25dp"
-                    android:textStyle="bold"
-                    android:textColor="@android:color/white"/>
+                    android:paddingLeft="8dp"
+                    android:text="Camas"
+                    android:textColor="@android:color/white"
+                    android:textSize="24dp"
+                    android:textStyle="bold" />
 
             </LinearLayout>
 

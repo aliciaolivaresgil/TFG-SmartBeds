@@ -312,26 +312,26 @@ public class BedChartsActivity extends AppCompatActivity {
             private void updatePressuresChart(){
                 lineDataPressures = new LineData();
 
-                updatePressureLine(listP1, ContextCompat.getColor(context, R.color.chart_1));
-                updatePressureLine(listP2, ContextCompat.getColor(context, R.color.chart_2));
-                updatePressureLine(listP3, ContextCompat.getColor(context, R.color.chart_3));
-                updatePressureLine(listP4, ContextCompat.getColor(context, R.color.chart_4));
-                updatePressureLine(listP5, ContextCompat.getColor(context, R.color.chart_5));
-                updatePressureLine(listP6, ContextCompat.getColor(context, R.color.chart_6));
+                updatePressureLine(listP1, ContextCompat.getColor(context, R.color.chart_1), "P1");
+                updatePressureLine(listP2, ContextCompat.getColor(context, R.color.chart_2), "P2");
+                updatePressureLine(listP3, ContextCompat.getColor(context, R.color.chart_3), "P3");
+                updatePressureLine(listP4, ContextCompat.getColor(context, R.color.chart_4), "P4");
+                updatePressureLine(listP5, ContextCompat.getColor(context, R.color.chart_5), "P5");
+                updatePressureLine(listP6, ContextCompat.getColor(context, R.color.chart_6), "P6");
 
                 chartPressures.invalidate();
             }
 
-            private void updatePressureLine(List<Entry> list, int color){
+            private void updatePressureLine(List<Entry> list, int color, String label){
 
-                    dataSetPressures = new LineDataSet(list, "P1");
+                dataSetPressures = new LineDataSet(list, label);
                 dataSetPressures.setColor(color);
                 dataSetPressures.setLineWidth(3.0f);
                 dataSetPressures.setDrawValues(false);
                 dataSetPressures.setDrawCircles(false);
                 lineDataPressures.addDataSet(dataSetPressures);
 
-                    chartPressures.setData(lineDataPressures);
+                chartPressures.setData(lineDataPressures);
 
             }
         });

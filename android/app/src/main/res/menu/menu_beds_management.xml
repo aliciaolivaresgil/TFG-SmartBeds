@@ -5,7 +5,7 @@
 
     <item android:id="@+id/modificar"
         android:icon="@drawable/ic_modify"
-        android:title="Modificar" />
+        android:title="Modificar"/>
     <item android:id="@+id/eliminar"
         android:icon="@drawable/ic_delete"
         android:title="Eliminar"/>
