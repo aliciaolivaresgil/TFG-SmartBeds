@@ -16,6 +16,7 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.LinkedList;
 import java.util.List;
 
 public class BedsActivity extends AppCompatActivity {
@@ -26,7 +27,7 @@ public class BedsActivity extends AppCompatActivity {
 
     private List<BedStreaming> threads = new ArrayList<BedStreaming>();
 
-    private List<Bed> bedsArray = Collections.synchronizedList(new ArrayList<Bed>());
+    private List<Bed> bedsArray = Collections.synchronizedList(new LinkedList<Bed>());
 
     private BedAdapter adapter;
     private ListView listView;
@@ -35,6 +36,7 @@ public class BedsActivity extends AppCompatActivity {
     @Override
     protected void onDestroy(){
         super.onDestroy();
+        Log.d("CERRANDO HILOS", "cerrando hilos joder");
         for(BedStreaming thread: threads){
             thread.stop();
         }
@@ -122,7 +124,6 @@ public class BedsActivity extends AppCompatActivity {
     }
 
     public void refresh(int bedId, int state){
-        Log.d("NUMERO DE CAMAS", this.bedsArray.toString());
         switch (state){
             case 0:
                 this.bedsArray.get(bedId).setBedState("Estado: dormido");

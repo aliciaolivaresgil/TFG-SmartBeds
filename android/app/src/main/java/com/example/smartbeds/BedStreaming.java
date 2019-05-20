@@ -80,7 +80,6 @@ public class BedStreaming implements Runnable {
                     Log.d("CONECTADO", "SI");
                 }
                 mSocket.emit("give_me_data", data);
-                //mSocket.close();
             }
         });
 
@@ -110,8 +109,17 @@ public class BedStreaming implements Runnable {
                 }catch (JSONException e){
                     e.printStackTrace();
                 }
+
+                try {
+                    if (!thread.isInterrupted()) {
+                        thread.sleep(200);
+                    }
+                }catch(Throwable e){
+                        e.printStackTrace();
+                }
             }
         });
+
     }
 
     public void stop(){
@@ -121,6 +129,8 @@ public class BedStreaming implements Runnable {
         if(inSocket!=null){
             inSocket.close();
         }
+        inSocket.off("package");
+        inSocket.off(Socket.EVENT_CONNECT);
         thread.interrupt();
     }
 }
