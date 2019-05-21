@@ -76,7 +76,7 @@ public class APICommunication implements Runnable{
                     }
                 }
             }else{
-                content.append("{\"status\":"+status+",\"message\":"+msg+"}");
+                content.append("{\"status\":"+status+",\"message\":\""+msg+"\"}");
             }
 
             Log.d("resultado", content.toString());

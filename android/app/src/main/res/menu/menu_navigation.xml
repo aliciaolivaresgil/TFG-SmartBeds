@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/item_modify"
+        android:icon="@drawable/ic_modify"
+        android:title="Modificar Contraseña" />
+
+    <item
+        android:id="@+id/item_users_management"
+        android:icon="@drawable/ic_users"
+        android:title="Gestión de usuarios" />
+
+    <item
+        android:id="@+id/item_beds_management"
+        android:icon="@drawable/ic_beds"
+        android:title="Gestión de camas" />
+
+    <item
+        android:id="@+id/item_beds_visualization"
+        android:icon="@drawable/ic_graphic"
+        android:title="Visualización de camas" />
+
+    <item
+        android:id="@+id/item_logout"
+        android:icon="@drawable/ic_logout"
+        android:title="Cerrar sesión" />
+
+</menu>

@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">SmartBeds</string>
+    <string name="open">hola</string>
+    <string name="close">adios</string>
 </resources>

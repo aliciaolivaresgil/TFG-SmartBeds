@@ -2,16 +2,30 @@ package com.example.smartbeds;
 
 import android.content.Context;
 import android.content.Intent;
+import android.drm.DrmStore;
+import android.support.annotation.NonNull;
+import android.support.design.widget.NavigationView;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Gravity;
+import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.w3c.dom.Text;
 
 
 import java.util.ArrayList;
@@ -19,7 +33,7 @@ import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
-public class BedsActivity extends AppCompatActivity {
+public class BedsActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
     private final Context context = this;
     private boolean created = false;
@@ -31,6 +45,10 @@ public class BedsActivity extends AppCompatActivity {
 
     private BedAdapter adapter;
     private ListView listView;
+
+    private DrawerLayout drawer;
+    private NavigationView navigation;
+    private ImageView menuImage;
 
 
     @Override
@@ -65,6 +83,10 @@ public class BedsActivity extends AppCompatActivity {
             Intent intent = new Intent(context, MainActivity.class);
             startActivity(intent);
         }
+
+        createNavigationMenu();
+
+
         showBeds(session);
     }
 
@@ -123,6 +145,29 @@ public class BedsActivity extends AppCompatActivity {
         });
     }
 
+    private void createNavigationMenu(){
+        Session session = Session.getInstance();
+        drawer = findViewById(R.id.drawer_layout);
+        navigation = findViewById(R.id.navigation_view);
+        LinearLayout lLayout = (LinearLayout) navigation.getHeaderView(0).getRootView();
+        RelativeLayout rLayout = (RelativeLayout) lLayout.getChildAt(0);
+
+        TextView username = (TextView) rLayout.getChildAt(0);
+        username.setText(session.getUsername());
+
+        Menu menu = navigation.getMenu();
+
+        if(session.getRole().equals("user")){
+            menu.getItem(1).setVisible(false);
+            menu.getItem(2).setVisible(false);
+            menu.getItem(3).setVisible(false);
+        }else{
+            menu.getItem(3).setEnabled(false);
+        }
+
+        navigation.setNavigationItemSelectedListener(this);
+    }
+
     public void refresh(int bedId, int state){
         switch (state){
             case 0:
@@ -145,5 +190,43 @@ public class BedsActivity extends AppCompatActivity {
             }
         });
 
+    }
+
+    protected void showMenu(View view){
+        drawer.openDrawer(Gravity.LEFT);
+    }
+
+    @Override
+    public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
+        Session session = Session.getInstance();
+        Intent intent;
+        switch ((String) menuItem.getTitle()){
+            case "Modificar Contraseña":
+                intent = new Intent(context, UserPassChangeActivity.class);
+                Bundle b = new Bundle();
+                b.putString("username", session.getUsername());
+                intent.putExtras(b);
+                startActivity(intent);
+                break;
+            case "Gestión de usuarios":
+                intent = new Intent(context, UsersManagementActivity.class);
+                startActivity(intent);
+                break;
+            case "Gestión de camas":
+                intent = new Intent(context, BedsManagementActivity.class);
+                startActivity(intent);
+                break;
+            case "Visualización de camas":
+                intent = new Intent(context, BedsActivity.class);
+                startActivity(intent);
+                break;
+            case "Cerrar sesión":
+                Session.resetSession();
+                intent = new Intent(context, MainActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(intent);
+                break;
+        }
+        return true;
     }
 }
