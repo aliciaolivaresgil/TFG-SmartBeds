@@ -81,4 +81,8 @@ public class UserPassChangeActivity extends AppCompatActivity {
             return false;
         }
     }
+
+    protected void back(View view){
+        finish();
+    }
 }

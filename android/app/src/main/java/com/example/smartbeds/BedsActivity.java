@@ -48,12 +48,20 @@ public class BedsActivity extends AppCompatActivity implements NavigationView.On
 
     private DrawerLayout drawer;
     private NavigationView navigation;
-    private ImageView menuImage;
 
 
     @Override
     protected void onDestroy(){
         super.onDestroy();
+        Log.d("CERRANDO HILOS", "que cierres los hilos me cago en mis muertos.");
+        for(BedStreaming thread: threads){
+            thread.stop();
+        }
+    }
+
+    @Override
+    protected void onPause(){
+        super.onPause();
         Log.d("CERRANDO HILOS", "cerrando hilos joder");
         for(BedStreaming thread: threads){
             thread.stop();

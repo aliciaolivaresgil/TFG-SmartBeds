@@ -360,4 +360,8 @@ public class BedChartsActivity extends AppCompatActivity {
         chart.setNoDataTextColor(ContextCompat.getColor(context, R.color.colorAccent));
     }
 
+    protected void back(View view){
+        finish();
+    }
+
 }

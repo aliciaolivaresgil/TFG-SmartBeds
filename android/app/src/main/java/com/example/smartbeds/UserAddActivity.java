@@ -59,4 +59,8 @@ public class UserAddActivity extends AppCompatActivity {
         }
     }
 
+    protected void back(View view){
+        finish();
+    }
+
 }
