@@ -1,6 +1,9 @@
 package com.example.smartbeds;
 
+import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -39,21 +42,15 @@ public class UserPassChangeActivity extends AppCompatActivity {
         EditText oldPass = (EditText) findViewById(R.id.user_pass_change_input_antigua);
         EditText newPass = (EditText) findViewById(R.id.user_pass_change_input_nueva);
         EditText reNewPass = (EditText) findViewById(R.id.user_pass_change_input_repetir_nueva);
-        TextView error = (TextView) findViewById(R.id.user_pass_change_mensaje_error);
-        TextView mssg = (TextView) findViewById(R.id.user_pass_change_mensaje);
 
         if(oldPass.getText().toString().equals("")||newPass.getText().toString().equals("")||reNewPass.getText().toString().equals("")){
-            error.setText("Todos los campos son obligatorios.");
-            error.setVisibility(View.VISIBLE);
+            DialogUtil.showDialog(context, "Error" ,"Todos los campos son obligatorios.");
         }else if(!newPass.getText().toString().equals(reNewPass.getText().toString())) {
-            error.setText("La nueva contraseña es incorrecta.");
-            error.setVisibility(View.VISIBLE);
+            DialogUtil.showDialog(context, "Error", "La nueva contraseña es incorrecta.");
         }else if(!checkOldPass(oldPass.getText().toString())){
-            error.setText("La antigua contraseña es incorrecta.");
-            error.setVisibility(View.VISIBLE);
-        }else{
-            error.setVisibility(View.GONE);
+            DialogUtil.showDialog(context, "Error", "La antigua contraseña es incorrecta. ");
 
+        }else{
             Session session = Session.getInstance();
             String token = session.getToken();
             String urlParameters = "token="+token+"&username="+username+"&password="+newPass.getText().toString()+"&password-re="+reNewPass.getText().toString();
@@ -61,14 +58,12 @@ public class UserPassChangeActivity extends AppCompatActivity {
             int status = APIUtil.getStatusFromJSON(resultado);
 
             if(status==200){
-                mssg.setText("La contraseña del usuario "+username+" se ha modificado correctamente.");
-                mssg.setVisibility(View.VISIBLE);
+                DialogUtil.showDialog(context, "Contraseña modificada", "La contraseña del usuario "+username+" se ha modificado correctamente.");
                 oldPass.setText("");
                 newPass.setText("");
                 reNewPass.setText("");
             }else{
-                error.setText("No se ha podido modificar la contraseña.");
-                error.setVisibility(View.VISIBLE);
+                DialogUtil.showDialog(context, "Error", "No se ha podido modificar la contraseña.");
             }
         }
     }
@@ -85,6 +80,5 @@ public class UserPassChangeActivity extends AppCompatActivity {
         }else{
             return false;
         }
-
     }
 }

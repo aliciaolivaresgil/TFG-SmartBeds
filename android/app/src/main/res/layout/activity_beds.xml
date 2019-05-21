@@ -46,9 +46,9 @@
             android:id="@+id/beds_list"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginVertical="8dp"
-            android:layout_marginHorizontal="16dp"
-            android:dividerHeight="16dp"
+            android:layout_marginVertical="4dp"
+            android:layout_marginHorizontal="8dp"
+            android:dividerHeight="8dp"
             android:divider="@color/background">
         </ListView>
 

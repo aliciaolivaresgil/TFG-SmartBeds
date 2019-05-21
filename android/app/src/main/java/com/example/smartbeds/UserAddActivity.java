@@ -1,6 +1,8 @@
 package com.example.smartbeds;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -31,18 +33,12 @@ public class UserAddActivity extends AppCompatActivity {
         EditText user = (EditText) findViewById(R.id.add_user_input_nombre);
         EditText pass = (EditText) findViewById(R.id.add_user_input_contrasena);
         EditText repass = (EditText) findViewById(R.id.add_user_input_repita_contrasena);
-        TextView error = (TextView) findViewById(R.id.user_add_mensaje_error);
-        TextView mssg = (TextView) findViewById(R.id.user_add_mensaje);
 
         if(user.getText().toString().equals("")||pass.getText().toString().equals("")||repass.getText().toString().equals("")){
-            error.setText("Todos los campos son obligatorios.");
-            error.setVisibility(View.VISIBLE);
+            DialogUtil.showDialog(context, "Error", "Todos los campos son obligatorios.");
         }else if(!pass.getText().toString().equals(repass.getText().toString())){
-            error.setText("La contraseña es incorrecta.");
-            error.setVisibility(View.VISIBLE);
+            DialogUtil.showDialog(context, "Error", "La contraseña es incorrecta.");
         }else{
-            error.setVisibility(View.GONE);
-
             Session session = Session.getInstance();
             String token = session.getToken();
 
@@ -51,16 +47,16 @@ public class UserAddActivity extends AppCompatActivity {
             int status = APIUtil.getStatusFromJSON(resultado);
 
             if(status==200){
-                mssg.setText("Se ha añadido el usuario "+user.getText().toString()+" correctamente.");
-                mssg.setVisibility(View.VISIBLE);
+                DialogUtil.showDialog(context, "Usuario añadido", "Se ha añadido el usuario "+user.getText().toString()+" correctamente.");
+
                 user.setText("");
                 pass.setText("");
                 repass.setText("");
             }else{
-                error.setText("No se ha podido crear el usuario.");
-                error.setVisibility(View.VISIBLE);
+                DialogUtil.showDialog(context, "Error", "No se ha podido añadir el usuario.");
             }
 
         }
     }
+
 }

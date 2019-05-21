@@ -4,4 +4,6 @@
     <dimen name="design_bottom_navigation_height" tools:override="true">64dp</dimen>
     <dimen name="design_bottom_navigation_text_size" tools:override="true">14sp</dimen>
     <dimen name="design_bottom_navigation_active_text_size" tools:override="true">14sp</dimen>
+
+    <dimen name="design_tab_layout_text_size" tools:override="true"></dimen>
 </resources>

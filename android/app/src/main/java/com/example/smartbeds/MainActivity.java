@@ -1,6 +1,8 @@
 package com.example.smartbeds;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -36,7 +38,6 @@ public class MainActivity extends AppCompatActivity {
 
         EditText user = (EditText) findViewById(R.id.input_nombre);
         EditText pass = (EditText) findViewById(R.id.input_contrasena);
-        TextView mensajeError = (TextView) findViewById(R.id.mensaje_error_login);
 
         String urlParameters = "user="+user.getText().toString()+"&pass="+pass.getText().toString();
         JSONObject resultado = APIUtil.petitionAPI("/api/auth", urlParameters);
@@ -44,7 +45,6 @@ public class MainActivity extends AppCompatActivity {
 
         switch (status){
             case 200:
-                mensajeError.setVisibility(View.GONE);
 
                 String token = null;
                 String username = null;
@@ -77,19 +77,15 @@ public class MainActivity extends AppCompatActivity {
                 pass.setText("");
                 break;
             case 500:
-                mensajeError.setText("Error interno del servidor. Inténtelo más tarde.");
-                mensajeError.setVisibility(View.VISIBLE);
+                DialogUtil.showDialog(context, "Error interno del servidor", "Inténtelo más tarde.");
                 break;
             case 502:
-                mensajeError.setText("Error de conexión con el servidor. Inténtelo más tarde.");
-                mensajeError.setText(View.VISIBLE);
+                DialogUtil.showDialog(context, "Error de conexión con el servidor", "Inténtelo más tarde.");
                 break;
             case 401:
-                mensajeError.setText("Error en la identificación del usuario. Usuario o contraseña incorrectos.");
-                mensajeError.setVisibility(View.VISIBLE);
+                DialogUtil.showDialog(context, "Error de autentificación del usuario", "Nombre de usuaro o contraseña incorrectos.");
                 break;
         }
-
-
     }
+
 }

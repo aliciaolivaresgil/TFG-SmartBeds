@@ -1,15 +1,12 @@
 package com.example.smartbeds;
 
-import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
@@ -105,10 +102,10 @@ public class BedsManagementActivity extends AppCompatActivity {
             public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
                 switch((String)menuItem.getTitle()){
                     case "Eliminar":
-                        showDialog("Eliminar cama");
+                        DialogUtil.showDialog(context, "Eliminar cama", "Esta acción no está disponible en la versión 1.0 de la aplicación.");
                         break;
                     case "Modificar":
-                        showDialog("Modificar datos de la cama");
+                        DialogUtil.showDialog(context, "Modificar datos de la cama", "Esta acción no está disponible en la versión 1.0 de la aplicación.");
                         break;
                     case "Asignar usuarios":
                         Intent intent = new Intent(context, BedAsignUsersActivity.class);
@@ -123,22 +120,7 @@ public class BedsManagementActivity extends AppCompatActivity {
         });
     }
 
-    public void showDialog(String acción){
-
-        AlertDialog dialog = new AlertDialog.Builder(context).create();
-        dialog.setTitle(acción);
-        dialog.setMessage("Esta acción no está disponible en la versión 1.0 de la aplicación.");
-        dialog.setButton(AlertDialog.BUTTON_POSITIVE, "OK", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-
-            }
-        });
-
-        dialog.show();
-    }
-
     protected void anadirCama(View view){
-        showDialog("Añadir cama");
+        DialogUtil.showDialog(context, "Añadir cama", "Esta acción no está disponible en la versión 1.0 de la aplicación.");
     }
 }

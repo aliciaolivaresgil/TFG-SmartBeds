@@ -87,17 +87,6 @@
                     android:inputType="textPassword"
                     android:text="" />
 
-                <TextView
-                    android:id="@+id/mensaje_error_login"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:visibility="gone"
-                    android:layout_marginBottom="16dp"
-                    android:layout_marginHorizontal="16dp"
-                    android:textSize="18dp"
-                    android:textStyle="bold"
-                    android:textColor="@android:color/holo_red_dark"/>
-
                 <Button
                     android:id="@+id/boton_iniciarSesion"
                     android:layout_width="wrap_content"

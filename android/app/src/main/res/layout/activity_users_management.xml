@@ -65,7 +65,7 @@
                 android:layout_width="64dp"
                 android:layout_height="64dp"
                 android:src="@drawable/ic_add"
-                android:tint="@color/colorPrimaryLight"
+                android:tint="@color/colorAccent"
                 android:layout_margin="16dp"
                 android:layout_gravity="right"
                 android:onClick="anadirUsuario"/>

@@ -64,7 +64,7 @@
                 android:layout_width="64dp"
                 android:layout_height="64dp"
                 android:src="@drawable/ic_add"
-                android:tint="@color/colorPrimaryLight"
+                android:tint="@color/colorAccent"
                 android:layout_margin="16dp"
                 android:layout_gravity="right"
                 android:onClick="anadirCama"/>
@@ -75,7 +75,6 @@
                 android:id="@+id/beds_management_navigation"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:elevation="8dp"
                 android:background="@color/colorPrimary"
                 app:itemTextColor="@android:color/white"
                 app:itemIconTint="@android:color/white"
