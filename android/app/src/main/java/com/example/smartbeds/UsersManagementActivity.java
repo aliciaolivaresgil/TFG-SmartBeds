@@ -114,7 +114,7 @@ public class UsersManagementActivity extends AppCompatActivity implements Naviga
                     view.setBackgroundColor(ContextCompat.getColor(context, R.color.colorPrimaryLight));
                     focusedItem = position;
                     if (namesAdapter.getItem(focusedItem).equals("admin")) {
-                        navigation.getMenu().getItem(1).setVisible(false);
+                        bottomNavigation.getMenu().getItem(1).setVisible(false);
                     } else {
                         bottomNavigation.getMenu().getItem(1).setVisible(true);
                     }
