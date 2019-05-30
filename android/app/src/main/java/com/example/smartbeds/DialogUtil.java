@@ -29,6 +29,11 @@ public class DialogUtil {
             public void onClick(DialogInterface dialog, int which) {
                 if(!ConnectivityUtil.checkInternetConnection(finalContext)){
                     DialogUtil.showConnectionLostDialog(finalContext);
+                }else{
+                    Activity activity = (Activity) finalContext;
+                    if(!activity.getLocalClassName().equals("MainActivity")) {
+                        activity.finish();
+                    }
                 }
             }
         });
