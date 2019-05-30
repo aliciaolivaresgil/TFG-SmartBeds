@@ -1,5 +1,6 @@
 package com.example.smartbeds;
 
+import android.app.Activity;
 import android.content.Context;
 import android.util.Log;
 
@@ -28,6 +29,10 @@ public class APIUtil {
             }
 
             int status = communication.getStatus();
+            Activity activity = (Activity) context;
+            if(status==401 && !activity.getLocalClassName().equals("MainActivity")){
+                DialogUtil.showUnactiveSessionDialog(context);
+            }
             resultado = communication.getResult();
         }else{
             DialogUtil.showConnectionLostDialog(context);
