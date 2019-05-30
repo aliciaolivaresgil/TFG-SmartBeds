@@ -47,7 +47,7 @@ public class BedAsignUsersActivity extends AppCompatActivity {
         title.setText(title.getText()+bedName);
 
         String urlParameters = "token="+token+"&mode=info";
-        JSONObject resultado = APIUtil.petitionAPI("/api/bed/perm", urlParameters);
+        JSONObject resultado = APIUtil.petitionAPI("/api/bed/perm", urlParameters, context);
 
         try {
             JSONArray permissionJSON = (JSONArray) resultado.get("permission");
@@ -66,7 +66,7 @@ public class BedAsignUsersActivity extends AppCompatActivity {
         }
 
         urlParameters = "token="+token;
-        resultado = APIUtil.petitionAPI("/api/users", urlParameters);
+        resultado = APIUtil.petitionAPI("/api/users", urlParameters, context);
 
         LinearLayout linearLayout = findViewById(R.id.bed_asign_users_linear_layout);
         try {
@@ -97,7 +97,7 @@ public class BedAsignUsersActivity extends AppCompatActivity {
                 public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                     String username = (String) buttonView.getText();
                     String urlParameters = "token="+token+"&mode=change&bed_name="+bedName+"&username="+username;
-                    JSONObject resultado = APIUtil.petitionAPI("/api/bed/perm", urlParameters);
+                    JSONObject resultado = APIUtil.petitionAPI("/api/bed/perm", urlParameters, context);
                 }
             });
         }

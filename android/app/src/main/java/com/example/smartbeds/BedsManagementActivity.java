@@ -66,71 +66,74 @@ public class BedsManagementActivity extends AppCompatActivity implements Navigat
         createNavigationMenu();
 
         String urlParameters = "token="+session.getToken();
-        JSONObject resultado = APIUtil.petitionAPI("/api/beds", urlParameters);
+        JSONObject resultado = APIUtil.petitionAPI("/api/beds", urlParameters, context);
         int status = APIUtil.getStatusFromJSON(resultado);
 
-        List<String> bedNames = new ArrayList<>();
-        try{
-            JSONArray bedsJSON = (JSONArray) resultado.get("beds");
-            for(int i=0; i< bedsJSON.length(); i++){
-                JSONObject bedJSON = (JSONObject) bedsJSON.get(i);
-                bedNames.add((String) bedJSON.get("bed_name"));
+
+        if(status==200) {
+            List<String> bedNames = new ArrayList<>();
+            try {
+                JSONArray bedsJSON = (JSONArray) resultado.get("beds");
+                for (int i = 0; i < bedsJSON.length(); i++) {
+                    JSONObject bedJSON = (JSONObject) bedsJSON.get(i);
+                    bedNames.add((String) bedJSON.get("bed_name"));
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
             }
-        }catch (JSONException e){
-            e.printStackTrace();
-        }
 
-        final ArrayAdapter<String> bedNamesAdapter = new ArrayAdapter<String>(context, android.R.layout.simple_list_item_1, bedNames);
-        final ListView listView = (ListView) findViewById(R.id.beds_management_list);
-        listView.setAdapter(bedNamesAdapter);
+            final ArrayAdapter<String> bedNamesAdapter = new ArrayAdapter<String>(context, android.R.layout.simple_list_item_1, bedNames);
+            final ListView listView = (ListView) findViewById(R.id.beds_management_list);
+            listView.setAdapter(bedNamesAdapter);
 
-        bottomNavigation = findViewById(R.id.beds_management_navigation);
+            bottomNavigation = findViewById(R.id.beds_management_navigation);
 
-        listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
-            @Override
-            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-                bottomNavigation.setVisibility(View.VISIBLE);
-                parent.getChildAt(focusedItem).setBackgroundColor(ContextCompat.getColor(context, R.color.background));
-                view.setBackgroundColor(ContextCompat.getColor(context, R.color.colorPrimaryLight));
-                focusedItem=position;
-                itemSelected=true;
-                return true;
-            }
-        });
-
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                if(position!=focusedItem && itemSelected){
+            listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+                @Override
+                public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+                    bottomNavigation.setVisibility(View.VISIBLE);
                     parent.getChildAt(focusedItem).setBackgroundColor(ContextCompat.getColor(context, R.color.background));
                     view.setBackgroundColor(ContextCompat.getColor(context, R.color.colorPrimaryLight));
-                    focusedItem=position;
+                    focusedItem = position;
+                    itemSelected = true;
+                    return true;
                 }
-            }
-        });
+            });
+
+            listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                    if (position != focusedItem && itemSelected) {
+                        parent.getChildAt(focusedItem).setBackgroundColor(ContextCompat.getColor(context, R.color.background));
+                        view.setBackgroundColor(ContextCompat.getColor(context, R.color.colorPrimaryLight));
+                        focusedItem = position;
+                    }
+                }
+            });
 
 
-        bottomNavigation.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
-            @Override
-            public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
-                switch((String)menuItem.getTitle()){
-                    case "Eliminar":
-                        DialogUtil.showDialog(context, "Eliminar cama", "Esta acción no está disponible en la versión 1.0 de la aplicación.");
-                        break;
-                    case "Modificar":
-                        DialogUtil.showDialog(context, "Modificar datos de la cama", "Esta acción no está disponible en la versión 1.0 de la aplicación.");
-                        break;
-                    case "Asignar usuarios":
-                        Intent intent = new Intent(context, BedAsignUsersActivity.class);
-                        Bundle b = new Bundle();
-                        b.putString("bedName", bedNamesAdapter.getItem(focusedItem));
-                        intent.putExtras(b);
-                        startActivity(intent);
-                        break;
+            bottomNavigation.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
+                @Override
+                public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
+                    switch ((String) menuItem.getTitle()) {
+                        case "Eliminar":
+                            DialogUtil.showDialog(context, "Eliminar cama", "Esta acción no está disponible en la versión 1.0 de la aplicación.");
+                            break;
+                        case "Modificar":
+                            DialogUtil.showDialog(context, "Modificar datos de la cama", "Esta acción no está disponible en la versión 1.0 de la aplicación.");
+                            break;
+                        case "Asignar usuarios":
+                            Intent intent = new Intent(context, BedAsignUsersActivity.class);
+                            Bundle b = new Bundle();
+                            b.putString("bedName", bedNamesAdapter.getItem(focusedItem));
+                            intent.putExtras(b);
+                            startActivity(intent);
+                            break;
+                    }
+                    return true;
                 }
-                return true;
-            }
-        });
+            });
+        }
     }
 
     protected void anadirCama(View view){

@@ -72,70 +72,72 @@ public class UsersManagementActivity extends AppCompatActivity implements Naviga
         createNavigationMenu();
 
         String urlParameters = "token=" + session.getToken();
-        JSONObject resultado = APIUtil.petitionAPI("/api/users", urlParameters);
+        JSONObject resultado = APIUtil.petitionAPI("/api/users", urlParameters, context);
+        int status = APIUtil.getStatusFromJSON(resultado);
 
-
-        List<String> names = null;
-        try {
-            names = APIUtil.JSONArrayToList((JSONArray) resultado.get("users"));
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-
-        final ArrayAdapter<String> namesAdapter = new ArrayAdapter<String>(context, android.R.layout.simple_list_item_1, names);
-
-        final ListView listView = (ListView) findViewById(R.id.users_management_list);
-        listView.setAdapter(namesAdapter);
-
-        bottomNavigation = findViewById(R.id.users_management_navigation);
-
-        listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
-            @Override
-            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-                bottomNavigation.setVisibility(View.VISIBLE);
-                parent.getChildAt(focusedItem).setBackgroundColor(ContextCompat.getColor(context, R.color.background));
-                view.setBackgroundColor(ContextCompat.getColor(context, R.color.colorPrimaryLight));
-                focusedItem = position;
-                itemSelected = true;
-                if (namesAdapter.getItem(focusedItem).equals("admin")) {
-                    bottomNavigation.getMenu().getItem(1).setVisible(false);
-                } else {
-                    bottomNavigation.getMenu().getItem(1).setVisible(true);
-                }
-                return true;
+        if(status == 200) {
+            List<String> names = null;
+            try {
+                names = APIUtil.JSONArrayToList((JSONArray) resultado.get("users"));
+            } catch (JSONException e) {
+                e.printStackTrace();
             }
-        });
 
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                if (position != focusedItem && itemSelected) {
+            final ArrayAdapter<String> namesAdapter = new ArrayAdapter<String>(context, android.R.layout.simple_list_item_1, names);
+
+            final ListView listView = (ListView) findViewById(R.id.users_management_list);
+            listView.setAdapter(namesAdapter);
+
+            bottomNavigation = findViewById(R.id.users_management_navigation);
+
+            listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+                @Override
+                public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+                    bottomNavigation.setVisibility(View.VISIBLE);
                     parent.getChildAt(focusedItem).setBackgroundColor(ContextCompat.getColor(context, R.color.background));
                     view.setBackgroundColor(ContextCompat.getColor(context, R.color.colorPrimaryLight));
                     focusedItem = position;
+                    itemSelected = true;
                     if (namesAdapter.getItem(focusedItem).equals("admin")) {
                         bottomNavigation.getMenu().getItem(1).setVisible(false);
                     } else {
                         bottomNavigation.getMenu().getItem(1).setVisible(true);
                     }
+                    return true;
                 }
-            }
-        });
+            });
 
-        bottomNavigation.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
-            @Override
-            public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
-                switch ((String) menuItem.getTitle()) {
-                    case "Eliminar":
-                        eliminarUsuario(namesAdapter.getItem(focusedItem));
-                        break;
-                    case "Cambiar contraseña":
-                        cambiarContrasena(namesAdapter.getItem(focusedItem));
-                        break;
+            listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                    if (position != focusedItem && itemSelected) {
+                        parent.getChildAt(focusedItem).setBackgroundColor(ContextCompat.getColor(context, R.color.background));
+                        view.setBackgroundColor(ContextCompat.getColor(context, R.color.colorPrimaryLight));
+                        focusedItem = position;
+                        if (namesAdapter.getItem(focusedItem).equals("admin")) {
+                            bottomNavigation.getMenu().getItem(1).setVisible(false);
+                        } else {
+                            bottomNavigation.getMenu().getItem(1).setVisible(true);
+                        }
+                    }
                 }
-                return true;
-            }
-        });
+            });
+
+            bottomNavigation.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
+                @Override
+                public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
+                    switch ((String) menuItem.getTitle()) {
+                        case "Eliminar":
+                            eliminarUsuario(namesAdapter.getItem(focusedItem));
+                            break;
+                        case "Cambiar contraseña":
+                            cambiarContrasena(namesAdapter.getItem(focusedItem));
+                            break;
+                    }
+                    return true;
+                }
+            });
+        }
     }
 
     private void createNavigationMenu() {
@@ -195,7 +197,7 @@ public class UsersManagementActivity extends AppCompatActivity implements Naviga
     private void delUser(String name) {
         Session session = Session.getInstance();
         String urlParameters = "token=" + session.getToken() + "&username=" + name;
-        JSONObject resultado = APIUtil.petitionAPI("/api/user/del", urlParameters);
+        JSONObject resultado = APIUtil.petitionAPI("/api/user/del", urlParameters, context);
         int status = APIUtil.getStatusFromJSON(resultado);
 
         //refrescar Activity

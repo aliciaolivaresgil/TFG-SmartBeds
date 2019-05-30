@@ -54,7 +54,7 @@ public class UserPassChangeActivity extends AppCompatActivity {
             Session session = Session.getInstance();
             String token = session.getToken();
             String urlParameters = "token="+token+"&username="+username+"&password="+newPass.getText().toString()+"&password-re="+reNewPass.getText().toString();
-            JSONObject resultado = APIUtil.petitionAPI("/api/user/mod", urlParameters);
+            JSONObject resultado = APIUtil.petitionAPI("/api/user/mod", urlParameters, context);
             int status = APIUtil.getStatusFromJSON(resultado);
 
             if(status==200){
@@ -72,7 +72,7 @@ public class UserPassChangeActivity extends AppCompatActivity {
         Session session = Session.getInstance();
         String token = session.getToken();
         String urlParameters = "user="+username+"&pass="+pass;
-        JSONObject resultado = APIUtil.petitionAPI("/api/auth", urlParameters);
+        JSONObject resultado = APIUtil.petitionAPI("/api/auth", urlParameters, context);
         int status = APIUtil.getStatusFromJSON(resultado);
 
         if(status==200){

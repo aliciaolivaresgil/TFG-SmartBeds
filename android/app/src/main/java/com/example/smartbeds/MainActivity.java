@@ -40,7 +40,7 @@ public class MainActivity extends AppCompatActivity {
         EditText pass = (EditText) findViewById(R.id.input_contrasena);
 
         String urlParameters = "user="+user.getText().toString()+"&pass="+pass.getText().toString();
-        JSONObject resultado = APIUtil.petitionAPI("/api/auth", urlParameters);
+        JSONObject resultado = APIUtil.petitionAPI("/api/auth", urlParameters, context);
         int status = APIUtil.getStatusFromJSON(resultado);
 
         switch (status){

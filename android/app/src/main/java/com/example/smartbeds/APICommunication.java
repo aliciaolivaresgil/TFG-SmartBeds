@@ -1,5 +1,8 @@
 package com.example.smartbeds;
 
+import android.app.Activity;
+import android.content.Context;
+import android.os.AsyncTask;
 import android.util.Log;
 
 import org.json.JSONException;
@@ -18,24 +21,27 @@ import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.HttpsURLConnection;
 import javax.net.ssl.SSLSession;
 
-public class APICommunication implements Runnable{
+public class APICommunication implements Runnable {
 
     private int status;
     private String urlParameters;
     private String path;
     private JSONObject result;
+    private Context context;
 
-    public APICommunication(String path, String urlParameters){
-        this.status=0;
-        this.urlParameters=urlParameters;
-        this.path=path;
-        this.result=null;
+    public APICommunication(String path, String urlParameters, Context context) {
+        this.status = 0;
+        this.urlParameters = urlParameters;
+        this.path = path;
+        this.result = null;
+        this.context = context;
     }
 
     @Override
     public void run() {
-        try  {
-            URL url = new URL("https://ubu.joselucross.com"+path);
+
+        try {
+            URL url = new URL("https://ubu.joselucross.com" + path);
 
             HttpsURLConnection connection = (HttpsURLConnection) url.openConnection();
 
@@ -49,7 +55,7 @@ public class APICommunication implements Runnable{
 
             connection.setRequestMethod("POST");
             connection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
-            connection.setRequestProperty("Accept","application/json");
+            connection.setRequestProperty("Accept", "application/json");
             connection.setRequestProperty("User-Agent", "Java client");
             connection.setDoOutput(true);
             connection.setDoInput(true);
@@ -63,11 +69,11 @@ public class APICommunication implements Runnable{
             this.status = connection.getResponseCode();
             String msg = connection.getResponseMessage();
             Log.d("status", msg);
-            Log.d("status", ""+status);
+            Log.d("status", "" + status);
 
-            StringBuilder content= new StringBuilder();
+            StringBuilder content = new StringBuilder();
 
-            if(status==200) {
+            if (status == 200) {
                 try (BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()))) {
                     String line;
                     while ((line = in.readLine()) != null) {
@@ -75,8 +81,8 @@ public class APICommunication implements Runnable{
                         content.append(System.lineSeparator());
                     }
                 }
-            }else{
-                content.append("{\"status\":"+status+",\"message\":\""+msg+"\"}");
+            } else {
+                content.append("{\"status\":" + status + ",\"message\":\"" + msg + "\"}");
             }
 
             Log.d("resultado", content.toString());
@@ -85,20 +91,21 @@ public class APICommunication implements Runnable{
 
         } catch (MalformedURLException e) {
             e.printStackTrace();
-        } catch(IOException e){
+        } catch (IOException e) {
             e.printStackTrace();
         } catch (JSONException e) {
             e.printStackTrace();
         }
 
+
     }
 
-    public int getStatus(){
+    public int getStatus() {
 
         return this.status;
     }
 
-    public JSONObject getResult(){
+    public JSONObject getResult() {
 
         return this.result;
     }

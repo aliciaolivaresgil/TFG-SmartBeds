@@ -160,7 +160,7 @@ public class BedChartsActivity extends AppCompatActivity {
         String namespace = null;
         try {
             String urlParameters = "token=" + session.getToken() + "&bedname=" + bedName;
-            JSONObject resultado = APIUtil.petitionAPI("/api/bed", urlParameters);
+            JSONObject resultado = APIUtil.petitionAPI("/api/bed", urlParameters, context);
             namespace = (String) resultado.get("namespace");
         } catch (JSONException e) {
             e.printStackTrace();

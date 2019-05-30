@@ -100,7 +100,7 @@ public class BedsActivity extends AppCompatActivity implements NavigationView.On
 
     private void showBeds(Session session){
         String urlParameters = "token="+session.getToken();
-        JSONObject resultado = APIUtil.petitionAPI("/api/beds", urlParameters);
+        JSONObject resultado = APIUtil.petitionAPI("/api/beds", urlParameters, context);
         int status = APIUtil.getStatusFromJSON(resultado);
 
         try {
@@ -115,7 +115,7 @@ public class BedsActivity extends AppCompatActivity implements NavigationView.On
                 bedsArray.add(new Bed(bed_name, "Estado: ..."));
 
                 urlParameters = "token="+session.getToken()+"&bedname="+bed_name;
-                resultado = APIUtil.petitionAPI("/api/bed", urlParameters);
+                resultado = APIUtil.petitionAPI("/api/bed", urlParameters, context);
                 namespace = (String) resultado.get("namespace");
 
                 BedStreaming bedStreaming = new BedStreaming(i, bed_name, namespace, this);

@@ -6,6 +6,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -43,7 +44,7 @@ public class UserAddActivity extends AppCompatActivity {
             String token = session.getToken();
 
             String urlParameters = "token="+token+"&username="+user.getText().toString()+"&password="+pass.getText().toString()+"&password-re="+repass.getText().toString();
-            JSONObject resultado = APIUtil.petitionAPI("/api/user/add", urlParameters);
+            JSONObject resultado = APIUtil.petitionAPI("/api/user/add", urlParameters, context);
             int status = APIUtil.getStatusFromJSON(resultado);
 
             if(status==200){
@@ -53,6 +54,7 @@ public class UserAddActivity extends AppCompatActivity {
                 pass.setText("");
                 repass.setText("");
             }else{
+                Log.d("ERROR", resultado.toString());
                 DialogUtil.showDialog(context, "Error", "No se ha podido añadir el usuario.");
             }
 

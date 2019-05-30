@@ -16,4 +16,20 @@ public class DialogUtil {
         });
         dialog.show();
     }
+
+    public static void showConnectionLostDialog(Context context){
+        final Context finalContext = context;
+        AlertDialog dialog = new AlertDialog.Builder(context).create();
+        dialog.setTitle("Error de conexión");
+        dialog.setMessage("No existe conexión a internet.");
+        dialog.setButton(AlertDialog.BUTTON_POSITIVE, "Reintentar", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                if(!ConnectivityUtil.checkInternetConnection(finalContext)){
+                    DialogUtil.showConnectionLostDialog(finalContext);
+                }
+            }
+        });
+        dialog.show();
+    }
 }
