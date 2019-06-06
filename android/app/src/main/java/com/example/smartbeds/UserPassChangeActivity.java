@@ -83,14 +83,18 @@ public class UserPassChangeActivity extends AppCompatActivity {
     private boolean checkOldPass(String pass){
         Session session = Session.getInstance();
         String token = session.getToken();
-        String urlParameters = "user="+username+"&pass="+pass;
-        JSONObject resultado = APIUtil.petitionAPI("/api/auth", urlParameters, context);
-        int status = APIUtil.getStatusFromJSON(resultado);
-
-        if(status==200){
+        if(!username.equals("admin") && connectedUser.equals("admin")){
             return true;
-        }else{
-            return false;
+        }else {
+            String urlParameters = "user=" + username + "&pass=" + pass;
+            JSONObject resultado = APIUtil.petitionAPI("/api/auth", urlParameters, context);
+            int status = APIUtil.getStatusFromJSON(resultado);
+
+            if (status == 200) {
+                return true;
+            } else {
+                return false;
+            }
         }
     }
 
