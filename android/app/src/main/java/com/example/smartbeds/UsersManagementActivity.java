@@ -11,6 +11,8 @@ import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -32,19 +34,20 @@ public class UsersManagementActivity extends AppCompatActivity implements Naviga
 
     private Context context = this;
     private BottomNavigationView bottomNavigation;
-    private int focusedItem = 0;
+
     private boolean itemSelected = false;
 
     private DrawerLayout drawer;
     private NavigationView navigation;
+    private TextView tvSelected;
 
     @Override
     public void onBackPressed() {
         bottomNavigation = findViewById(R.id.users_management_navigation);
-        ListView listView = findViewById(R.id.users_management_list);
+;
         if (bottomNavigation.getVisibility() == View.VISIBLE) {
             bottomNavigation.setVisibility(View.GONE);
-            listView.getChildAt(focusedItem).setBackgroundColor(ContextCompat.getColor(context, R.color.background));
+            tvSelected.setVisibility(View.GONE);
             itemSelected = false;
         } else {
             super.onBackPressed();
@@ -89,16 +92,17 @@ public class UsersManagementActivity extends AppCompatActivity implements Naviga
             listView.setAdapter(namesAdapter);
 
             bottomNavigation = findViewById(R.id.users_management_navigation);
+            tvSelected = findViewById(R.id.users_management_selected);
 
             listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
                 @Override
                 public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
                     bottomNavigation.setVisibility(View.VISIBLE);
-                    parent.getChildAt(focusedItem).setBackgroundColor(ContextCompat.getColor(context, R.color.background));
-                    view.setBackgroundColor(ContextCompat.getColor(context, R.color.colorPrimaryLight));
-                    focusedItem = position;
                     itemSelected = true;
-                    if (namesAdapter.getItem(focusedItem).equals("admin")) {
+                    tvSelected.setText(namesAdapter.getItem(position));
+                    tvSelected.setVisibility(View.VISIBLE);
+
+                    if (tvSelected.getText().toString().equals("admin")) {
                         bottomNavigation.getMenu().getItem(1).setVisible(false);
                     } else {
                         bottomNavigation.getMenu().getItem(1).setVisible(true);
@@ -110,11 +114,9 @@ public class UsersManagementActivity extends AppCompatActivity implements Naviga
             listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                    if (position != focusedItem && itemSelected) {
-                        parent.getChildAt(focusedItem).setBackgroundColor(ContextCompat.getColor(context, R.color.background));
-                        view.setBackgroundColor(ContextCompat.getColor(context, R.color.colorPrimaryLight));
-                        focusedItem = position;
-                        if (namesAdapter.getItem(focusedItem).equals("admin")) {
+                    if (itemSelected) {
+                        tvSelected.setText(namesAdapter.getItem(position));
+                        if (tvSelected.getText().toString().equals("admin")) {
                             bottomNavigation.getMenu().getItem(1).setVisible(false);
                         } else {
                             bottomNavigation.getMenu().getItem(1).setVisible(true);
@@ -128,10 +130,10 @@ public class UsersManagementActivity extends AppCompatActivity implements Naviga
                 public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
                     switch ((String) menuItem.getTitle()) {
                         case "Eliminar":
-                            eliminarUsuario(namesAdapter.getItem(focusedItem));
+                            eliminarUsuario(tvSelected.getText().toString());
                             break;
                         case "Cambiar contraseña":
-                            cambiarContrasena(namesAdapter.getItem(focusedItem));
+                            cambiarContrasena(tvSelected.getText().toString());
                             break;
                     }
                     return true;

@@ -30,22 +30,22 @@ import java.util.List;
 public class BedsManagementActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener{
 
     private Context context = this;
-    private int focusedItem=0;
     private boolean itemSelected=false;
 
     private BottomNavigationView bottomNavigation;
 
     private DrawerLayout drawer;
     private NavigationView navigation;
+    private TextView tvSelected;
 
 
     @Override
     public void onBackPressed(){
         bottomNavigation = findViewById(R.id.beds_management_navigation);
-        ListView listView = findViewById(R.id.beds_management_list);
+
         if(bottomNavigation.getVisibility()==View.VISIBLE){
             bottomNavigation.setVisibility(View.GONE);
-            listView.getChildAt(focusedItem).setBackgroundColor(ContextCompat.getColor(context, R.color.background));
+            tvSelected.setVisibility(View.GONE);
             itemSelected=false;
         }else{
             super.onBackPressed();
@@ -87,14 +87,14 @@ public class BedsManagementActivity extends AppCompatActivity implements Navigat
             listView.setAdapter(bedNamesAdapter);
 
             bottomNavigation = findViewById(R.id.beds_management_navigation);
+            tvSelected = findViewById(R.id.beds_management_selected);
 
             listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
                 @Override
                 public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
                     bottomNavigation.setVisibility(View.VISIBLE);
-                    parent.getChildAt(focusedItem).setBackgroundColor(ContextCompat.getColor(context, R.color.background));
-                    view.setBackgroundColor(ContextCompat.getColor(context, R.color.colorPrimaryLight));
-                    focusedItem = position;
+                    tvSelected.setText(bedNamesAdapter.getItem(position));
+                    tvSelected.setVisibility(View.VISIBLE);
                     itemSelected = true;
                     return true;
                 }
@@ -103,14 +103,11 @@ public class BedsManagementActivity extends AppCompatActivity implements Navigat
             listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                    if (position != focusedItem && itemSelected) {
-                        parent.getChildAt(focusedItem).setBackgroundColor(ContextCompat.getColor(context, R.color.background));
-                        view.setBackgroundColor(ContextCompat.getColor(context, R.color.colorPrimaryLight));
-                        focusedItem = position;
+                    if (itemSelected) {
+                        tvSelected.setText(bedNamesAdapter.getItem(position));
                     }
                 }
             });
-
 
             bottomNavigation.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
                 @Override
@@ -125,7 +122,7 @@ public class BedsManagementActivity extends AppCompatActivity implements Navigat
                         case "Asignar usuarios":
                             Intent intent = new Intent(context, BedAsignUsersActivity.class);
                             Bundle b = new Bundle();
-                            b.putString("bedName", bedNamesAdapter.getItem(focusedItem));
+                            b.putString("bedName", tvSelected.getText().toString());
                             intent.putExtras(b);
                             startActivity(intent);
                             break;
