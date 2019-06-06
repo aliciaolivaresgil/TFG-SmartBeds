@@ -44,7 +44,7 @@ public class UsersManagementActivity extends AppCompatActivity implements Naviga
     @Override
     public void onBackPressed() {
         bottomNavigation = findViewById(R.id.users_management_navigation);
-;
+
         if (bottomNavigation.getVisibility() == View.VISIBLE) {
             bottomNavigation.setVisibility(View.GONE);
             tvSelected.setVisibility(View.GONE);
