@@ -162,7 +162,7 @@ public class UsersManagementActivity extends AppCompatActivity implements Naviga
     }
 
 
-    protected void anadirUsuario(View view) {
+    public void anadirUsuario(View view) {
         Intent intent = new Intent(context, UserAddActivity.class);
         startActivityForResult(intent, 1);
     }

@@ -17,6 +17,7 @@ public class UserPassChangeActivity extends AppCompatActivity {
 
     private Context context = this;
     private String username = null;
+    private String connectedUser = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,6 +33,13 @@ public class UserPassChangeActivity extends AppCompatActivity {
         Bundle b = getIntent().getExtras();
         username = b.getString("username");
 
+        connectedUser = session.getUsername();
+
+        if(!username.equals("admin") && connectedUser.equals("admin")){
+            findViewById(R.id.user_pass_change_antigua_contrasena_text).setVisibility(View.GONE);
+            findViewById(R.id.user_pass_change_input_antigua).setVisibility(View.GONE);
+        }
+
         TextView toolbar = (TextView) findViewById(R.id.user_pass_change_title);
         String title = toolbar.getText().toString();
         toolbar.setText(title+username);
@@ -42,6 +50,10 @@ public class UserPassChangeActivity extends AppCompatActivity {
         EditText oldPass = (EditText) findViewById(R.id.user_pass_change_input_antigua);
         EditText newPass = (EditText) findViewById(R.id.user_pass_change_input_nueva);
         EditText reNewPass = (EditText) findViewById(R.id.user_pass_change_input_repetir_nueva);
+
+        if(!username.equals("admin") && connectedUser.equals("admin")){
+            oldPass.setText("-");
+        }
 
         if(oldPass.getText().toString().equals("")||newPass.getText().toString().equals("")||reNewPass.getText().toString().equals("")){
             DialogUtil.showDialog(context, "Error" ,"Todos los campos son obligatorios.");
