@@ -12,6 +12,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -19,8 +20,15 @@ public class AdminActivity extends AppCompatActivity implements NavigationView.O
 
     private final Context context = this;
 
+    private ProgressBar progressBar;
     private DrawerLayout drawer;
     private NavigationView navigation;
+
+    @Override
+    protected void onResume(){
+        super.onResume();
+        progressBar.setVisibility(View.GONE);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,20 +41,24 @@ public class AdminActivity extends AppCompatActivity implements NavigationView.O
             startActivity(intent);
         }
 
+        progressBar = findViewById(R.id.admin_progress);
         createNavigationMenu();
     }
 
     public void visualizarCamas(View view) {
+        progressBar.setVisibility(View.VISIBLE);
         Intent intent = new Intent(context, BedsActivity.class);
         startActivity(intent);
     }
 
     public void gestionarCamas(View view) {
+        progressBar.setVisibility(View.VISIBLE);
         Intent intent = new Intent(context, BedsManagementActivity.class);
         startActivity(intent);
     }
 
     public void gestionarUsuarios(View view) {
+        progressBar.setVisibility(View.VISIBLE);
         Intent intent = new Intent(context, UsersManagementActivity.class);
         startActivity(intent);
     }

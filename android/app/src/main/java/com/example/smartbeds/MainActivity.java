@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import org.json.JSONException;
@@ -18,16 +19,21 @@ import org.json.JSONObject;
 public class MainActivity extends AppCompatActivity {
 
     private final Context context = this;
+    private ProgressBar progressBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        progressBar = findViewById(R.id.main_progress);
+
     }
 
     @Override
     protected void onResume(){
         super.onResume();
+
+        progressBar.setVisibility(View.GONE);
 
         Session session = Session.getInstance();
         session.resetSession();
@@ -45,6 +51,8 @@ public class MainActivity extends AppCompatActivity {
 
         switch (status){
             case 200:
+
+                progressBar.setVisibility(View.VISIBLE);
 
                 String token = null;
                 String username = null;

@@ -7,6 +7,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
@@ -21,6 +22,7 @@ import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -50,6 +52,8 @@ public class BedsActivity extends AppCompatActivity implements NavigationView.On
 
     private DrawerLayout drawer;
     private NavigationView navigation;
+
+    private ProgressBar progressBar;
 
 
     private Handler handler = new Handler(){
@@ -92,6 +96,7 @@ public class BedsActivity extends AppCompatActivity implements NavigationView.On
     @Override
     protected void onResume(){
         super.onResume();
+        progressBar.setVisibility(View.GONE);
         if(created && contador>0) {
             for (BedStreaming thread : threads) {
                 thread.run();
@@ -113,8 +118,9 @@ public class BedsActivity extends AppCompatActivity implements NavigationView.On
             startActivity(intent);
         }
 
-        createNavigationMenu();
+        progressBar = findViewById(R.id.beds_progress);
 
+        createNavigationMenu();
 
         showBeds(session);
     }
@@ -127,6 +133,11 @@ public class BedsActivity extends AppCompatActivity implements NavigationView.On
         try {
             JSONArray beds_info = (JSONArray) resultado.get("beds");
             String namespace=null;
+
+            TextView info = findViewById(R.id.beds_info);
+            if(beds_info.length()==0){
+                info.setVisibility(View.VISIBLE);
+            }
 
             //por cada cama se lanza un hilo
             for (int i = 0; i < beds_info.length(); i++) {
@@ -159,6 +170,8 @@ public class BedsActivity extends AppCompatActivity implements NavigationView.On
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+                progressBar.setVisibility(View.VISIBLE);
                 Bed bed = adapter.getItem(position);
 
                 Intent intent = new Intent(context, BedChartsActivity.class);
@@ -200,16 +213,20 @@ public class BedsActivity extends AppCompatActivity implements NavigationView.On
     public void refresh(int bedId, int state){
         switch (state){
             case 0:
-                this.bedsArray.get(bedId).setBedState("Estado: dormido");
+                bedsArray.get(bedId).setBedState("Estado: dormido");
+                bedsArray.get(bedId).setColor(false);
                 break;
             case 1:
                 bedsArray.get(bedId).setBedState("Estado: crisis epiléptica");
+                bedsArray.get(bedId).setColor(true);
                 break;
             case 2:
                 bedsArray.get(bedId).setBedState("Estado: cama vacía");
+                bedsArray.get(bedId).setColor(false);
                 break;
             case 3:
                 bedsArray.get(bedId).setBedState("Estado: datos insuficientes");
+                bedsArray.get(bedId).setColor(false);
         }
 
         adapter.clear();

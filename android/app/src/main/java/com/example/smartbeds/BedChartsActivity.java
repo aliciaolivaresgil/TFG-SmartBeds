@@ -301,29 +301,31 @@ public class BedChartsActivity extends AppCompatActivity {
             switch (state) {
                 case 0:
                     stateView.setText("Estado: dormido");
+                    stateView.setBackground(ContextCompat.getDrawable(context, R.color.colorPrimaryLight));
                     break;
                 case 1:
                     stateView.setText("Estado: crisis epiléptica");
+                    stateView.setBackground(ContextCompat.getDrawable(context, R.color.colorAccentLight));
                     break;
                 case 2:
                     stateView.setText("Estado: cama vacía");
+                    stateView.setBackground(ContextCompat.getDrawable(context, R.color.colorPrimaryLight));
                     break;
                 case 3:
                     stateView.setText("Estado: datos insuficientes");
+                    stateView.setBackground(ContextCompat.getDrawable(context, R.color.colorPrimaryLight));
             }
 
             //actualizar gráficas
-            updateChart(chartProb, listProb, dataSetProb, lineDataProb, ContextCompat.getColor(context, R.color.chart_1), "Probabilidad de ataque");
-            updateChart(chartHR, listHR, dataSetVital, lineDataVital, ContextCompat.getColor(context, R.color.chart_1), "HR");
-            updateChart(chartRR, listRR, dataSetVital, lineDataVital, ContextCompat.getColor(context, R.color.chart_2), "RR");
-            updateChart(chartSV, listSV, dataSetVital, lineDataVital, ContextCompat.getColor(context, R.color.chart_3), "SV");
-            updateChart(chartHRV, listHRV, dataSetVital, lineDataVital, ContextCompat.getColor(context, R.color.chart_4), "HRV");
-            updateChart(chartB2B, listB2B, dataSetVital, lineDataVital, ContextCompat.getColor(context, R.color.chart_5), "B2B");
+            updateChart(chartProb, listProb, dataSetProb, lineDataProb, ContextCompat.getColor(context, R.color.chart_1), "Probabilidad de crisis");
+            updateChart(chartHR, listHR, dataSetVital, lineDataVital, ContextCompat.getColor(context, R.color.chart_1), "Frec. cardíaca (puls/min)");
+            updateChart(chartRR, listRR, dataSetVital, lineDataVital, ContextCompat.getColor(context, R.color.chart_2), "Frec. respiratoria (resp/min)");
+            updateChart(chartSV, listSV, dataSetVital, lineDataVital, ContextCompat.getColor(context, R.color.chart_3), "Volumen sitólico (mm)");
+            updateChart(chartHRV, listHRV, dataSetVital, lineDataVital, ContextCompat.getColor(context, R.color.chart_4), "Variabilidad de HR (ms)");
+            updateChart(chartB2B, listB2B, dataSetVital, lineDataVital, ContextCompat.getColor(context, R.color.chart_5), "Tiempo entre pulaciones (ms)");
 
             //actualizar grafica Pressures
             updatePressuresChart();
-
-            Log.d("DIBUJAR", "terminado");
 
         } catch (Exception e) {
             e.printStackTrace();

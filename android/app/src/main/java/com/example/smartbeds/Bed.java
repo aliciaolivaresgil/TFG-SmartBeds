@@ -4,6 +4,7 @@ public class Bed {
 
     private String bedName;
     private String bedState;
+    private boolean color;
 
     public Bed(String bedName, String bedState){
         this.bedName=bedName;
@@ -19,4 +20,8 @@ public class Bed {
     }
 
     public void setBedState(String bedState){ this.bedState=bedState; }
+
+    public void setColor(boolean color){this.color=color; }
+
+    public boolean getColor(){ return this.color; }
 }
