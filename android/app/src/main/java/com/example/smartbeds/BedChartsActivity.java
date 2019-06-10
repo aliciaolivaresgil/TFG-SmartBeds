@@ -2,10 +2,14 @@ package com.example.smartbeds;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.Handler;
+import android.os.Looper;
+import android.os.Message;
 import android.support.design.widget.TabLayout;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
@@ -24,7 +28,9 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 
 public class BedChartsActivity extends AppCompatActivity {
@@ -52,6 +58,7 @@ public class BedChartsActivity extends AppCompatActivity {
     private int b2b;
 
     private String stringDate;
+    private Map<Float, String> mapFormatter = new HashMap<>();
 
     private BedStreaming bedStreaming;
 
@@ -84,6 +91,14 @@ public class BedChartsActivity extends AppCompatActivity {
     private LineChart chartB2B;
 
     private int counter = 0;
+
+    private Handler handler = new Handler() {
+        @Override
+        public void handleMessage(Message inputMessage) {
+            JSONObject resultado = (JSONObject) inputMessage.obj;
+            refresh(resultado);
+        }
+    };
 
     @Override
     protected void onDestroy() {
@@ -166,7 +181,7 @@ public class BedChartsActivity extends AppCompatActivity {
             e.printStackTrace();
         }
 
-        bedStreaming = new BedStreaming(0, bedName, namespace, this);
+        bedStreaming = new BedStreaming(0, bedName, namespace, handler);
 
         //crear gráfica de probabilidad
         chartProb = (LineChart) findViewById(R.id.bed_charts_prob);
@@ -200,12 +215,14 @@ public class BedChartsActivity extends AppCompatActivity {
 
     public void refresh(JSONObject resultado) {
         state = 0;
+
         try {
             JSONArray array = (JSONArray) resultado.get("result");
             state = (int) array.get(0);
             prob = (double) array.get(1);
             probFloat = (float) prob;
             stringDate = (String) resultado.get("instance");
+            mapFormatter.put((float) counter, stringDate.substring(11,19));
 
             JSONArray pressures = (JSONArray) resultado.get("pressure");
             p1 = (int) pressures.get(0);
@@ -258,83 +275,81 @@ public class BedChartsActivity extends AppCompatActivity {
         listB2B.add(new Entry(counter, b2b));
         counter++;
 
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                try {
-
-                    //modificar etiqueta de estado
-                    switch (state) {
-                        case 0:
-                            stateView.setText("Estado: dormido");
-                            break;
-                        case 1:
-                            stateView.setText("Estado: crisis epiléptica");
-                            break;
-                        case 2:
-                            stateView.setText("Estado: cama vacía");
-                            break;
-                        case 3:
-                            stateView.setText("Estado: datos insuficientes");
-                    }
-
-                    //actualizar gráficas
-                    updateChart(chartProb, listProb, dataSetProb, lineDataProb, ContextCompat.getColor(context, R.color.chart_1), "Probabilidad de ataque");
-                    updateChart(chartHR, listHR, dataSetVital, lineDataVital, ContextCompat.getColor(context, R.color.chart_1), "HR");
-                    updateChart(chartRR, listRR, dataSetVital, lineDataVital, ContextCompat.getColor(context, R.color.chart_2), "RR");
-                    updateChart(chartSV, listSV, dataSetVital, lineDataVital, ContextCompat.getColor(context, R.color.chart_3), "SV");
-                    updateChart(chartHRV, listHRV, dataSetVital, lineDataVital, ContextCompat.getColor(context, R.color.chart_4), "HRV");
-                    updateChart(chartB2B, listB2B, dataSetVital, lineDataVital, ContextCompat.getColor(context, R.color.chart_5), "B2B");
-
-                    //actualizar grafica Pressures
-                    updatePressuresChart();
-
-                }catch (Exception e){
-                    e.printStackTrace();
-                    bedStreaming.stop();
-                }
+        try {
+            //modificar etiqueta de estado
+            switch (state) {
+                case 0:
+                    stateView.setText("Estado: dormido");
+                    break;
+                case 1:
+                    stateView.setText("Estado: crisis epiléptica");
+                    break;
+                case 2:
+                    stateView.setText("Estado: cama vacía");
+                    break;
+                case 3:
+                    stateView.setText("Estado: datos insuficientes");
             }
 
-            private void updateChart(LineChart chart, List<Entry> list, LineDataSet dataSet, LineData lineData, int color, String label) {
-                    dataSet = new LineDataSet(list, label);
+            //actualizar gráficas
+            updateChart(chartProb, listProb, dataSetProb, lineDataProb, ContextCompat.getColor(context, R.color.chart_1), "Probabilidad de ataque");
+            updateChart(chartHR, listHR, dataSetVital, lineDataVital, ContextCompat.getColor(context, R.color.chart_1), "HR");
+            updateChart(chartRR, listRR, dataSetVital, lineDataVital, ContextCompat.getColor(context, R.color.chart_2), "RR");
+            updateChart(chartSV, listSV, dataSetVital, lineDataVital, ContextCompat.getColor(context, R.color.chart_3), "SV");
+            updateChart(chartHRV, listHRV, dataSetVital, lineDataVital, ContextCompat.getColor(context, R.color.chart_4), "HRV");
+            updateChart(chartB2B, listB2B, dataSetVital, lineDataVital, ContextCompat.getColor(context, R.color.chart_5), "B2B");
 
-                dataSet.setColor(color);
-                dataSet.setLineWidth(3.0f);
-                dataSet.setDrawValues(false);
-                dataSet.setDrawCircles(false);
-                lineData = new LineData(dataSet);
+            //actualizar grafica Pressures
+            updatePressuresChart();
 
-                    chart.setData(lineData);
-                    chart.invalidate();
+        } catch (Exception e) {
+            e.printStackTrace();
+            bedStreaming.stop();
+        }
+    }
 
-            }
 
-            private void updatePressuresChart(){
-                lineDataPressures = new LineData();
+    private void updateChart(LineChart chart, List<Entry> list, LineDataSet dataSet, LineData lineData, int color, String label) {
+        dataSet = new LineDataSet(list, label);
 
-                updatePressureLine(listP1, ContextCompat.getColor(context, R.color.chart_1), "P1");
-                updatePressureLine(listP2, ContextCompat.getColor(context, R.color.chart_2), "P2");
-                updatePressureLine(listP3, ContextCompat.getColor(context, R.color.chart_3), "P3");
-                updatePressureLine(listP4, ContextCompat.getColor(context, R.color.chart_4), "P4");
-                updatePressureLine(listP5, ContextCompat.getColor(context, R.color.chart_5), "P5");
-                updatePressureLine(listP6, ContextCompat.getColor(context, R.color.chart_6), "P6");
+        dataSet.setColor(color);
+        dataSet.setLineWidth(3.0f);
+        dataSet.setDrawValues(false);
+        dataSet.setDrawCircles(false);
+        lineData = new LineData(dataSet);
 
-                chartPressures.invalidate();
-            }
+        chart.setData(lineData);
 
-            private void updatePressureLine(List<Entry> list, int color, String label){
+        chart.notifyDataSetChanged();
+        chart.invalidate();
+    }
 
-                dataSetPressures = new LineDataSet(list, label);
-                dataSetPressures.setColor(color);
-                dataSetPressures.setLineWidth(3.0f);
-                dataSetPressures.setDrawValues(false);
-                dataSetPressures.setDrawCircles(false);
-                lineDataPressures.addDataSet(dataSetPressures);
+    private void updatePressuresChart(){
+        lineDataPressures = new LineData();
 
-                chartPressures.setData(lineDataPressures);
+        updatePressureLine(listP1, ContextCompat.getColor(context, R.color.chart_1), "P1");
+        updatePressureLine(listP2, ContextCompat.getColor(context, R.color.chart_2), "P2");
+        updatePressureLine(listP3, ContextCompat.getColor(context, R.color.chart_3), "P3");
+        updatePressureLine(listP4, ContextCompat.getColor(context, R.color.chart_4), "P4");
+        updatePressureLine(listP5, ContextCompat.getColor(context, R.color.chart_5), "P5");
+        updatePressureLine(listP6, ContextCompat.getColor(context, R.color.chart_6), "P6");
 
-            }
-        });
+        chartPressures.notifyDataSetChanged();
+        chartPressures.invalidate();
+
+    }
+
+    private void updatePressureLine(List<Entry> list, int color, String label){
+
+        dataSetPressures = new LineDataSet(list, label);
+        dataSetPressures.setColor(color);
+        dataSetPressures.setLineWidth(3.0f);
+        dataSetPressures.setDrawValues(false);
+        dataSetPressures.setDrawCircles(false);
+        lineDataPressures.addDataSet(dataSetPressures);
+
+        chartPressures.setData(lineDataPressures);
+
     }
 
     private void generateChart(LineChart chart, int count, int min, int max) {
@@ -353,7 +368,11 @@ public class BedChartsActivity extends AppCompatActivity {
         xAxis.setValueFormatter(new ValueFormatter() {
             @Override
             public String getFormattedValue(float value) {
-                return "";
+                if(mapFormatter.containsKey(value)) {
+                    return mapFormatter.get(value);
+                }else{
+                    return "";
+                }
             }
         });
         chart.setNoDataText("Esperando datos");

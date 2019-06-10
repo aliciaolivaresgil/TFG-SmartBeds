@@ -1,5 +1,7 @@
 package com.example.smartbeds;
 
+import android.os.Handler;
+import android.os.Message;
 import android.util.Log;
 
 import com.github.nkzawa.emitter.Emitter;
@@ -17,9 +19,6 @@ public class BedStreaming implements Runnable {
 
     private Thread thread;
 
-    private BedsActivity listener1 = null;
-    private BedChartsActivity listener2 = null;
-
     private int bedId;
     private String bedName;
     private int state;
@@ -30,19 +29,11 @@ public class BedStreaming implements Runnable {
     private Manager manager;
 
     private JSONObject data;
+    Handler handler = null;
 
-    public BedStreaming(int bedId, String bedName, String nameSpace, BedsActivity listener){
+    public BedStreaming(int bedId, String bedName, String nameSpace, Handler handler){
         this.bedId=bedId;
-        this.listener1=listener;
-        this.bedName=bedName;
-        this.namespace=nameSpace;
-        this.thread = new Thread(this);
-        this.thread.start();
-    }
-
-    public BedStreaming(int bedId, String bedName, String nameSpace, BedChartsActivity listener){
-        this.bedId=bedId;
-        this.listener2=listener;
+        this.handler=handler;
         this.bedName=bedName;
         this.namespace=nameSpace;
         this.thread = new Thread(this);
@@ -96,23 +87,16 @@ public class BedStreaming implements Runnable {
             @Override
             public void call(Object... args) {
                 JSONObject resultado = (JSONObject) args[0];
-                Log.d("RESULTADO", resultado.toString());
+                Log.d("RESULTADO", bedName+" "+resultado.toString());
 
-                try {
-                    if(listener1!=null) {
-                        JSONArray array = (JSONArray) resultado.get("result");
-                        state = (int) array.get(0);
-                        listener1.refresh(bedId, state);
-                    }else{
-                        listener2.refresh(resultado);
-                    }
-                }catch (JSONException e){
-                    e.printStackTrace();
-                }
+                Message message = new Message();
+                message.obj = resultado;
+                message.arg1 = bedId;
+                handler.sendMessage(message);
 
                 try {
                     if (!thread.isInterrupted()) {
-                        thread.sleep(200);
+                        thread.sleep(400);
                     }
                 }catch(Throwable e){
                         e.printStackTrace();

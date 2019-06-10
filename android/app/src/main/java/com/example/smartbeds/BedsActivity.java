@@ -3,6 +3,8 @@ package com.example.smartbeds;
 import android.content.Context;
 import android.content.Intent;
 import android.drm.DrmStore;
+import android.os.Handler;
+import android.os.Message;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.widget.DrawerLayout;
@@ -48,6 +50,25 @@ public class BedsActivity extends AppCompatActivity implements NavigationView.On
 
     private DrawerLayout drawer;
     private NavigationView navigation;
+
+
+    private Handler handler = new Handler(){
+        @Override
+        public void handleMessage(Message inputMessage){
+
+            int bedId = -1;
+            int state = -1;
+            try {
+                JSONObject resultado = (JSONObject) inputMessage.obj;
+                JSONArray aux = (JSONArray) resultado.get("result");
+                state = (int) aux.get(0);
+                bedId = inputMessage.arg1;
+            }catch (JSONException e){
+                e.printStackTrace();
+            }
+            refresh(bedId, state);
+        }
+    };
 
 
     @Override
@@ -118,7 +139,7 @@ public class BedsActivity extends AppCompatActivity implements NavigationView.On
                 resultado = APIUtil.petitionAPI("/api/bed", urlParameters, context);
                 namespace = (String) resultado.get("namespace");
 
-                BedStreaming bedStreaming = new BedStreaming(i, bed_name, namespace, this);
+                BedStreaming bedStreaming = new BedStreaming(i, bed_name, namespace, handler);
                 threads.add(bedStreaming);
             }
         }catch (JSONException e){
@@ -190,14 +211,9 @@ public class BedsActivity extends AppCompatActivity implements NavigationView.On
             case 3:
                 bedsArray.get(bedId).setBedState("Estado: datos insuficientes");
         }
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                adapter.clear();
-                adapter.addAll(bedsArray);
-            }
-        });
 
+        adapter.clear();
+        adapter.addAll(bedsArray);
     }
 
     protected void showMenu(View view){
