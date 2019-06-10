@@ -49,4 +49,5 @@ public class Session {
     public String getRole(){
         return this.role;
     }
+
 }

@@ -31,11 +31,17 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.locks.Condition;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 
 public class BedChartsActivity extends AppCompatActivity {
 
     private Context context = this;
+
+    private Session session;
 
     private TextView stateView;
     TabLayout.Tab tab1;
@@ -44,7 +50,7 @@ public class BedChartsActivity extends AppCompatActivity {
 
     private int state = -1;
     private double prob = 0.0;
-    private float probFloat = 0.0f;
+
     private int p1;
     private int p2;
     private int p3;
@@ -55,7 +61,7 @@ public class BedChartsActivity extends AppCompatActivity {
     private int rr;
     private int sv;
     private int hrv;
-    private int b2b;
+    private double b2b;
 
     private String stringDate;
     private Map<Float, String> mapFormatter = new HashMap<>();
@@ -69,21 +75,21 @@ public class BedChartsActivity extends AppCompatActivity {
 
     private LineDataSet dataSetPressures;
     private LineData lineDataPressures;
-    private List<Entry> listP1 = Collections.synchronizedList(new ArrayList<Entry>());
-    private List<Entry> listP2 = Collections.synchronizedList(new ArrayList<Entry>());
-    private List<Entry> listP3 = Collections.synchronizedList(new ArrayList<Entry>());
-    private List<Entry> listP4 = Collections.synchronizedList(new ArrayList<Entry>());
-    private List<Entry> listP5 = Collections.synchronizedList(new ArrayList<Entry>());
-    private List<Entry> listP6 = Collections.synchronizedList(new ArrayList<Entry>());
+    private List<Entry> listP1 = new ArrayList<Entry>();
+    private List<Entry> listP2 = new ArrayList<Entry>();
+    private List<Entry> listP3 = new ArrayList<Entry>();
+    private List<Entry> listP4 = new ArrayList<Entry>();
+    private List<Entry> listP5 = new ArrayList<Entry>();
+    private List<Entry> listP6 = new ArrayList<Entry>();
     private LineChart chartPressures;
 
     private LineDataSet dataSetVital;
     private LineData lineDataVital;
-    private List<Entry> listHR = Collections.synchronizedList(new ArrayList<Entry>());
-    private List<Entry> listRR = Collections.synchronizedList(new ArrayList<Entry>());
-    private List<Entry> listSV = Collections.synchronizedList(new ArrayList<Entry>());
-    private List<Entry> listHRV = Collections.synchronizedList(new ArrayList<Entry>());
-    private List<Entry> listB2B = Collections.synchronizedList(new ArrayList<Entry>());
+    private List<Entry> listHR = new ArrayList<Entry>();
+    private List<Entry> listRR = new ArrayList<Entry>();
+    private List<Entry> listSV = new ArrayList<Entry>();
+    private List<Entry> listHRV = new ArrayList<Entry>();
+    private List<Entry> listB2B = new ArrayList<Entry>();
     private LineChart chartHR;
     private LineChart chartRR;
     private LineChart chartSV;
@@ -111,7 +117,7 @@ public class BedChartsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_bed_charts);
 
-        Session session = Session.getInstance();
+        session = Session.getInstance();
         if (session.getToken() == null) {
             Intent intent = new Intent(context, MainActivity.class);
             startActivity(intent);
@@ -215,16 +221,18 @@ public class BedChartsActivity extends AppCompatActivity {
 
     public void refresh(JSONObject resultado) {
         state = 0;
+        JSONArray array=null;
+        JSONArray pressures=null;
+        JSONArray vitals=null;
 
         try {
-            JSONArray array = (JSONArray) resultado.get("result");
+            array = (JSONArray) resultado.get("result");
             state = (int) array.get(0);
-            prob = (double) array.get(1);
-            probFloat = (float) prob;
+
             stringDate = (String) resultado.get("instance");
             mapFormatter.put((float) counter, stringDate.substring(11,19));
 
-            JSONArray pressures = (JSONArray) resultado.get("pressure");
+            pressures = (JSONArray) resultado.get("pressure");
             p1 = (int) pressures.get(0);
             p2 = (int) pressures.get(1);
             p3 = (int) pressures.get(2);
@@ -232,17 +240,30 @@ public class BedChartsActivity extends AppCompatActivity {
             p5 = (int) pressures.get(4);
             p6 = (int) pressures.get(5);
 
-            JSONArray vitals = (JSONArray) resultado.get("vital");
+            vitals = (JSONArray) resultado.get("vital");
             hr = (int) vitals.get(0);
             rr = (int) vitals.get(1);
             sv = (int) vitals.get(2);
             hrv = (int) vitals.get(3);
-            b2b = (int) vitals.get(4);
 
         } catch (JSONException e) {
             e.printStackTrace();
-        } catch (ClassCastException e) {
-            probFloat = 0.0f;
+        }
+
+        try{
+            prob = (double) array.get(1);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }catch (ClassCastException e){
+            prob = 0.0;
+        }
+
+        try{
+            b2b = (double) array.get(1);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }catch (ClassCastException e){
+            b2b = 0.0;
         }
 
         if (counter > 180) {
@@ -260,7 +281,7 @@ public class BedChartsActivity extends AppCompatActivity {
             listB2B.remove(0);
         }
 
-        listProb.add(new Entry(counter, probFloat));
+        listProb.add(new Entry(counter, (float) prob));
 
         listP1.add(new Entry(counter, p1));
         listP2.add(new Entry(counter, p2));
@@ -272,7 +293,7 @@ public class BedChartsActivity extends AppCompatActivity {
         listRR.add(new Entry(counter, rr));
         listSV.add(new Entry(counter, sv));
         listHRV.add(new Entry(counter, hrv));
-        listB2B.add(new Entry(counter, b2b));
+        listB2B.add(new Entry(counter, (float) b2b));
         counter++;
 
         try {
@@ -301,6 +322,8 @@ public class BedChartsActivity extends AppCompatActivity {
 
             //actualizar grafica Pressures
             updatePressuresChart();
+
+            Log.d("DIBUJAR", "terminado");
 
         } catch (Exception e) {
             e.printStackTrace();

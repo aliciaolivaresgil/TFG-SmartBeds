@@ -14,6 +14,7 @@ import org.json.JSONObject;
 
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.concurrent.locks.ReentrantLock;
 
 public class BedStreaming implements Runnable {
 
@@ -31,14 +32,18 @@ public class BedStreaming implements Runnable {
     private JSONObject data;
     Handler handler = null;
 
+    Session session;
+
     public BedStreaming(int bedId, String bedName, String nameSpace, Handler handler){
         this.bedId=bedId;
         this.handler=handler;
         this.bedName=bedName;
         this.namespace=nameSpace;
         this.thread = new Thread(this);
+        this.session = Session.getInstance();
         this.thread.start();
     }
+
 
     @Override
     public void run() {
@@ -92,11 +97,12 @@ public class BedStreaming implements Runnable {
                 Message message = new Message();
                 message.obj = resultado;
                 message.arg1 = bedId;
+
                 handler.sendMessage(message);
 
                 try {
                     if (!thread.isInterrupted()) {
-                        thread.sleep(400);
+                        thread.sleep(200);
                     }
                 }catch(Throwable e){
                         e.printStackTrace();
