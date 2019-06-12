@@ -1,6 +1,159 @@
 \capitulo{4}{Técnicas y herramientas}
 
-Esta parte de la memoria tiene como objetivo presentar las técnicas metodológicas y las herramientas de desarrollo que se han utilizado para llevar a cabo el proyecto. Si se han estudiado diferentes alternativas de metodologías, herramientas, bibliotecas se puede hacer un resumen de los aspectos más destacados de cada alternativa, incluyendo comparativas entre las distintas opciones y una justificación de las elecciones realizadas. 
-No se pretende que este apartado se convierta en un capítulo de un libro dedicado a cada una de las alternativas, sino comentar los aspectos más destacados de cada opción, con un repaso somero a los fundamentos esenciales y referencias bibliográficas para que el lector pueda ampliar su conocimiento sobre el tema.
+En este apartado se presentan las técnicas metodológicas y las herramientas que se han usado en las distintas fases del desarrollo del proyecto. 
+
+
+\section{Técnicas metodológicas}
+
+\subsection{Scrum}
+
+Como se explica más detenidamente en el apartado de Planificación temporal del Apéndice A, para la planificación y desarrollo del proyecto se ha utilizado la metodología ágil \textit{Scrum}, manteniendo el enfoque incremental de los \textit{sprints} pero adaptándola al contexto de un trabajo con fines educativos. 
+
+\subsection{KDD}
+
+En la fase de investigación se ha seguido el proceso de Descubrimiento de Conocimiento en Bases de Datos o \textit{KDD}, dedicado a encontrar un modelo válido y útil en la medida en la que sirva para describir los patrones subyacentes de los datos. El término \textit{KDD} suele ser empleado a menudo como sinónimo de minería de datos, pero esta corresponde en realidad con uno solo de los pasos del proceso. Se suele hablar de las siguientes fases englobados en el proceso de \textit{KDD}: 
+
+\begin{itemize}
+	\item \textbf{Limpieza de datos:} Consiste en eliminar los datos inconsistentes o con ruido.  
+	\item \textbf{Integración de datos:} Se integran los datos de todas las fuentes disponibles en un formato uniforme y adecuado para los pasos posteriores. 
+	\item \textbf{Selección de datos:} Se trata de seleccionar solo aquellos datos relevantes para la tarea de análisis.  
+	\item \textbf{Transformación de datos:} Se realizan transformaciones y cálculos a partir de los datos en bruto con el fin de aplicar las técnicas de minería a las formas más apropiadas de los mismos. 
+	\item \textbf{Minería de datos:} Aplicación de técnicas para encontrar patrones subyacentes. 
+	\item \textbf{Evaluación de patrones:} Se estudia hasta qué punto los patrones encontrados son interesantes. 
+	\item \textbf{Presentación del conocimiento:} Consiste en ofrecer una representación comprensible y útil de los patrones y del conocimiento extraído. 
+\end{itemize}
+
+Estos pasos no se aplican necesariamente de forma secuencial, ya que en muchos casos conviene volver a pasos anteriores tras la evaluación de los resultados del paso actual. 
+
+\section{Herramientas en la fase de investigación}
+
+\subsection{Anaconda}
+
+Anaconda es un administrador de paquetes y de entornos considerado un estándar para el desarrollo de minería de datos en lenguajes como python y R. Al instalar Anaconda se tienen automáticamente disponibles más de 200 paquetes, además de ofrecer la posibilidad de añadir nuevos de forma sencilla. 
+
+Licencia: \textit{New BSD License}
+
+\subsection{Jupyter Notebook}
+
+Los experimentos se han desarrollado en código python distribuído en múltiples jupyter notebooks ya que ofrecen un formato de estructuración y documentación del código muy adecuado para la investigación. \textit{Jupyter Notebook} se encuentra disponible al instalar Anaconda. 
+
+Licencia: \textit{Modified BSD License}
+
+
+\subsection{Scikit-Learn}
+
+Es la principal librería empleada en la fase de investigación. Incluye modelos de clasificación, predicción y clustering de todo tipo y herramientas para entrenarlos, explotarlos y evaluarlos de forma sencilla. Está especialmente diseñada para operar con las librerías \textit{NumPy} y \textit{SciPy}, y es compatible con \textit{pandas}.
+
+Licencia: \textit{New BSD License } 
+
+\subsection{Weka}
+
+En algunas partes de la investigación se han usado modelos de Weka, otra plataforma para aprendizaje automático y minería de datos escrita en Java. La usamos sobre todo para el entrenamiento de \textit{ensembles} aplicados a conjuntos de datos desequilibrados.
+
+Licencia: \textit{GNU General Public License}
+
+\subsection{tsfresh}
+
+Es una librería de python dedicada al cálculo de grandes cantidades de características de series temporales. Permite calcular 64 tipos distintos de características y dispone de herramientas para filtrarlas en función de su relevancia. Es compatible con \textit{pandas}. 
+
+Licencia: \textit{MIT License }
+
+\subsection{deap}
+
+Es el framework de python para computación evolutiva más utilizado. Se ha empleado como una de las alternativas para intentar encontrar la mejor selección de características de series temporales mediante un algoritmo genético, esperando que al aplicar este conjunto en la fase de minería se obtuviesen los mejores resultados posibles.  
+
+Licencia: \textit{GNU Lesser General Public License v3.0}
+
+\subsection{tmux}
+
+Se trata un multiplexador de terminales que permite abrir varias sesiones simultáneamente y dejarlas corriendo en segundo plano. Esta herramienta ha resultado especialmente útil para la ejecución de los experimentos más costosos en cuanto a tiempo de ejecución. Debido a que las ejecuciones de los experimentos se han llevado a cabo sobre el computador del departamento mediante una conexión ssh que a menudo se cerraba en medio de un trabajo, ha sido necesario abrir una sesión de tmux en el computador para cada una de estas ejecuciones de forma que, aunque se perdiera la conexión, el proceso siguiera corriendo en segundo plano y pudiéramos acceder a los resultados reactivando la sesión cuando el trabajo finalizase.
+
+Licencia: \textit{BSD License }
+
+\subsection{Otras librerías relevantes}
+\begin{itemize}
+	\item \textit{NumPy} y \textit{pandas} para la gestión, modificación y presentación de los datos. 
+	\item \textit{Matplotlib} para la presentación gráfica de los resultados. 
+\end{itemize}
+
+\section{Herramientas en la fase de diseño de la aplicación}
+
+\subsection{Star UML}
+
+Software de edición de diagramas UML utilizado en la fase de modelado. 
+
+Licencia: Propietaria aunque dispone de una demo gratuíta. 
+
+\subsection{Material Design}
+
+Es una guía de estilos desarrollada por Google e integrada a partir de la versión \textit{Lollipop} (5.0) de Android. Esta guía de estilos trata los elementos de la interfaz como elementos matariales, con unas dimensiones y una posición definida dentro del espacio (no solo en el plano, también en una tercera dimensión representada mediante el atributo \textit{elevation}), propone una serie de dimensiones idóneas para cada tipo de elemento (textos, botones, tarjetas, etc.), y define la forma de generar el esquema de colores de la interfaz.
+
+\subsection{Pencil}
+
+Software de prototipado de interfaces gráficas. Permite incluir paquetes para incorporar elementos propios de \textit{Material Design} a los prototipos, por lo que proporciona una visión más próxima al aspecto final de las interfaces de la aplicación que otros tipos de prototipado. 
+
+Licencia: \textit{GNU Public License version 2} 
+
+\section{Herramientas en la fase de desarrollo de la aplicación}
+
+\subsection{Android Studio}
+
+Es el entorno de desarrollo integrado oficial de Android, disponible para Windows, GNU/Linux y macOS. Android Studio incluye, entre otras muchas cosas, un editor de código, un editor gráfico de layouts, emuladores para todas las versiones de Android existentes, y soporte para construcción automática con Gradle. 
+
+Licencia: \textit{Apache License 2.0}
+
+\subsection{Gradle}
+
+Herramienta para la automatización de la construcción del software para proyectos Java. Es la herramienta soportada de forma oficial por Android.
+
+Licencia: \textit{Apache License 2.0} 
+
+\subsection{Android Support Library}
+
+Es la librería que gestiona la compatibilidad de funciones de versiones avanzadas con su equivalente en versiones anteriores de Android. Además, incluye layouts, elementos y utilidades que no están disponibles en el framework oficial. Aunque la librería recomendada actualmente para este cometido es \textit{AndroidX}, la cual incluye las mismas funcionalidades y algunas más, se ha escogido \textit{Android Support Library} por su simplicidad y por su documentación clara y completa, lo que resulta de mucha utilidad cuando se desarrolla una aplicación Android por primera vez. 
+
+Licencia: \textit{Apache License 2.0}
+
+\subsection{MPAndroidChart}
+
+Es una librería para generación de gráficos en aplicaciones Android. En este caso, y aunque no está pensada para ello, se ha utilizado para visualizar gráficas dinámicas modificadas en tiempo real. Para implementar esta funcionalidad se tuvo en cuenta también la librería SciChart, al ser la librería de referencia para generación de gráficos en tiempo real de Android, pero se descartó al tratarse de un software de pago. 
+
+Licencia: \textit{Apache License 2.0}
+
+\subsection{Socket.IO-client Library}
+
+Es una librería para gestión de comunicación mediante sockets para Java. El uso de esta librería viene impuesto por la implementación de la API del servidor, que gestiona el envío de datos en tiempo real de esta forma. 
+
+Licencia: \textit{MIT License}
+
+\section{Otras herramientas generales}
+
+\begin{itemize}
+	\item \textbf{Git} como sistema de control de versiones distribuido. 
+	\item \textbf{GitHub} como plataforma para el \textit{hosting} del repositorio del proyecto. 
+	\item \textbf{ZenHub} como extensión de GitHub para la gestión del proyecto basada en la metodología \textit{Scrum}. 
+	\item \textbf{GitKraken} como cliente de Git mediante interfaz gráfica. (\textit{GNU Public License})
+	\item \textbf{Overleaf} como editor colaborativo de LaTeX online para la generación del cuaderno de investigación conjunto. 
+	\item \textbf{TeXstudio} como editor de LaTeX para la generación de la memoria y los anexos. (\textit{GNU General Public License v2})
+	\item \textbf{FileZilla} como aplicación para transferencia de ficheros. Soporta los protocolos FTP, SFTP y FTPS. (\textit{GNU General Public License v2}) 
+\end{itemize}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
