@@ -1,6 +1,6 @@
 \capitulo{3}{Conceptos teóricos}
 
-La parte del proyecto con evidente carga teórica es la fase de investigación. En el apéndice del cuaderno de investigación se explica el uso de todas las técnicas que hemos empleado en los experimentos, especificando implementaciones concretas, parámetros utilizados y resultados obtenidos. En este apartado se van a exponer los conceptos teóricos en los que se basan esas técnicas sin entrar en los detalles de implementación.  
+Este proyecto es principalmente de investigación, por lo que tiene una importante carga teórica. En el apéndice del cuaderno de investigación se explica el uso de todas las técnicas que hemos empleado en los experimentos, especificando implementaciones concretas, parámetros utilizados y resultados obtenidos. Por otra parte, en este apartado se van a exponer los conceptos teóricos en los que se basan esas técnicas sin entrar en los detalles de implementación.  
 
 Dado que el desarrollo de la investigación se ha basado en el proceso \textit{KDD} (explicado más detenidamente en el apartado de Técnicas y Herramientas), este apartado se estructurará en función de los pasos que incluye este proceso: 
 
@@ -27,6 +27,8 @@ Concretamente eliminamos todas aquellas instancias que tengan un SS menor de 400
 
 \subsection{Eliminación manual del ruido}
 
+Una opción para eliminar el ruido de los datos es hacerlo de forma manual, inspeccionando los datos disponibles y modificar o eliminar aquellos que sean inconsistentes. 
+
 Mediante una inspección inicial de los datos se detectó que algunos datos de los tubos de presión en ocasiones eran negativos (lo cual no debería ocurrir), y aparecían valores bajos de presión en momentos en los que la cama debería estar vacía. Por esta razón, se decidió considerar todo valor de presión menor a 5 como ruido convirtiéndolo a 0 (de esta forma nos deshacemos también de los valores negativos). 
 
 \subsection{Filtrado}
@@ -34,7 +36,7 @@ Mediante una inspección inicial de los datos se detectó que algunos datos de l
 Otra forma de eliminar el ruido de una señal consiste en usar filtros. Un filtro es un sistema que se aplica a una señal (en nuestro caso la señal de presiones en el tiempo) y la transforma para conseguir un objetivo concreto, en este caso el suavizado de la señal para eliminar el ruido. Se han probado dos tipos de filtro distintos: 
 
 \begin{itemize}
-	\item \textbf{Filtro de Butterworth}: Diseñado para filtrado de señales eléctricas, trata de producir la respuesta más plana que sea posible hasta la frecuencia de corte (\textit{Wn}), dicho de otra forma, trata de mantener intactas las frecuencias por debajo de la frecuencia de corte mientras disminuye las frecuencias superiores con razón proporcional a \textit{N}, siendo \textit{N} el orden de filtrado:
+	\item \textbf{Filtro de Butterworth}~\cite{wiki:butterworth}: Diseñado para filtrado de señales eléctricas, trata de producir la respuesta más plana que sea posible hasta la frecuencia de corte (\textit{Wn}), dicho de otra forma, trata de mantener intactas las frecuencias por debajo de la frecuencia de corte mientras disminuye las frecuencias superiores con razón proporcional a \textit{N}, siendo \textit{N} el orden de filtrado:
 	\begin{center}
 		$|H| = \dfrac{1}{\sqrt{1+(W/Wn)^{2N}}}$
 	\end{center}
@@ -46,7 +48,7 @@ Otra forma de eliminar el ruido de una señal consiste en usar filtros. Un filtr
 		\label{fig:senalP5butter}
 	\end{figure}
 	
-	\item \textbf{Filtro de Savitzky–Golay}: Se basa en el cálculo de una regresión polinomial local para la que se debe especificar un tamaño de ventana (\textit{window\_lenght}) y el orden del polinomio utilizado en la regresión (\textit{polyorder}). 
+	\item \textbf{Filtro de Savitzky–Golay}~\cite{wiki:savitzkygolay}: Se basa en el cálculo de una regresión polinomial local para la que se debe especificar un tamaño de ventana (\textit{window\_lenght}) y el orden del polinomio utilizado en la regresión (\textit{polyorder}). 
 	
 	\begin{figure}[H]
 		\centering
@@ -66,7 +68,7 @@ Cabe destacar que esto supone un gran inconveniente, ya que la mayoría de técn
 
 \section{Integración de datos}
 
-Los datos disponibles corresponden con las instancias recogidas al lo largo de varios meses de una sola cama (un solo paciente). Estos datos nos han sido proporcionados en varios archivos de extensión .csv, por lo que la fase de integración ha consistido en recoger los datos en varios subconjuntos (varios DataFrames de Pandas), uno por cada noche, considerando que una noche corresponde con el periodo de tiempo en el que el paciente estuvo acostado en la cama de forma ininterrumpida. 
+Los datos disponibles corresponden con las instancias recogidas al lo largo de varios meses de una sola cama (un solo paciente). Estos datos nos han sido proporcionados en varios archivos de extensión .csv, por lo que la fase de integración ha consistido en recoger los datos en varios subconjuntos, uno por cada noche, considerando que una noche corresponde con el periodo de tiempo en el que el paciente estuvo acostado en la cama de forma ininterrumpida. 
 
 \section{Selección de datos}
 
@@ -90,7 +92,77 @@ En este punto ya hemos seleccionado los atributos que serán considerados como \
 
 \section{Transformación de datos}
 
-TODO
+\subsection{Técnicas de reducción de la dimensionalidad}
+
+El primer tipo de transformación de datos que se utilizó fueron las técnicas de reducción de dimensionalidad. Estas técnicas consisten en proyectar datos en un plano, reduciendo su dimensión (número de atributos de cada instancia, en nuestro caso seis) a dos. Este tipo de enfoques se basan en la hipótesis de que la dimensionalidad de los conjuntos de datos es artificialmente alta, y que se puede mantener la misma información con una representación de los mismos con una dimensionalidad menor. 
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.7\textwidth]{../img/reducdim.png}
+	\caption{Abstracción de la reducción de la dimensionalidad de los datos}
+	\label{fig:reducdim}
+\end{figure}
+
+
+Con esto, el objetivo que se persiguió fue comprobar si las instancias de <<crisis>> eran fácilmente separables de las instancias de <<no crisis>> en una representación bidimensional de los datos. Existen varios tipos de técnicas, cada una basada en unos criterios concretos para realizar la proyección, y se pueden clasificar principalmente en transformaciones lineales y transformaciones no lineales.  
+
+\subsubsection{Transformaciones lineales}
+
+Este tipo de transformaciones supone que los datos observados son combinación lineal de una cierta base, y en ellas se engloba el Análisis de Componentes Principales (\textit{PCA})~\cite{pca}. 
+
+\textit{PCA} es una de las técnicas más utilizadas y consiste en escoger el nuevo sistema de coordenadas (o base) de forma que se maximice la varianza entre las instancias. Cabe destacar que para el nuevo sistema de coordenadas se puede escoger cualquier dimensionalidad menor o igual a la del conjunto original de datos, pero a mayor dimensionalidad, mayor coste de computación, por lo que solo se ha probado la proyección a dos dimensiones. 
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=1\textwidth]{../img/pca.png}
+	\caption{\textit{PCA} aplicado a la noche de la crisis 1 (izquierda) y a la noche de la crisis 2 (derecha).}
+	\label{fig:pca}
+\end{figure}
+
+En la figura~\ref{fig:pca} los puntos rojos corresponden con instancias de <<crisis>> y los azules con instancias de <<no crisis>>. Como se puede ver no existe separación entre ellas. 
+
+\subsubsection{Transformaciones no lineales}
+
+Las transformaciones no lineales~\cite{manifold} no asumen que los datos sean una combinación lineal de una base. Existen varias técnicas de este tipo y en nuestro caso se han probado con éxito las siguientes: 
+
+\begin{itemize}
+	\item \textbf{\textit{Isomap}:} Trata de reducir la dimensionalidad manteniendo las distancias geodésicas entre todas las instancias.
+	\item \textbf{\textit{Locally Linear Embedding} (\textit{LLE}):} Reduce la dimensionalidad preservando las distancias dentro de los ``vecindarios'' locales. Se puede considerar como un conjunto de \textit{PCA}s locales que se comparan globalmente para encontrar la mejor reducción no lineal. 
+	\item \textbf{\textit{Multi-Dimensional Scaling} (\textit{MDS}):} Es una técnica bastante utilizada en marketing y ciencias sociales que se basa en la similitud o disimilitud de los datos. Busca reducir la dimensionalidad tratando las distancias como valores proporcionales a la disimilitud de las instancias (lo que se parecen entre ellas).   
+\end{itemize}
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=1\textwidth]{../img/manifolds.png}
+	\caption{Comparativa de las técnicas de transformación no lineal.}
+	\label{fig:manifolds}
+\end{figure}
+
+Como se aprecia en la figura~\ref{fig:manifolds} con algunas de estas técnicas se consigue un grado algo mayor de separación, pero las instancias siguen sin ser fácilmente separables. En este caso y como se puede observar, hemos aplicado las técnicas no solo a los datos en bruto sino también a los datos estadísticos, lo que nos lleva al siguiente tipo de transformación. 
+
+\subsection{Cálculo de estadísticas móviles}
+
+Las técnicas de minería de datos se pueden aplicar directamente a los datos en bruto, pero en ocasiones ofrecen un mejor rendimiento aplicadas a datos estadísticos calculados a partir de estos. Para calcular estadísticas móviles se debe definir el tamaño de la ventana (\textit{N}), de forma que para cada ventana se calculará un valor estadístico a partir de los datos contenidos en ella. Se han usado tres estadísticas simples: 
+
+\begin{itemize}
+	\item \textbf{Media móvil:} Es el valor promedio de los valores contenidos en la ventana. 
+	\begin{center}
+		$ \overline{x}=\frac{1}{N}\sum_{i=1}^{N}x_{i}$
+	\end{center}
+	\item \textbf{Desviación típica móvil:} Es una medida de la dispersión de los valores contenidos en la ventana. 
+	\begin{center}
+		$ \sigma=\sqrt{\frac{1}{N-1}\sum_{i=1}^{N}(x_{i}-\overline{x})^2}$
+	\end{center}
+	\item \textbf{Rango móvil:} Es la diferencia entre el valor máximo y el valor mínimo de los contenidos en la ventana. 
+\end{itemize}
+
+\subsection{Cálculo de características de series temporales}
+
+Además de las descritas en el apartado anterior, se pueden calcular multitud de estadísticas más complejas, como es el caso de las características de series temporales. 
+
+Una serie temporal~\cite{wiki:serietemporal} no es más que una secuencia de instancias medidas en determinado momento de tiempo y ordenadas cronológicamente por lo que nuestro conjunto de datos corresponde con la definición de serie temporal. Las series temporales se suelen usar para estudiar la relación causal entre diversas variables que cambian en el tiempo y pueden influirse entre sí, y para este cometido existen una serie de técnicas específicas basadas en cálculos estadísticos más complejos. 
+
+Para este proyecto se ha empleado una biblioteca que extrae algunas de esas características a partir de una serie temporal, y hemos tratado de usarlas para generar el modelo de clasificación. 
 
 \section{Minería de datos}
 
