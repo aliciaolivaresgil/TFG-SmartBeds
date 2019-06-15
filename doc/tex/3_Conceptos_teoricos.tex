@@ -182,7 +182,7 @@ Por otra parte, dentro de los modelos de clasificación podemos distinguir entre
 
 \begin{itemize}
 	\item Los \textbf{clasificadores simples} emplean un solo modelo que será el encargado de predecir la clase de las nuevas instancias. 
-	\item Los \textbf{\textit{ensembles}} son conjuntos de clasificadores simples cuyas predicciones se combinan para obtener una predicción final. La idea es construir varios modelos que no necesariamente predigan la misma clase para la misma instancia, y será la combinación de estas predicciones, por ejemplo, mediante votación, la que determinará la clase que predice en \textit{ensemble}. Para que este sistema de clasificación tenga sentido los modelos que forman el \textit{ensemble} deben ser algo distintos entre sí, de lo contrario no ofrecerían ninguna ventaja, y esa diferencia puede radicar en varios mecanismos, por ejemplo: 
+	\item Los \textbf{\textit{ensembles}} son conjuntos de clasificadores simples cuyas predicciones se combinan para obtener una predicción final. La idea es construir varios modelos que no necesariamente predigan la misma clase para la misma instancia, y será la combinación de estas predicciones, por ejemplo, mediante votación, la que determinará la clase que predice el \textit{ensemble}. Para que este sistema de clasificación tenga sentido los modelos que forman el \textit{ensemble} deben ser algo distintos entre sí, de lo contrario no ofrecerían ninguna ventaja, y esa diferencia puede radicar en varios mecanismos, por ejemplo: 
 	\begin{itemize}
 		\item El proceso de construcción del modelo no es determinista, por lo que al entrenar varias instancias de ese modelo no se generan clasificadores exactamente iguales. 
 		\item El \textit{ensemble} se compone de modelos obtenidos con distintos métodos. 
@@ -229,7 +229,7 @@ Debido a la forma en la que se construyen los modelos simples que lo componen, a
 En el contexto de este trabajo, la utilidad de los patrones encontrados corresponderá con la precisión del clasificador en sus predicciones. Dado que al clasificar instancias nuevas no conocemos a priori la clase a la que pertenecen, no podemos saber si la clasificación ha sido correcta, por lo que para calcular la precisión de un clasificiador se debe usar una partición de entrenamiento y test del conjunto original de datos disponibles:  
 \begin{itemize}
 	\item La \textbf{partición de entrenamiento} contiene la mayoría de los datos (por ejemplo, el 75\%), los cuales serán usados para entrenar el clasificador. 
-	\item El resto corresponden con la \textbf{partición de test}, que serán usados para comparar su clase real (su etiqueta) con la clase predicha por el clasificador entrenado. De esta forma podemos calcular. 
+	\item El resto corresponden con la \textbf{partición de test}, que serán usados para comparar su clase real (su etiqueta) con la clase predicha por el clasificador entrenado.
 \end{itemize} 
 
 La precisión corresponde con el porcentaje de acierto del clasificador para la partición de entrenamiento, pero en ocasiones, conviene usar métricas más complejas para medir el rendimiento de un clasificador. En este trabajo se ha trabajado con dos métricas distintas: el área bajo la curva ROC y la precisión media, pero antes de explicarlos es necesario presentar algunos conceptos básicos.  
