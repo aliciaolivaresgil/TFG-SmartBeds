@@ -108,7 +108,7 @@ Con esto, el objetivo que se persiguió fue comprobar si las instancias de <<cri
 
 \subsubsection{Transformaciones lineales}
 
-Este tipo de transformaciones supone que los datos observados son combinación lineal de una cierta base, y en ellas se engloba el Análisis de Componentes Principales (\textit{PCA})~\cite{pca}. 
+Este tipo de transformaciones supone que los datos observados son combinación lineal de una cierta base, y en ellas se engloba el \textbf{Análisis de Componentes Principales} (\textit{PCA})~\cite{pca}. 
 
 \textit{PCA} es una de las técnicas más utilizadas y consiste en escoger el nuevo sistema de coordenadas (o base) de forma que se maximice la varianza entre las instancias. Cabe destacar que para el nuevo sistema de coordenadas se puede escoger cualquier dimensionalidad menor o igual a la del conjunto original de datos, pero a mayor dimensionalidad, mayor coste de computación, por lo que solo se ha probado la proyección a dos dimensiones. 
 
@@ -166,12 +166,146 @@ Para este proyecto se ha empleado una biblioteca que extrae algunas de esas cara
 
 \section{Minería de datos}
 
-TODO
+En esta fase se ha tratado de generar un modelo capaz de encontrar los patrones que definen una crisis epiléptica. Para ello el modelo debe ser capaz de aprender a partir de los datos, y en función de como lo haga se puede hablar de dos tipos básicos de aprendizaje: supervisado y no supervisado. 
+
+\begin{itemize}
+	\item Un modelo de \textbf{aprendizaje supervisado} se entrena con un conjunto de datos etiquetado, es decir, que cada instancia de dato de entrenamiento tiene información sobre a qué clase pertenece (para un problema de clasificación como el nuestro), en este caso, las dos clases posibles son <<crisis>> o <<no crisis>>. Tras el entrenamiento, el modelo deberá ser capaz de etiquetar nuevas instancias de dato distintas a las que se han usado en el entrenamiento como instancias de <<crisis>> o <<no crisis>> basándose en lo aprendido. En definitiva, el ciclo de vida de un clasificador supervisado tiene dos fases: 
+	\begin{itemize}
+		\item \textbf{Entrenamiento:} El modelo aprende a partir de un conjunto de datos etiquetado. 
+		\item \textbf{Predicción:} El modelo predice la clase de un dato no etiquetado, es decir, cuya clase real se desconoce. 
+	\end{itemize}
+	
+	\item En el \textbf{aprendizaje no supervisado} el modelo no tiene conocimiento sobre a qué clase pertenece cada instancia. Con este tipo de aprendizaje se pueden, por ejemplo, agrupar los datos en subconjuntos en función de sus características. Las técnicas de reducción de la dimensionalidad podrían ser consideradas técnicas de aprendizaje no supervisado, ya que elaboran la proyección sin conocer la clase de cada instancia, pero podrían darnos información sobre la existencia de dos clases si en las proyecciones bidimensionales existiera una clara separación entre dos clusters de instancias. 
+\end{itemize}
+
+Por otra parte, dentro de los modelos de clasificación podemos distinguir entre clasificadores simples o \textit{ensembles}.
+
+\begin{itemize}
+	\item Los \textbf{clasificadores simples} emplean un solo modelo que será el encargado de predecir la clase de las nuevas instancias. 
+	\item Los \textbf{\textit{ensembles}} son conjuntos de clasificadores simples cuyas predicciones se combinan para obtener una predicción final. La idea es construir varios modelos que no necesariamente predigan la misma clase para la misma instancia, y será la combinación de estas predicciones, por ejemplo, mediante votación, la que determinará la clase que predice en \textit{ensemble}. Para que este sistema de clasificación tenga sentido los modelos que forman el \textit{ensemble} deben ser algo distintos entre sí, de lo contrario no ofrecerían ninguna ventaja, y esa diferencia puede radicar en varios mecanismos, por ejemplo: 
+	\begin{itemize}
+		\item El proceso de construcción del modelo no es determinista, por lo que al entrenar varias instancias de ese modelo no se generan clasificadores exactamente iguales. 
+		\item El \textit{ensemble} se compone de modelos obtenidos con distintos métodos. 
+		\item Cada modelo se entrena con un conjunto de datos diferente.
+		\item Cada modelo se entrena con un subconjunto de atributos diferente para el conjunto de datos. 
+	\end{itemize} 
+\end{itemize} 
+
+Teniendo en cuenta estas distinciones a continuación se exponen los modelos de clasificación que se han probado en este proyecto.
+
+\subsection{Random Forest}
+
+El clasificador \textit{Random Forest} es un \textit{ensemble} que emplea aprendizaje supervisado mediante árboles de decisión, y se trata de uno de los más sencillos y utilizados. Para construir cada modelo simple emplea la técnica de \textit{Bagging}, que consiste en entrenar cada modelo con un conjunto de datos del mismo tamaño que el original pero generado mediante muestreo uniforme con reemplazo (los datos pueden aparecer varias veces en el mismo conjunto). Mediante este mecanismo se reduce la varianza y se evita el sobreajuste. 
+
+Además, durante la construcción de los árboles que componen el \textit{ensemble}, en cada nodo de decisión se tendrá en cuenta únicamente un subconjunto aleatorio de atributos del conjunto de datos.
+
+Dado que todos los modelos del \textit{ensemble} son independientes los unos de los otros, tienen la misma importancia, por lo que su voto tendrá el mismo peso a la hora de calcular la predicción final. 
+
+\subsection{One-Class}
+
+La detección de anomalías One-Class consiste en entrenar el modelo con instancias de una sola clase de forma que a la hora evaluar nuevas instancias, devolverá información sobre si cada una pertenece o no a la clase basándose, de alguna forma, en su similitud con las instancias usadas en el entrenamiento. 
+
+Por ejemplo, si entrenamos el clasificador solo con instancias etiquetadas como <<no crisis>> y utilizamos datos de ambas clases para la predicción, esta puede devolver dos valores: 
+
+\begin{itemize}
+	\item La nueva instancia corresponde con la clase, por lo que se predice <<no crisis>>. 
+	\item La nueva instancia no corresponde con la clase, por lo que se predice <<crisis>>. 
+\end{itemize}
+
+Durante el entrenamiento no se indica explícitamente a qué clase pertenece cada instancia, pero dado que todas las instancias de entrenamiento pertenecen a la misma, sí se le está proporcionando cierta información sobre la clase a la que pertenecen, y por lo tanto puede ser considerado como un algoritmo de aprendizaje supervisado. 
+
+\subsection{AdaBoost.M1}
+
+Se trata de un \textit{ensemble} para clasificación multi-clase que emplea aprendizaje supervisado. Emplea el método de \textit{Boosting}, que a diferencia de \textit{Bagging} es iterativo, y genera cada modelo del \textit{ensemble} influenciado por el rendimiento del anterior. En este caso se busca que cada modelo dé más importancia a las instancias que son mal clasificadas por el modelo anterior. A diferencia de \textit{Bagging} este mecanismo puede producir sobreajuste, sobre todo si el conjunto de datos tiene demasiado ruido. 
+
+Debido a la forma en la que se construyen los modelos simples que lo componen, a la hora de calcular la predicción final para una nueva instancia el voto de cada modelo tendrá un peso distinto en función de su precisión.  
+
+\subsection{Rotation Forest}
+
+\textit{Rotation Forest}~\cite{rodriguez2006rotation} es también un \textit{ensemble} para clasificación que emplea aprendizaje supervisado mediante árboles de decisión. No se basa en un algoritmo iterativo como \textit{Boosting}, por lo que los clasificadores simples pueden ser generados de forma paralela, y se trata de un método algo más complejo que los anteriores, basado en la aplicación del ya mencionado \textit{PCA} a subconjuntos, preferiblemente disjuntos, de atributos de conjuntos de datos construidos mediante muestreo con reemplazo a partir del conjunto original. 
 
 \section{Evaluación de patrones}
 
-TODO
+En el contexto de este trabajo, la utilidad de los patrones encontrados corresponderá con la precisión del clasificador en sus predicciones. Dado que al clasificar instancias nuevas no conocemos a priori la clase a la que pertenecen, no podemos saber si la clasificación ha sido correcta, por lo que para calcular la precisión de un clasificiador se debe usar una partición de entrenamiento y test del conjunto original de datos disponibles:  
+\begin{itemize}
+	\item La \textbf{partición de entrenamiento} contiene la mayoría de los datos (por ejemplo, el 75\%), los cuales serán usados para entrenar el clasificador. 
+	\item El resto corresponden con la \textbf{partición de test}, que serán usados para comparar su clase real (su etiqueta) con la clase predicha por el clasificador entrenado. De esta forma podemos calcular. 
+\end{itemize} 
+
+La precisión corresponde con el porcentaje de acierto del clasificador para la partición de entrenamiento, pero en ocasiones, conviene usar métricas más complejas para medir el rendimiento de un clasificador. En este trabajo se ha trabajado con dos métricas distintas: el área bajo la curva ROC y la precisión media, pero antes de explicarlos es necesario presentar algunos conceptos básicos.  
+
+En un problema de clasificación binaria como este, si consideramos una instancia de <<crisis>> como un positivo (P) y una instancia de <<no crisis>> como un negativo (N) podemos definir los siguientes valores: 
+
+\begin{itemize}
+	\item Verdaderos positivos (VP): número de instancias de <<crisis>> que son clasificadas como <<crisis>>. 
+	\item Falsos positivos (FP): número de instancias de <<no crisis>> que son clasificadas como <<crisis>>. 
+	\item Verdaderos negativos (VN): número de instancias de <<no crisis>> que son clasificadas como <<no crisis>>. 
+	\item Falsos negativos (FN): número de instancias de <<crisis>> que son clasificadas como <<no crisis>>.  
+\end{itemize}
+
+Estos valores se suelen visualizar en forma de matriz de confusión, la cual tiene la estructura de la figura~\ref{fig:matrizconfusion}.
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.5\textwidth]{../img/matrizconfusion.png}
+	\caption{Disposición de la matriz de confusión.}
+	\label{fig:matrizconfusion}
+\end{figure}  
+
+\subsection{Área bajo la curva ROC}
+
+A partir de los valores anteriores se pueden calcular los siguientes: 
+
+\begin{itemize}
+	\item \textbf{Sensibilidad o Razón de Verdaderos Positivos (VPR):}
+	\begin{center}
+		$VPR=\frac{VP}{P}=\frac{VP}{(VP+FN)}$ 
+	\end{center} 
+	\item \textbf{Razón de Falsos positivos (FPR):} 
+	\begin{center}
+		$VPR=\frac{VP}{P}=\frac{VP}{(VP+FN)}$ 
+	\end{center} 
+\end{itemize}
+
+Algunos clasificadores binarios, como los que se usan en este trabajo, además de predecir la etiqueta de la clase a la que creen que pertenece la instancia, son capaces de devolver la probabilidad entre 0 y 1 de que la instancia pertenezca a esa clase. Usando estas probabilidades podríamos clasificar las instancias en función de un umbral, por ejemplo, una instancia sería considerada <<crisis>> si la probabilidad de que pertenezca a esa clase es mayor o igual a 0.8 y <<no crisis>> si es menor. 
+
+El área bajo la curva ROC (\textit{Receiver Operating Characteristic}) representa la relación entre la VPR y la FPR según se varía ese umbral. Se representará la VPR en el eje ``y'', y FPR en el eje ``x''. Cada punto corresponderá con los valores VPR y FPR resultantes de escoger cada uno de los posibles umbrales de clasificación, y la unión de esos puntos será lo que llamamos la curva ROC del clasificador.
+
+Nos interesa que el VPR (sensibilidad) sea lo mayor posible y que el FPR (1-especificidad) sea lo menor posible, por lo que el clasificador óptimo corresponderá con aquel que presenta un área bajo la curva ROC (AUC) igual a 1, mientras que el peor clasificador será aquel con un AUC igual a 0.5, ya que ofrecería una predicción equivalente a lanzar una moneda al aire. 
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.7\textwidth]{../img/roc.png}
+	\caption{ROC. De izquierda a derecha: mejor caso, caso intermedio y peor caso.}
+	\label{fig:roc}
+\end{figure} 
+
+\subsection{Precisión media}
+
+Se definen las siguientes variables: 
+\begin{center}
+	$Precision=\frac{VP}{VP+FP}$
+\end{center}
+\begin{center}
+	$Recall=\frac{VP}{VP+FN}$
+\end{center}
+
+La precisión media (AV) se define como lo siguiente: 
+
+\begin{center}
+	$AV=\sum_{i=1}^{n}(Recall_{i}-Recall_{i-1})Precission_{i}$
+\end{center}
+
+donde $Precission_{i}$ y $Recall_{i}$ son los valores de \textit{Precision} y \textit{Recall} calculados para el umbral de clasificación i-ésimo, y \textit{n} el número de posibles umbrales. Cuanto mayor sea este valor, mejor se considera el clasificador. 
 
 \section{Presentación del conocimiento}
 
-TODO
+En este caso una posible presentación útil del conocimiento adquirido sería la representación de la probabilidad de pertenencia a la clase <<crisis>> de cada instancia ordenadas cronológicamente, es decir, cómo varía la probabilidad de crisis epiléptica del paciente con el tiempo en función del modelo. Esta será una de las gráficas que serán visibles en la aplicación de Android desarrollada. 
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.7\textwidth]{../img/prob.png}
+	\caption{Ejemplo de representación de la probabilidad de crisis en función del tiempo.}
+	\label{fig:prob}
+\end{figure} 
+
