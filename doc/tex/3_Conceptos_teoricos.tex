@@ -17,7 +17,7 @@ Los datos de los que disponemos tienen los siguientes atributos:
 	\item \textbf{STATUS}: estado de medición del sensor de constantes vitales. 0=\textit{low signal}, 1=\textit{ok signal}, 2=\textit{high signal}, 3= \textit{close to overload}, 4= \textit{close to max HR}. 
 \end{itemize}
 
-Por otra parte se nos proporcionaron unos rangos aproximados de horas en los que el paciente tuvo un ataque epiléptico, lo que nos permite etiquetar cada instancia de datos como <<crisi>> o <<no crisis>>.  
+Por otra parte se nos proporcionaron unos rangos aproximados de horas en los que el paciente tuvo un ataque epiléptico, lo que nos permite etiquetar cada instancia de datos como <<crisis>> o <<no crisis>>.  
 
 \subsection{Eliminación de instancias por baja señal}
 
@@ -25,7 +25,7 @@ Dos de estos atributos, SS y STATUS, hacen referencia a la calidad de la instanc
 
 \subsection{Eliminación manual del ruido}
 
-Una opción para eliminar el ruido de los datos es hacerlo de forma manual, inspeccionando los datos disponibles y modificar o eliminar aquellos que sean inconsistentes.  
+Una opción para eliminar el ruido de los datos es hacerlo de forma manual, inspeccionando los datos disponibles y modificando o eliminando aquellos que sean inconsistentes.  
 
 \subsection{Eliminación del ruido mediante filtrado}
 
@@ -56,7 +56,7 @@ Otra forma de eliminar el ruido de una señal consiste en usar filtros. Un filtr
 
 \subsection{Eliminación de atributos inconsistentes}
 
-Al trabajar con datos reales, cabe la posibilidad de que algunos de los atributos contengan datos inconsistente, ya sea por que se produjeron errores (humanos o sistemáticos) durante la captación de los mismos o porque se corrompieron o perdieron durante su almacenamiento o su envío. Estos datos deberán ser eliminados para no interferir en la fase de minería de datos. Como se explicará en el apartado de Aspectos Relevantes en esta fase nos vimos obligados a eliminar los datos relativos a las constantes vitales. 
+Al trabajar con datos reales, cabe la posibilidad de que algunos de los atributos contengan datos inconsistente, ya sea por que se produjeron errores (humanos o sistemáticos) durante la captación de los mismos o porque se corrompieron o perdieron durante su almacenamiento o su envío. Estos datos deberán ser eliminados para no interferir en la fase de minería de datos. Como se explicará en el apartado de Aspectos Relevantes, en esta fase nos vimos obligados a eliminar los datos relativos a las constantes vitales. 
 
 \section{Integración de datos}
 
@@ -161,6 +161,7 @@ Como se aprecia en la figura~\ref{fig:manifolds} con algunas de estas técnicas 
 
 Las técnicas de minería de datos se pueden aplicar directamente a los datos en bruto, pero en ocasiones ofrecen un mejor rendimiento aplicadas a datos estadísticos calculados a partir de estos. Para calcular estadísticas móviles se debe definir el tamaño de la ventana (\textit{N}), de forma que para cada ventana se calculará un valor estadístico a partir de los datos contenidos en ella. Se han usado tres estadísticas simples: 
 
+\begin{minipage}{\linewidth}
 \begin{itemize}
 	\item \textbf{Media móvil:} Es el valor promedio de los valores contenidos en la ventana. 
 	\begin{center}
@@ -172,12 +173,13 @@ Las técnicas de minería de datos se pueden aplicar directamente a los datos en
 	\end{center}
 	\item \textbf{Rango móvil:} Es la diferencia entre el valor máximo y el valor mínimo de los contenidos en la ventana. 
 \end{itemize}
+\end{minipage}
 
 \subsection{Cálculo de características de series temporales}
 
 Además de las descritas en el apartado anterior, se pueden calcular multitud de estadísticas más complejas, como es el caso de las características de series temporales. 
 
-Una serie temporal~\cite{wiki:serietemporal} no es más que una secuencia de instancias medidas en determinado momento de tiempo y ordenadas cronológicamente por lo que nuestro conjunto de datos corresponde con la definición de serie temporal. Las series temporales se suelen usar para estudiar la relación causal entre diversas variables que cambian en el tiempo y pueden influirse entre sí, y para este cometido existen una serie de técnicas específicas basadas en cálculos estadísticos más complejos. 
+Una serie temporal~\cite{wiki:serietemporal} no es más que una secuencia de instancias medidas en determinado momento de tiempo y ordenadas cronológicamente, por lo que nuestro conjunto de datos corresponde con la definición de serie temporal. Las series temporales se suelen usar para estudiar la relación causal entre diversas variables que cambian en el tiempo y pueden influirse entre sí, y para este cometido existen una serie de técnicas específicas basadas en cálculos estadísticos más complejos. 
 
 Para este proyecto se ha empleado una biblioteca que extrae algunas de esas características a partir de una serie temporal, y hemos tratado de usarlas para generar el modelo de clasificación. 
 
@@ -187,10 +189,10 @@ En esta fase se ha tratado de generar un modelo capaz de encontrar los patrones 
 
 \begin{itemize}
 	\item Un modelo de \textbf{aprendizaje supervisado} se entrena con un conjunto de datos etiquetado, es decir, que cada instancia de dato de entrenamiento tiene información sobre a qué clase pertenece (para un problema de clasificación como el nuestro), en este caso, las dos clases posibles son <<crisis>> o <<no crisis>>. Tras el entrenamiento, el modelo deberá ser capaz de etiquetar nuevas instancias de dato distintas a las que se han usado en el entrenamiento como instancias de <<crisis>> o <<no crisis>> basándose en lo aprendido. En definitiva, el ciclo de vida de un clasificador supervisado tiene dos fases: 
-	\begin{itemize}
+	\begin{enumerate}
 		\item \textbf{Entrenamiento:} El modelo aprende a partir de un conjunto de datos etiquetado. 
 		\item \textbf{Predicción:} El modelo predice la clase de un dato no etiquetado, es decir, cuya clase real se desconoce. 
-	\end{itemize}
+	\end{enumerate}
 	
 	\item En el \textbf{aprendizaje no supervisado} el modelo no tiene conocimiento sobre a qué clase pertenece cada instancia. Con este tipo de aprendizaje se pueden, por ejemplo, agrupar los datos en subconjuntos en función de sus características. Las técnicas de reducción de la dimensionalidad podrían ser consideradas técnicas de aprendizaje no supervisado, ya que elaboran la proyección sin conocer la clase de cada instancia, pero podrían darnos información sobre la existencia de dos clases si en las proyecciones bidimensionales existiera una clara separación entre dos clusters de instancias. 
 \end{itemize}
@@ -224,10 +226,12 @@ La detección de anomalías One-Class consiste en entrenar el modelo con instanc
 
 Por ejemplo, si entrenamos el clasificador solo con instancias etiquetadas como <<no crisis>> y utilizamos datos de ambas clases para la predicción, esta puede devolver dos valores: 
 
+\begin{minipage}{\linewidth}
 \begin{itemize}
 	\item La nueva instancia corresponde con la clase, por lo que se predice <<no crisis>>. 
 	\item La nueva instancia no corresponde con la clase, por lo que se predice <<crisis>>. 
 \end{itemize}
+\end{minipage}
 
 Durante el entrenamiento no se indica explícitamente a qué clase pertenece cada instancia, pero dado que todas las instancias de entrenamiento pertenecen a la misma, sí se le está proporcionando cierta información sobre la clase a la que pertenecen, y por lo tanto puede ser considerado como un algoritmo de aprendizaje supervisado. 
 
@@ -243,11 +247,14 @@ Debido a la forma en la que se construyen los modelos simples que lo componen, a
 
 \section{Evaluación de patrones}
 
-En el contexto de este trabajo, la utilidad de los patrones encontrados corresponderá con la precisión del clasificador en sus predicciones. Dado que al clasificar instancias nuevas no conocemos a priori la clase a la que pertenecen, no podemos saber si la clasificación ha sido correcta, por lo que para calcular la precisión de un clasificiador se debe usar una partición de entrenamiento y test del conjunto original de datos disponibles:  
+En el contexto de este trabajo, la utilidad de los patrones encontrados corresponderá con la precisión del clasificador en sus predicciones. Dado que al clasificar instancias nuevas no conocemos a priori la clase a la que pertenecen, no podemos saber si la clasificación ha sido correcta, por lo que para calcular la precisión de un clasificiador se debe usar una partición de entrenamiento y test del conjunto original de datos disponibles: 
+
+\begin{minipage}{\linewidth}
 \begin{itemize}
 	\item La \textbf{partición de entrenamiento} contiene la mayoría de los datos (por ejemplo, el 75\%), los cuales serán usados para entrenar el clasificador. 
 	\item El resto corresponden con la \textbf{partición de test}, que serán usados para comparar su clase real (su etiqueta) con la clase predicha por el clasificador entrenado.
 \end{itemize} 
+\end{minipage} 
 
 La precisión corresponde con el porcentaje de acierto del clasificador para la partición de entrenamiento, pero en ocasiones, conviene usar métricas más complejas para medir el rendimiento de un clasificador. En este trabajo se ha trabajado con dos métricas distintas: el área bajo la curva ROC y la precisión media, pero antes de explicarlos es necesario presentar algunos conceptos básicos.  
 
