@@ -140,3 +140,121 @@ Como ya se ha explicado al hablar de tmux en el apartado \ref{tecnicas y herrami
 Normalmente, para lanzar los experimentos en el equipo, nos hemos conectado mediante ssh, y hemos lanzado el proceso de jupyter notebook sin interfaz gráfica mediante el comando \texttt{jupyter notebook ---no-browser}. Este comando devuelve una URL que podemos copiar en nuestro navegador local para acceder a la interfaz gráfica del proceso y ejecutar los experimentos. Para ejecutar notebooks sin necesidad de acceder a la interfaz gráfica se ha usado el comando \texttt{jupyter nbconvert}. 
 
 Sin embargo, mediante este proceso, para experimentos muy costosos la conexión ssh se cerraba en mitad del trabajo y se perdían los resultados. Por ello, hemos usado el multiplexador de terminales tmux, que permite iniciar varias sesiones y ejecutarlas en segundo plano. De esta forma aunque se pierda la conexión ssh, el proceso seguirá corriendo en el equipo, y podremos acceder a los resultados una vez termine. 
+
+\section{Fase de desarrollo de la aplicación}
+
+A continuación se expondrán los problemas y las decisiones que se tomaron referentes al desarrollo de la aplicación de Android. A diferencia de la fase de investigación, la fase de desarrollo se llevó a cabo de forma individual, pero debido a que la lógica de negocio se basó en la comunicación con la API desarrollada por mi compañero, algunas de las decisiones estuvieron condicionadas por las suyas. 
+
+\subsection{Formación en Android}
+
+El desarrollo de una aplicación en Android requiere de unos conocimientos previos de los que no disponía antes de comenzar este proyecto, por lo que el primer paso consistió en buscar recursos que me permitieran iniciarme en el tema de la forma más eficiente posible. Estos recursos fueron principalmente los siguientes: 
+
+\begin{itemize}
+	\item El curso online gratuíto \textit{Android Development for Beginners} de Google (Udacity)~\cite{udacity}, que se estructura en los siguientes temas: 
+	
+	\begin{minipage}{\linewidth}
+	\begin{itemize}
+		\item \textit{User input}
+		\item \textit{Multiple App Screens}
+		\item \textit{Networking}
+		\item \textit{Data Storage} 
+	\end{itemize}
+	\end{minipage}
+	\item La página web de \textit{Android Developers}~\cite{androiddevelopers}, que contiene la documentación oficial de las herramientas del SDK de Android y la API. 
+	\item La página web de \textit{Stack Overflow}~\cite{stackoverflow}, donde se encontró solución a muchas de las pequeñas cuestiones que surgieron a lo largo del desarrollo. 
+\end{itemize}
+
+El curso me permitió adquirir las bases necesarias para comenzar con el desarrollo de la aplicación, y en los demás recursos encontré solución a cuestiones de implementación más concretas. 
+
+\subsection{Inicio del desarrollo}
+
+Para empezar, una de las primeras decisiones que se tomó fue para qué versiones de Android se iba a desarrollar la aplicación. Tras consultar el porcentaje de usuarios de cada versión de Android en el momento~\cite{paneldecontrol}, se tomó la decisión de dar soporte a la versión 6.0 \textit{Marshmallow} (API 23) y superiores, cubriendo un 74,8\% de los dispositivos Android del mercado. Aunque la versión 5.1 contaba con un porcentaje relativamente importante de usuarios, del 11,5\%, la aplicación resultante no iba a ser puesta en producción de inmediato, por lo que se consideró que las versiones soportadas eran suficientes. 
+
+\subsection{Resumen de la arquitectura de la aplicación}
+
+TODO
+
+\subsection{Comunicación con la API}
+
+Como se expone detenidamente en el apéndice de Especificación de requisitos, la aplicación ofrecerá, a grandes rasgos, tres funcionalidades principales: 
+
+\begin{enumerate}
+	\item \textbf{Gestión de usuarios:} permite gestionar qué usuarios y con qué credenciales pueden acceder al sistema. Esta funcionalidad solo estará disponible para el usuario con rol de admnistrador. 
+	\item \textbf{Gestión de camas:} permite gestionar las camas instaladas y qué usuarios tienen acceso a sus datos. También estará disponible solo para el usuario administrador. 
+	\item \textbf{Visualización de camas:} permite visualizar en tiempo real los datos captados por las camas a las que el usuario tiene acceso. El usuario administrador tendrá acceso a todas las camas instaladas, el resto solo a las especificadas por el administrador. 
+\end{enumerate}
+
+Todas estas funcionalidades se basan en los servicios disponibles en la API de mi compañero. Las especificaciones de la API se exponen en el Manual del programador contenido en los anexos de su trabajo, donde se explica que se distingue entre dos tipos de comunicación: 
+
+\begin{enumerate}
+	\item La mayor parte de los servicios se basan en peticiones POST a rutas específicas en función del servicio. Este tipo de comunicación abarca servicios de autentificación, consulta y modificación de datos de gestión (tanto de usuarios como de camas). 
+	\item De forma particular, el sistema que proporciona los datos captados por las camas en tiempo real se maneja a través de mensajes entre \textit{WebSockets} usando la librería Socket.IO. 
+\end{enumerate}
+
+\subsubsection{Peticiones POST}
+Dado que el funcionamiento de la aplicación depende casi enteramente de la comunicación con la API, debemos estar seguros de que existe conexión antes de realizar cada petición POST. Además, tal y como se implementa la API, un usuario solo puede mantener la autentificación en un dispositivo al mismo tiempo, de forma que, si el usuario <<alicia>> entra al sistema desde un dispositivo, y posteriormente lo hace desde otro, solo mantendrá la autentificación desde este último y perderá las credenciales desde el primero. Para gestionar estos dos problemas se define el siguiente esquema general de comunicación para cada petición POST:  
+
+\begin{minipage}{\linewidth}
+\begin{enumerate}
+	\item Se comprueba que existe conexión a internet.
+	\begin{enumerate}
+		\item Si existe se continúa. 
+		\item Si no existe se espera a recuperar la conexión o se pregunta al usuario si desea volver a la pantalla de inicio. 
+	\end{enumerate}
+	\item Se comprueba que el usuario sigue teniendo credenciales en el sistema.
+	\begin{enumerate}
+		\item Si es así se continúa. 
+		\item Si no, se muestra un mensaje comunicando que se ha abierto sesión desde un dispositivo distinto y se redirige a la pantalla de inicio. 
+	\end{enumerate}
+	\item Se realiza la petición POST
+	\begin{enumerate}
+		\item Si la respuesta es satisfactoria se refleja el resultado en la interfaz o se indica que la operación se ha llevado a cabo con éxito.  
+		\item Si la respuesta no es satisfactoria pero no se debe a un error del servidor, se muestra un mensaje de error al usuario. 
+		\item Si la respuesta no es satisfactoria debido a un error del servidor se muestra un mensaje de error y se redirige a la pantalla de inicio. 
+	\end{enumerate}
+\end{enumerate}
+\end{minipage}
+
+Además, se tomó la decisión de que cada petición a la API, tanto POST como mediante WebSockets para la recepción de mensajes en tiempo real, se gestione por un hilo independiente. De esta forma se pueden recibir y mostrar datos de varias camas al mismo tiempo de forma sencilla y transparente. 
+
+\subsubsection{Comunicación en tiempo real con \textit{Socket.IO}}
+
+Al emplear esta biblioteca en la API, también debe usarse en el cliente para que la comunicación en tiempo real sea efectiva. 
+
+A rasgos generales la comunicación se realiza en dos pasos: 
+
+\begin{enumerate}
+	\item Se conecta un \textit{Socket} a la ruta genérica del servidor y se emite un evento <<give\_me\_data>>. 
+	\item Se conecta otro \textit{Socket} a la ruta formada por por la concatenación de la ruta genérica y el namespace que identifica la cama que se desea escuchar. A través de este \textit{Socket} se recibirán los eventos <<package>> con los datos en tiempo real. 
+\end{enumerate}
+
+\subsection{Autenticación}
+
+La autenticación se resuelve de una forma muy sencilla desde el servidor. La primera petición POST que se debe realizar es la de autenticación, que recibe un nombre de usuario y una contraseña. Si el usuario tiene permiso para acceder al sistema, recibe un \textit{token} que se guarda como variable de sesión. Todas las peticiones POST sucesivas recibirán como parámetro este \textit{token}. 
+
+\subsection{Actualización de la interfaz en tiempo real}
+
+Para la funcionalidad de visualización de camas, la aplicación va a recibir continuamente los datos captados por la cama en tiempo real, y queremos que la interfaz se actualice cada vez que llega un dato. 
+
+Dado que es un hilo el que gestiona la recepción de datos en tiempo real, para que la interfaz de usuario se actualice cada vez que se recibe un dato necesitamos implementar un mecanismo que permita que el hilo se lo notifique. La solución más sencilla que puede venir a la mente es el uso de un patrón observador. 
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=1\textwidth]{../img/observador.png}
+	\caption{Posible aplicación del patrón observador.}
+	\label{fig:observador}
+\end{figure}
+
+Según se muestra en la figura~\ref{fig:observador}, la interfaz (Activity) tendría una referencia al hilo que realiza la petición, el que a su vez tendría una referencia a la interfaz. Desde su referencia a la interfaz, el hilo podría ejecutar el método \texttt{actualizar()}.
+
+Esta es una solución muy simple y efectiva para muchas plataformas, pero no funciona en el caso de Android, ya que la actualización de los elementos de la interfaz (\textit{Layouts}) solo se puede realizar desde el hilo principal. Al llamar al método \texttt{actualizar()} desde el hilo, saltaría una excepción si dentro de este método se manipula algún elemento de la interfaz. 
+
+Android ofrece varias alternativas para abordar este problema, y en mi caso he usado la que me ha parecido más sencilla: \textbf{el uso de \textit{Handlers}}~\cite{handler}. La idea es la misma, pero en este caso el \textit{Activity} tiene una referencia a un objeto \textit{Handler} que contiene el método \texttt{handleMessage}, el cual será el encargado de actualizar la interfaz. Cuando el \textit{Activity} lanza el hilo, le pasa la referencia al objeto \textit{Handler} como argumento. Cuando el hilo reciba un nuevo dato, se lo notificará ejecutando el método \texttt{sendMessage} del \textit{Handler}. Esta llamada activará el método \texttt{handleMessage}, que a diferencia del método \texttt{actualizar} del patrón observador, sí se ejecuta en el hilo principal. 
+
+\section{Aspectos relevantes generales}
+
+Este proyecto se me asignó gracias a la concesión de la \textbf{beca de colaboración de estudiantes en departamentos universitarios}, en este caso el departamento de Ingeniería Civil. Esta beca tiene como objetivo la implicación del estudiante en un proyecto de investigación, ofreciendo la posibilidad de ampliar sus conocimiento y concretar sus intereses para la posible incorporación a futuras tareas docentes o investigadoras. 
+
+La realización de este proyecto me ha permitido experimentar a grandes rasgos en qué consiste la labor de un investigador, y la experiencia, definitivamente, me ha llevado a considerar muy positivamente esta salida laboral. 
+
+
