@@ -1,4 +1,4 @@
-\capitulo{5}{Aspectos relevantes del desarrollo del proyecto}
+\capitulo{5}{Aspectos relevantes del desarrollo del proyecto}\label{aspectos relevantes}
 
 En este apartado se presentarán los aspectos relevantes del desarrollo del proyecto, exponiendo los problemas y las principales decisiones tomadas en cada una de las fases. Se distinguirá, de nuevo, entre la fase de investigación y la fase de desarrollo de la aplicación de Android. 
 
@@ -12,7 +12,7 @@ Cabe destacar que la fase de investigación se hizo de forma conjunta con mi com
 
 Como en cualquier proyecto de investigación, el paso inicial consistió en realizar una exploración del estado del arte sobre métodos y técnicas empleados para la detección automática de ataque epilépticos o de otros problemas similares, como la detección de caídas. En esta exploración se encontró que aunque la detección automática de ataques epilépticos es un campo muy explorado, la mayoría de las técnicas que se encuentran se basan en el uso de Electroencefalogramas (EEG) y pulseras inteligentes basadas en la monitorización de las constantes vitales. Por otro lado, no se encontraron artículos relativos a técnicas o metodologías de aprendizaje a partir de los datos de sensores de presión instalados en colchones o similares.
 
-Por otro lado, dado que el conjunto de datos disponibles es claramente desequilibrado (se tienen muchas más instancias de <<no crisis>> que de <<crisis>>) también se realizó una búsqueda de técnicas aplicadas a este tipo de problemas, lo que nos llevó a los modelos de clasificación expuestos en el apartado de Conceptos teóricos. 
+Por otro lado, dado que el conjunto de datos disponibles es claramente desequilibrado (se tienen muchas más instancias de <<no crisis>> que de <<crisis>>) también se realizó una búsqueda de técnicas aplicadas a este tipo de problemas, lo que nos llevó a los modelos de clasificación expuestos en el apartado~\ref{conceptos teoricos} de Conceptos teóricos. 
 
 \subsection{Etiquetado de los datos}
 
@@ -35,50 +35,35 @@ Esto nos obligó a realizar una inspección visual de los datos, y ajustar los t
 
 En la figura~\ref{fig:mdsetiquetado} se muestra la aplicación de la técnica de transformación MDS para el etiquetado de la primera crisis. Las instancias se han dividido en colores en función de su instante de tiempo respecto al rango proporcionado por los proveedores de los datos. Azul: antes de la crisis, Negro: después de la crisis, Verde: primeros 5 minutos de la crisis, Rojo: minutos centrales de la crisis, Naranja: últimos 5 minutos de la crisis. Como se puede observar, las instancias rojas presentan una separación mucho mayor con el resto, y además coinciden con aquellas cuyas señales de presión mostraban una diferencia más significativa dentro de su entorno, por lo que esas fueron las instancias etiquetadas como <<crisis>>. 
 
-Se debe tener en cuenta que, aunque se realizaron estos ajustes, el etiquetado de los datos no puede ser considerado otra cosa que aproximado, y se asume que por esta razón los datos tendrán cierto grado de ruido. Este y la escasez de datos de <<crisis>> en el conjunto de datos disponible, representan los mayores inconvenientes del proyecto. 
+Se debe tener en cuenta que, aunque se realizaron estos ajustes, el etiquetado de los datos no puede ser considerado otra cosa que aproximado, y se asume que por esta razón los datos tendrán cierto grado de ruido. Este motivo junto con la escasez de datos de <<crisis>> en el conjunto de datos disponible, representan los mayores problemas a los que me he tenido que enfrentar en el proyecto. 
 
 \subsection{Limpieza de datos}
 
 Del total de datos, hubo que desechar muchas de las instancias por distintas razones. En primer lugar se eliminaron aquellas instancias cuya señal era de mala calidad. Concretamente eliminamos todas aquellas instancias con un SS menor de 400 (como recomendaban los proveedores de los datos), pero no tuvimos en cuenta el valor de STATUS ya que, como se explicará más adelante, los valores de las constantes vitales no se usaron para la búsqueda del modelo de clasificación.
 
-Por otra parte, mediante una inspección inicial de los datos se detectó que algunos datos de los tubos de presión en ocasiones eran negativos (lo cual no debería ocurrir), y aparecían valores bajos de presión en momentos en los que la cama debería estar vacía. Por esta razón, se decidió considerar todo valor de presión menor a 5 como ruido convirtiéndolo manualmente a 0. De esta forma nos deshicimos también de los valores negativos. Para eliminar el ruido del resto de los datos se aplicó un filtro de Butterworth.
+Por otra parte, mediante una inspección inicial de los datos se detectó que algunos datos de los tubos de presión en ocasiones eran negativos (lo cual no debería ocurrir), y aparecían valores bajos de presión en momentos en los que la cama debería estar vacía. Por esta razón, se decidió considerar todo valor de presión menor a 5 como ruido convirtiéndolo automáticamente a 0. De esta forma nos deshicimos también de los valores negativos. Para eliminar el ruido del resto de los datos se aplicó un filtro de Butterworth.
 
 En esta inspección también se advirtió que los atributos referentes a las constantes vitales eran nulos de forma intermitente y en una gran cantidad de las instancias. Como supimos más adelante, esto se debió al mal funcionamiento del sensor durante las primeras etapas de recogida de los datos. Aunque algunas técnicas de minería de datos soportan la presencia de atributos desconocidos (\textit{missing}) en algunas de las instancias, la cantidad de instancias con constantes vitales nulas o incorrectas era tan grande que se tomó la decisión de no tener en cuenta estos datos para el resto de experimentos. Cabe destacar que esto supone un gran inconveniente, ya que la mayoría de técnicas de detección automática encontrados en el estado del arte (quitando las centradas en EEG) se basan en datos biométricos. 
 
-\subsection{Selección de datos}
+\subsection{Selección de atributos}
 
 A continuación se detectaron los datos con baja variabilidad para su eliminación. Tras llevar a cabo este proceso se eliminaron los atributos P7, P8, P9, P10, P11 y P12. Esto tiene sentido ya que esos campos corresponden con la matriz de tubos de presión de una de las mitades del modelo de colchón de matrimonio, y el colchón con el que se trabaja en este proyecto es individual. Por esta razón eliminar estos datos no supone ninguna pérdida de información, y además, reduce a la mitad la cantidad de datos con la que deben tratar los modelos, lo que repercute positivamente en los tiempos. 
 
 \subsection{Transformadores}
 
-Una vez seleccionado el abanico de operaciones que íbamos a tener en cuenta para la búsqueda de un preprocesado óptimo, se codificaron estas operaciones como transformadores compatibles con sklearn para poder aplicarlas de forma sencilla y sistemática. Para ello se generaron una serie de clases que heredaban la clase \texttt{sklearn.base.TransformerMixin}. En total se codificaron 9 transformadores que se enumerarán a continuación y cuyo funcionamiento se explica detenidamente en el cuaderno de investigación: 
+Una vez seleccionado el abanico de operaciones que íbamos a tener en cuenta para la búsqueda de un preprocesado óptimo, se codificaron estas operaciones como transformadores compatibles con sklearn para poder aplicarlas de forma sencilla y sistemática. Para ello se generaron una serie de clases que heredaban la clase \texttt{sklearn.base.TransformerMixin}. En total se codificaron 9 transformadores. 
 
-\begin{minipage}{\linewidth}
-\begin{itemize}
-	\item \texttt{Normalizer()}
-	\item \texttt{NoiseFilter(minimum=0)}
-	\item \texttt{VarianceThresholdPD(threshold=0.05)}
-	\item \texttt{StatisticsTransformer(mode=’mean’, window=25)}
-	\item \texttt{ButterTransformer(N, Wn, btype=’low’, analog=False, output=’ba’, fs=None)}
-	\item \texttt{SavgolTransformer(window\_length, polyorder=2, deriv=0, delta=1.0, axis=-1, mode=’interp’, cval=0.0)}
-	\item \texttt{ConcatenateTransformer()}
-	\item \texttt{PipelineTransformer()}
-	\item \texttt{MoveTargetsTransformer()}
-\end{itemize}
-\end{minipage}
-
-Para implementar un transformador de sklearn la clase padre obliga a implementar dos métodos: el método \texttt{fit}, para realizar operaciones de cálculo y almacenamiento de variables necesarias para la transformación de los datos, y el método \texttt{transform} que devuelve los datos transformados. Al heredar de \texttt{sklearn.base.TransformerMixin} se tiene disponible el método \texttt{fit\_transform} que llama a \texttt{fit} y luego a \texttt{transform}. 
 
 \subsection{Elección del tamaño de ventana}
 
-Como se ha comentado en el apartado de Conceptos teóricos, para calcular estadísticas móviles del conjunto de datos debemos escoger un tamaño de ventana. Para determinar el valor óptimo para este problema, se realizó un barrido de tamaños aplicados a la media y la desviación móviles, datos que se usaron para entrenar y testear un clasificador \textit{Random Forest}. El proceso que se siguió se explica también con detenimiento y detalle en el cuaderno de investigación. 
+Como se ha comentado en el apartado~\ref{conceptos teoricos} de Conceptos teóricos, para calcular estadísticas móviles del conjunto de datos debemos escoger un tamaño de ventana. Para determinar el valor óptimo para este problema, se realizó un barrido de tamaños aplicados a la media y la desviación móviles, datos que se usaron para entrenar y testear un clasificador \textit{Random Forest}. El proceso que se siguió se explica también con detenimiento y detalle en el cuaderno de investigación. 
 
 Para calcular las estadísticas móviles durante la exploración se usó nuestro transformador \texttt{StatisticsTransformer} que utiliza internamente las funciones  \texttt{df.rolling(window\_length).mean()} o \texttt{.std()} según el caso, donde \texttt{df} es el \texttt{pandas.DataFrame} que contiene los datos originales. Esta función devuelve un nuevo \texttt{pandas.DataFrame} con las estadísticas móviles calculadas para cada una de las ventanas (una fila por cada desplazamiento de la ventana). De esta forma, nos evita ir desplazando la ventana manualmente mediante un bucle. 
 
 \begin{figure}[H]
 	\centering
 	\includegraphics[width=1\textwidth]{../img/heatmap.png}
-	\caption{Mapa de calor de los resultados finales de la exploración para cada uno de las métricas de evaluación. En el eje ``y'' el tamaño de la ventana para la desviación típica, en el eje ``x'' el tamaño para la media.}
+	\caption[Mapa de calor de los resultados finales de la exploración para cada uno de las métricas de evaluación.]{Mapa de calor de los resultados finales de la exploración para cada uno de las métricas de evaluación. En el eje $y$ el tamaño de la ventana para la desviación típica, en el eje $x$ el tamaño para la media.}
 	\label{fig:heatmap}
 \end{figure}
 
@@ -86,10 +71,10 @@ Para cada una de las métricas de evaluación del clasificador (AUC y Precisión
 
 \subsection{Extracción de características de series temporales para una ventana de datos}
 
-La extracción de características de series temporales aplicada a un cierto tamaño de ventana no es tan sencilla y merece un comentario sobre cómo se ha resuelto. La función encargada de la extracción de características pertenece la biblioteca \texttt{tsfresh} y se llama \texttt{extract\_features}. Esta función recibe un \texttt{pandas.DataFrame} como parámetro y devuelve una fila de características por cada grupo de filas con el mismo ``id'' (debemos añadir un atributo ``id'' a nuestro conjunto de datos en bruto). Puedes indicarle mediante un diccionario pasado como parámetro el conjunto de características concreto que se desea calcular, o por el contrario, hacer que calcule todo su repertorio de características. Esta misma biblioteca ofrece una función llamada \texttt{utilities.dataframe\_functions.roll\_time\_series()} que, a efectos prácticos, permite la extracción de características aplicada a una ventana, pero lo hace con un coste de memoria tan grande que no resulta práctica para conjuntos de datos como el nuestro. Básicamente, crea un \texttt{pandas.DataFrame} con un ``id'' distinto para cada ventana. Pongamos un ejemplo para comprender su funcionamiento: si tenemos un conjunto de datos con 10 filas y queremos aplicar una ventana de tamaño 3, esta función devuelve: 
+La extracción de características de series temporales aplicada a un cierto tamaño de ventana no es tan sencilla y merece un comentario sobre cómo se ha resuelto. La función encargada de la extracción de características pertenece la biblioteca \texttt{tsfresh} y se llama \texttt{extract\_features}. Esta función recibe un \texttt{pandas.DataFrame} como parámetro y devuelve una fila de características por cada grupo de filas con el mismo <<id>> (debemos añadir un atributo <<id>> a nuestro conjunto de datos en bruto). Puedes indicarle mediante un diccionario pasado como parámetro el conjunto de características concreto que se desea calcular, o por el contrario, hacer que calcule todo su repertorio de características. Esta misma biblioteca ofrece una función llamada \texttt{utilities.dataframe\_functions.roll\_time\_series()} que, a efectos prácticos, permite la extracción de características aplicada a una ventana, pero lo hace con un coste de memoria tan grande que no resulta práctica para conjuntos de datos como el nuestro. Básicamente, crea un \texttt{pandas.DataFrame} con un <<id>> distinto para cada ventana. Pongamos un ejemplo para comprender su funcionamiento: si tenemos un conjunto de datos con 10 filas y queremos aplicar una ventana de tamaño 3, esta función devuelve: 
 \begin{itemize}
-	\item 3 filas correspondientes a las filas 1, 2, y 3 del conjunto original y con un ``id''=1. 
-	\item 3 filas correspondientes a las filas 2, 3, y 4 del conjunto original y con un ``id''=2. 
+	\item 3 filas correspondientes a las filas 1, 2, y 3 del conjunto original y con un <<id>>=1. 
+	\item 3 filas correspondientes a las filas 2, 3, y 4 del conjunto original y con un <<id>>=2. 
 	\item así sucesivamente. 
 \end{itemize}
 
@@ -100,28 +85,14 @@ La extracción de características de series temporales aplicada a un cierto tam
 	\label{fig:rolltimeseries}
 \end{figure}
 
-Por cómo funciona en relación al atributo ``id'', si aplicamos este nuevo conjunto de datos a la función \texttt{extract\_features} obtenemos lo que buscamos, una fila de características por cada ventana, pero el coste computacional y de memoria que supone la generación de este nuevo conjunto, que tiene una enorme cantidad de datos repetidos, es tan alto que no resulta viable. Por ello, en lugar de usar esta función, se tomó la decisión de realizar el desplazamiento de la ventana de forma manual mediante un bucle:
-
-\begin{minipage}{0.95\linewidth} 
-\begin{lstlisting}
-import tsfresh as tf
-
-def rolling_extract_features(X, window): 
-	features = pd.DataFrame()
-	for i in range(len(X)-window): 
-		X_rolling = X.iloc[i:i+window]
-		features_rolling = tf.extract_features(X_rolling, column_id='id', column_sort='DateTime')
-		features = pd.concat([features,features_rolling],axis=0)
-	return features
-\end{lstlisting}
-\end{minipage}
+Por cómo funciona en relación al atributo <<id>>, si aplicamos este nuevo conjunto de datos a la función \texttt{extract\_features} obtenemos lo que buscamos, una fila de características por cada ventana, pero el coste computacional y de memoria que supone la generación de este nuevo conjunto, que tiene una enorme cantidad de datos repetidos, es tan alto que no resulta viable. Por ello, en lugar de usar esta función, se tomó la decisión de realizar el desplazamiento de la ventana de forma manual mediante un bucle.
 
 
 \subsection{Filtrado de características de series temporales}
 
-Al ejecutar la extracción de características de las datos de las dos noches en las que tuvo lugar una crisis epiléptica, obtenemos 4764 características en total, 794 por cada tubo de presión. Este número de atributos es excesivo para aplicarlo directamente a un clasificador, por lo que planteamos varias estrategias para quedarnos con aquellos que aporten mayor información. Estas estrategias se encuentran recogidas y explicadas en el cuaderno de investigación, por lo que aquí se expone la que, por presentar un mejor rendimiento, se empleó como entrada a métodos de selección posteriores. 
+Al ejecutar la extracción de características de las datos de las dos noches en las que tuvo lugar una crisis epiléptica, obtenemos 4\,764 características en total, 794 por cada tubo de presión. Este número de atributos es excesivo para aplicarlo directamente a un clasificador, por lo que planteamos varias estrategias para quedarnos con aquellos que aporten mayor información. Estas estrategias se encuentran recogidas y explicadas en el cuaderno de investigación, por lo que aquí se expone la que, por presentar un mejor rendimiento, se empleó como entrada a métodos de selección posteriores. 
 
-Este filtrado consistió en usar la función \texttt{select\_features} de la biblioteca tsfresh, que realiza una selección supervisada de las características (recibe el el valor de las etiquetas de cada instancia). Al aplicar esta función el número de características se redujo a 1731. Además, asumimos que una característica solo sería relevante si resulta relevante para todos los tubos de presión, por lo que eliminamos aquellas que, tras el filtrado, no permanecieran para todos los tubos, quedándonos únicamente con 744 (124 para cada tubo de presión).  
+Este filtrado consistió en usar la función \texttt{select\_features} de la biblioteca tsfresh, que realiza una selección supervisada de las características (recibe el el valor de las etiquetas de cada instancia). Al aplicar esta función el número de características se redujo a 1\,731. Además, asumimos que una característica solo sería relevante si resulta relevante para todos los tubos de presión, por lo que eliminamos aquellas que, tras el filtrado, no permanecieran para todos los tubos, quedándonos únicamente con 744 (124 para cada tubo de presión).  
 
 \subsection{Selección final de características mediante algoritmo genético}
 
@@ -132,24 +103,11 @@ Esta estrategia es la que emplea un algoritmo genético implementado mediante la
 \begin{figure}[H]
 	\centering
 	\includegraphics[width=0.7\textwidth]{../img/genotipo.png}
-	\caption{Genotipo del mejor individuos encontrado usando el AUC como métrica de evaluación.}
+	\caption{Genotipo del mejor individuo encontrado usando el AUC como métrica de evaluación.}
 	\label{fig:genotipo}
 \end{figure}
 
-Se aclara que 10 es el tamaño \textbf{máximo} de características porque, debido a los mecanismos de mutación y cruce utilizados, una característica puede aparecer más de una vez en un mismo individuo, en cuyo caso solo se tendría en cuenta una vez. Esta decisión se tomó porque de los mecanismos de cruce y mutación que ofrece DEAP, ninguno está preparado para trabajar con pseudopermutaciones (permutaciones en las que el tamaño del array no corresponde con el número de valores que puede contener), y aunque es posible crear mecanismos de cruce y mutación personalizados, el beneficio que se obtiene con ello es mínimo o nulo, ya que al tratar de maximizar el rendimiento, prevalecerán aquellos individuos que aporten mayor información al clasificar, es decir, aquellos con un mayor número de características.
-
-Configuración de los mecanismos de cruce, mutación y selección:
-
-\begin{minipage}{0.95\linewidth} 
-\begin{lstlisting}
-#curce uniforme:
-toolbox.register("mate", tools.cxUniform, indpb=0.5)
-#mutacion uniforme:
-toolbox.register("mutate", tools.mutUniformInt,low=0, up=(n_features-1), indpb=0.2)
-#seleccion por torneo:
-toolbox.register("select", tools.selTournament, tournsize=3)
-\end{lstlisting}
-\end{minipage}
+Se aclara que 10 es el tamaño \textbf{máximo} de características porque, debido a los mecanismos de mutación y cruce utilizados, una característica puede aparecer más de una vez en un mismo individuo, en cuyo caso solo se tendría en cuenta una vez. Esta decisión se tomó porque de los mecanismos de cruce y mutación que ofrece DEAP, ninguno está preparado para trabajar con pseudopermutaciones (permutaciones en las que el tamaño del array no corresponde con el número de valores que puede contener). Aunque en DEAP es posible crear mecanismos de cruce y mutación personalizados que resolverían este problema, el beneficio que se obtiene con ello es mínimo o nulo. Esto se debe a que al tratar de maximizar el rendimiento, prevalecerán aquellos individuos que aporten mayor información al clasificar, es decir, aquellos con un mayor número de características.
 
 Esto nos lleva a la decisión de cómo implementar la función de adaptación. Como ya hemos comentado, tenemos características relativas a dos noches en las que tuvo lugar una crisis epiléptica, y queremos realizar una evaluación lo más dura posible para que estemos seguros de que el clasificador vaya a predecir bien nuevas instancias. Por esta razón decidimos que la evaluación de los individuos se realizará mediante validación cruzada entre dos días (este tipo de evaluación se usó a menudo en otras fases de la investigación): 
 
@@ -164,23 +122,6 @@ Esto nos lleva a la decisión de cómo implementar la función de adaptación. C
 
 Las últimas decisiones que se deben tomar en relación a la configuración del algoritmo son el tamaño de la población y el número de generaciones que se ejecutan. En ambos casos se escoge un valor de 50 teniendo en cuenta lo costosa que es la evaluación de cada individuo, y se confirma la decisión al ver que tras la ejecución se observa que no se producen mejoras en las últimas generaciones. 
 
-Configuración de los individuos y la población: 
-
-\begin{minipage}{0.95\linewidth} 
-\begin{lstlisting}
-#El valor de adaptacion se va a maximizar
-creator.create("FitnessMax", base.Fitness, weights=(1.0,))
-creator.create("Individual", list, fitness=creator.FitnessMax)
-#Los genes son de tipo entero. Cada uno representa una caracteristica. 
-toolbox.register("attribute", random.sample, range(n_features-1), 10) 
-#El individuo tiene una longitud de 10 atributos 
-toolbox.register("individual", tools.initIterate, creator.Individual, toolbox.attribute)
-#La poblacion es una lista de individuos 
-toolbox.register("population", tools.initRepeat, list, toolbox.individual)
-\end{lstlisting}
-\end{minipage}
-
-
 \begin{figure}
 	\centering
 	\includegraphics[width=0.8\textwidth]{../img/genetico.png}
@@ -190,32 +131,12 @@ toolbox.register("population", tools.initRepeat, list, toolbox.individual)
 
 \subsection{One-Class y \textit{ensembles} para desequilibrados}
 
-Las características seleccionadas mediante el algoritmo genético no se probaron unicamente en un clasificador \textit{Random Forest}, también se probaron en otros de los clasificadores comentados en el apartado de Conceptos teóricos. Sin embargo, fue mi compañero José Luis Garrido Labrador el que se centró más en esta parte de la investigación, por lo que los aspectos relevantes relativos a estos clasificadores, así como a la detección de anomalías One-Class, se recogerán en su memoria. 
+Las características seleccionadas mediante el algoritmo genético no se probaron unicamente en un clasificador \textit{Random Forest}, también se probaron en otros de los clasificadores comentados en el apartado~\ref{conceptos teoricos} de Conceptos teóricos. Sin embargo, fue mi compañero José Luis Garrido Labrador el que se centró más en esta parte de la investigación, por lo que los aspectos relevantes relativos a estos clasificadores, así como a la detección de anomalías One-Class, se recogerán en su memoria. 
 
-\subsection{Ejecución remota de experimentos con tmux}
+\subsection{Ejecución remota de experimentos con \textit{tmux}}
 
-Como ya se ha explicado al hablar de tmux en el apartado de Técnicas y herramientas, nos hemos topado con un problema al tratar de ejecutar experimentos computacionalmente costosos en el equipo de cómputo del grupo de investigación de los tutores. 
+Como ya se ha explicado al hablar de tmux en el apartado \ref{tecnicas y herramientas} de Técnicas y herramientas, nos hemos topado con un problema al tratar de ejecutar experimentos computacionalmente costosos en el equipo de cómputo del grupo de investigación de los tutores. 
 
-Normalmente, para lanzar los experimentos en el equipo, nos hemos conectado mediante ssh, y, normlamente, hemos lanzado el proceso de jupyter notebook sin interfaz gráfica mediante el comando: 
+Normalmente, para lanzar los experimentos en el equipo, nos hemos conectado mediante ssh, y hemos lanzado el proceso de jupyter notebook sin interfaz gráfica mediante el comando \texttt{jupyter notebook ---no-browser}. Este comando devuelve una URL que podemos copiar en nuestro navegador local para acceder a la interfaz gráfica del proceso y ejecutar los experimentos. Para ejecutar notebooks sin necesidad de acceder a la interfaz gráfica se ha usado el comando \texttt{jupyter nbconvert}. 
 
-\texttt{>jupyter notebook ---no-browser}
-
-Este comando devuelve una URL que podemos copiar en nuestro navegador local para acceder a la interfaz gráfica del proceso y ejecutar los experimentos. Sin embargo, mediante este proceso, para experimentos muy costosos la conexión ssh se cerraba en mitad del trabajo y se perdían los resultados. Por ello, hemos usado el multiplexador de terminales tmux, que permite iniciar varias sesiones y ejecutarlas en segundo plano. Seguimos los siguientes pasos: 
-
-\begin{minipage}{\linewidth} 
-\begin{enumerate}
-	\item Creamos una nueva sesión: 
-	\\\texttt{>tmux}
-	\item Lanzar la ejecución del notebook por línea de comandos: 
-	\\\texttt{>jupyter nbconvert ---to notebook ---execute \\---ExecutePreprocessor.timeout=None ---inplace MiNotebook.ipynb}
-	\item Si lo deseamos podemos desvincular la ventana de la sesión mientras esta se ejecuta en segundo plano: 
-	\\\texttt{Ctrl+b}
-	\item Para volver a vincular la ventana a la sesión: 
-	\\\texttt{>tmux attach -t id\_session}
-\end{enumerate}
-\end{minipage}
-
-De esta forma aunque se pierda la conexión ssh, el proceso \texttt{jupyter nbconvert} seguirá corriendo en el equipo, y podremos acceder a los resultados una vez termine. 
-
-Para ver las sesiones abiertas junto con sus identificadores ejecutamos \texttt{tmux list-sessions} y para cerrar una sesión ejecutamos \texttt{tmux kill-session -t id\_session}. 
-
+Sin embargo, mediante este proceso, para experimentos muy costosos la conexión ssh se cerraba en mitad del trabajo y se perdían los resultados. Por ello, hemos usado el multiplexador de terminales tmux, que permite iniciar varias sesiones y ejecutarlas en segundo plano. De esta forma aunque se pierda la conexión ssh, el proceso seguirá corriendo en el equipo, y podremos acceder a los resultados una vez termine. 
