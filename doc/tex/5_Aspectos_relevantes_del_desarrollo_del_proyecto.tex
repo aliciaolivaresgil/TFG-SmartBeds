@@ -135,7 +135,51 @@ Las características seleccionadas mediante el algoritmo genético no se probaro
 
 En resumen, aquí se pueden exponer los resultados conseguidos al utilizar, como datos de entrenamiento, el conjunto de características seleccionado por el algoritmo genético usando la métrica de la precisión media en la función de adaptación, ya que, según la bibliografía~\cite{Davis2006RPR, saito2015pr}, esta métrica es más adecuada para la evaluación de clasificadores en conjuntos de datos desequilibrados. 
 
-Como se explica en el cuaderno de investigación, tras una exploración más amplia de varios tipos de clasificador, finalmente se escogen y comparan 3 métodos de remuestreo junto con 3 tipos de \textit{ensembles} distintos. Los métodos de remuestreo son: \textit{Random Balance}~\cite{diez2015random}, \textit{SMOTE}~\cite{galar2012review} y \textit{Random under sampling}~\cite{diez2015diversity}. Los \textit{ensembles} son: \textit{Bagging}~\cite{galar2012review}, \textit{Rotation Forest}~\cite{rodriguez2006rotation} y \textit{RandomCommittee}~\cite{diez2015diversity}. Las tablas TODO muestran los resultado medios obtenidos para 10 ejecuciones con cada una de las combinaciones de remuestreo-\textit{ensemble}.
+Como se explica en el cuaderno de investigación, tras una exploración más amplia de varios tipos de clasificador, finalmente se escogen y comparan 3 métodos de remuestreo junto con 3 tipos de \textit{ensembles} distintos. Los métodos de remuestreo son: \textit{Random Balance}~\cite{diez2015random}, \textit{SMOTE}~\cite{galar2012review} y \textit{Random under sampling}~\cite{diez2015diversity}. Los \textit{ensembles} son: \textit{Bagging}~\cite{galar2012review}, \textit{Rotation Forest}~\cite{rodriguez2006rotation} y \textit{RandomCommittee}~\cite{diez2015diversity}. Las tablas~\ref{tab:crisis1} y~\ref{tab:crisis2} muestran los resultado medios obtenidos para 10 ejecuciones con cada una de las combinaciones de remuestreo-\textit{ensemble}. Cada fila corresponde con un método distinto y cada columna con una métrica de rendimiento, donde \textit{TPR}=tasa de verdaderos positivos, \textit{FPR}=tasa de falsos positivos, \textit{TNR}=tasa de verdaderos negativos, \textit{FNR}=tasa de falsos negativos, \textit{PRC}=\textit{Precision-Recall} (precisión media), \textit{ACC}=área bajo la curva ROC y \textit{ACC}=\textit{accuracy}. 
+
+\begin{table}\scriptsize
+	\begin{center}
+		\begin{tabular}{llllllll}
+			\toprule
+			{} & TPR &          FPR &       TNR & FNR &       PRC &       AUC &       ACC \\
+			\midrule
+			RB - Bag                &   0 &            0 &         1 &   1 &  0.984425 &  0.552363 &   0.98178 \\
+			RB - RC       &   0 &            0 &         1 &   1 &  0.981267 &  0.485675 &   0.98178 \\
+			RB - RotF        &   0 &  1.65036e-06 &  0.999998 &   1 &  0.980551 &  0.485354 &  0.981778 \\
+			RUS - Bag          &   0 &  0.000899444 &  0.999101 &   1 &  0.980613 &  0.447139 &  0.980897 \\
+			RUS - RC &   0 &            0 &         1 &   1 &  0.981076 &    0.4806 &   0.98178 \\
+			RUS - RotF  &   0 &  0.000394435 &  0.999606 &   1 &  0.982287 &  0.486412 &  0.981393 \\
+			SM - Bag                         &   0 &  0.000173287 &  0.999827 &   1 &  0.984367 &  0.565807 &   0.98161 \\
+			SM - RC                &   0 &            0 &         1 &   1 &  0.981278 &  0.486071 &   0.98178 \\
+			SM - RotF                 &   0 &  1.56784e-05 &  0.999984 &   1 &  0.982673 &  0.512364 &  0.981764 \\
+			\bottomrule
+		\end{tabular}
+		\caption{Resultados para el entrenamiento con la primera crisis y testeo con la segunda crisis.}
+		\label{tab:crisis1}
+	\end{center}
+\end{table}
+
+\begin{table}\scriptsize
+	\begin{center}
+		\begin{tabular}{llllllll}
+			\toprule
+			{} & TPR &         FPR &       TNR & FNR &       PCR &       AUC &       ACC \\
+			\midrule
+			RB - Bag                &   0 &   0.0109634 &  0.989037 &   1 &  0.995225 &  0.491511 &  0.983616 \\
+			RB - RC       &   0 &  0.00571683 &  0.994283 &   1 &  0.993912 &  0.446135 &  0.988834 \\
+			RB - RotF        &   0 &  0.00488364 &  0.995116 &   1 &   0.99517 &  0.525534 &  0.989663 \\
+			RUS - Bag          &   0 &   0.0461306 &  0.953869 &   1 &  0.994863 &  0.514533 &  0.948642 \\
+			RUS - RC &   0 &   0.0112769 &  0.988723 &   1 &  0.994602 &  0.506568 &  0.983304 \\
+			RUS - RotF  &   0 &   0.0128567 &  0.987143 &   1 &  0.994482 &  0.468075 &  0.981733 \\
+			SM - Bag                         &   0 &    0.017596 &  0.982404 &   1 &  0.995505 &  0.539099 &   0.97702 \\
+			SM - RC                &   0 &   0.0048424 &  0.995158 &   1 &  0.994052 &  0.458383 &  0.989704 \\
+			SM - RotF                 &   0 &  0.00344412 &  0.996556 &   1 &  0.994742 &  0.502318 &  0.991094 \\
+			\bottomrule
+		\end{tabular}
+		\caption{Resultados para el entrenamiento con la segunda crisis y testeo con la primera crisis.}
+		\label{tab:crisis2}
+	\end{center}
+\end{table}
 
 \subsection{Ejecución remota de experimentos con \textit{tmux}}
 
