@@ -1,4 +1,43 @@
 \capitulo{7}{Conclusiones y Líneas de trabajo futuras}
 
-Todo proyecto debe incluir las conclusiones que se derivan de su desarrollo. Éstas pueden ser de diferente índole, dependiendo de la tipología del proyecto, pero normalmente van a estar presentes un conjunto de conclusiones relacionadas con los resultados del proyecto y un conjunto de conclusiones técnicas. 
-Además, resulta muy útil realizar un informe crítico indicando cómo se puede mejorar el proyecto, o cómo se puede continuar trabajando en la línea del proyecto realizado. 
+En este apartado se exponen las conclusiones generales y personales del proyecto, y se enumeran una serie de líneas de trabajo futuras. 
+
+\section{Conclusiones}
+
+En lo que concierne a la fase de investigación, a pesar de que en la tablas TODO los resultados a primera vista parecen prometedores, podemos ver que al tratar de maximizar la precisión media perdemos mucho rendimiento en términos de \textit{AUC}. En general, hemos podido observar que la maximización de una de las dos métricas no se refleja en buenos valores de la otra métrica, y en definitiva, no hemos logrado generar un modelo capaz de detectar crisis epilépticas. Aunque algunos de los modelos generados sí lograban clasificar algunas instancias como <<crisis>>, esta clasificación era muchas veces errónea, y en este caso, un falso positivo o un falso negativo tienen demasiado coste como para considerarlos modelos de clasificación aceptables. 
+
+Estos resultados pueden deberse a varios de los problemas con los que nos hemos topado en la fase de investigación, y que tienen que ver con la cantidad y la calidad de los datos disponibles: 
+
+\begin{itemize}
+	\item La cantidad de instancias de <<crisis>> disponibles era radicalmente pequeña en comparación con las instancias de <<no crisis>>, con solo dos episodios de crisis epiléptica registrados. 
+	\item Aunque hubiéramos tenido suficientes instancias de <<crisis>>, al trabajar con datos de un solo paciente no podríamos haberlo considerado como un modelo generalizado. 
+	\item Aunque el conjunto de datos original contenía atributos relativos a constantes vitales, siendo este un tipo de dato empleado frecuentemente en la bibliografía para este tipo de problemas, su mala calidad nos ha obligado a eliminarlos. 
+	\item El etiquetado de los datos era demasiado aproximado, y desde el primer momento se consideró que debido a ello los datos iban a tener mucho ruido. Esto nos ha impedido usar eficazmente métodos que tienden a sobreajustar el ruido, como los basados en \textit{Boosting}. 
+\end{itemize}
+
+Aún con todo, creemos que con un conjunto de datos mayor, con una mayor variedad de pacientes y con instancias etiquetadas consistentemente, los mismos experimentos realizados en este proyecto podrían servir para encontrar un modelo de detección funcional. 
+
+Por otra parte, aunque la mayor carga de trabajo ha recaído sobre la fase de investigación, el proceso de desarrollo de la aplicación de Android me ha permitido consolidar conocimientos sobre diseño y desarrollo de software y adquirir otros nuevos. A pesar del poco tiempo que se ha tenido para esta fase, se ha logrado crear una aplicación correcta, funcional y adecuada para su propósito. 
+
+\section{Líneas de trabajo futuras}
+
+Las posibles líneas de trabajo relativas a la fase de investigación son las siguientes: 
+
+\begin{itemize}
+	\item Como ya se ha comentado, en caso de contar con más datos y de mejor calidad en un futuro se propone aplicar los experimentos de este mismo proyecto para tratar de generar un modelo de clasificación eficaz. 
+	\item En vez de centrarnos en maximizar una métrica de precisión, se podría considerar el tratar de maximizar varias de forma conjunta. 
+	\item Se pueden usar técnicas más novedosas no consideradas en este proyecto por desconocimiento o por falta de tiempo, como la aplicación de la técnica bag-of-words para clasificación de series temporales~\cite{bagofwords}, o el uso de redes neuronales. 
+\end{itemize}
+
+En cuanto a la aplicación de Android, las posibles líneas de trabajo futuras son numerosas: 
+
+\begin{itemize}
+	\item Debido a que los datos en tiempo real no se reciben directamente de las camas, sino que se simulan mediante un servidor de datos, algunas de las funcionalidades de gestión de camas (añadir, modificar o eliminar) no han podido implementarse en esta versión. 
+	\item En una aplicación lista para la explotación, se deben considerar cuestiones de internacionalización. 
+	\item Al igual que la gestión de usuario y de camas, se plantea incluir una funcionalidad de gestión de hospitales, que permita agrupar las camas y los usuarios en distintos hospitales y gestionar la visibilidad de cada cama por cada usuario en función de su pertenencia a un hospital. 
+	\item Aunque esta cuestión debe abordarse primero en el servidor, se plantea la implementación de concurrencia de un mismo usuario en varios dispositivos. 
+	\item Además de permitir la visualización de los datos, se puede explorar la posibilidad de que, corriendo la aplicación en segundo plano, se genere una notificación o alerta en el dispositivo cada vez que se detecta una crisis epiléptica. 
+	\item Conocidos una serie de umbrales de los distintos datos recogidos por la cama, generar una vista más elaborada que proporcione información sobre si se superan o no esos umbrales en un determinado periodo de tiempo. 
+\end{itemize}
+
+

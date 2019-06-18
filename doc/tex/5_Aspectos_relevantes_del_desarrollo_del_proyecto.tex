@@ -131,7 +131,11 @@ Las últimas decisiones que se deben tomar en relación a la configuración del 
 
 \subsection{One-Class y \textit{ensembles} para desequilibrados}
 
-Las características seleccionadas mediante el algoritmo genético no se probaron unicamente en un clasificador \textit{Random Forest}, también se probaron en otros de los clasificadores comentados en el apartado~\ref{conceptos teoricos} de Conceptos teóricos. Sin embargo, fue mi compañero José Luis Garrido Labrador el que se centró más en esta parte de la investigación, por lo que los aspectos relevantes relativos a estos clasificadores, así como a la detección de anomalías One-Class, se recogerán en su memoria. 
+Las características seleccionadas mediante el algoritmo genético no se probaron unicamente en un clasificador \textit{Random Forest}, sirvieron como entrada para otros tipos de clasificador, como los comentados en el apartado~\ref{conceptos teoricos} de Conceptos teóricos. Sin embargo, fue mi compañero José Luis Garrido Labrador el que se centró más en esta parte de la investigación, por lo que los aspectos relevantes relativos a estos clasificadores, así como a la detección de anomalías One-Class, se recogerán en su memoria. 
+
+En resumen, aquí se pueden exponer los resultados conseguidos al utilizar, como datos de entrenamiento, el conjunto de características seleccionado por el algoritmo genético usando la métrica de la precisión media en la función de adaptación, ya que, según la bibliografía~\cite{Davis2006RPR, saito2015pr}, esta métrica es más adecuada para la evaluación de clasificadores en conjuntos de datos desequilibrados. 
+
+Como se explica en el cuaderno de investigación, tras una exploración más amplia de varios tipos de clasificador, finalmente se escogen y comparan 3 métodos de remuestreo junto con 3 tipos de \textit{ensembles} distintos. Los métodos de remuestreo son: \textit{Random Balance}~\cite{diez2015random}, \textit{SMOTE}~\cite{galar2012review} y \textit{Random under sampling}~\cite{diez2015diversity}. Los \textit{ensembles} son: \textit{Bagging}~\cite{galar2012review}, \textit{Rotation Forest}~\cite{rodriguez2006rotation} y \textit{RandomCommittee}~\cite{diez2015diversity}. Las tablas TODO muestran los resultado medios obtenidos para 10 ejecuciones con cada una de las combinaciones de remuestreo-\textit{ensemble}.
 
 \subsection{Ejecución remota de experimentos con \textit{tmux}}
 
@@ -139,7 +143,7 @@ Como ya se ha explicado al hablar de tmux en el apartado \ref{tecnicas y herrami
 
 Normalmente, para lanzar los experimentos en el equipo, nos hemos conectado mediante ssh, y hemos lanzado el proceso de jupyter notebook sin interfaz gráfica mediante el comando \texttt{jupyter notebook ---no-browser}. Este comando devuelve una URL que podemos copiar en nuestro navegador local para acceder a la interfaz gráfica del proceso y ejecutar los experimentos. Para ejecutar notebooks sin necesidad de acceder a la interfaz gráfica se ha usado el comando \texttt{jupyter nbconvert}. 
 
-Sin embargo, mediante este proceso, para experimentos muy costosos la conexión ssh se cerraba en mitad del trabajo y se perdían los resultados. Por ello, hemos usado el multiplexador de terminales tmux, que permite iniciar varias sesiones y ejecutarlas en segundo plano. De esta forma aunque se pierda la conexión ssh, el proceso seguirá corriendo en el equipo, y podremos acceder a los resultados una vez termine. 
+Sin embargo, mediante este proceso, para experimentos muy costosos la conexión ssh se cerraba en mitad del trabajo y se perdían los resultados. Por ello, hemos usado el multiplexador de terminales tmux, que permite iniciar varias sesiones y ejecutarlas en segundo plano. De esta forma aunque se pierda la conexión ssh, un proceso lanzado en una de esas sesiones seguirá corriendo en el equipo, y podremos acceder a los resultados recuperando la conexión una vez termine. 
 
 \section{Fase de desarrollo de la aplicación}
 
@@ -179,7 +183,7 @@ Por otro lado, si hablamos de aplicaciones que trabajan directamente con los dat
 \begin{figure}[H]
 	\centering
 	\includegraphics[width=0.8\textwidth]{../img/microservicios.png}
-	\caption{Resumen de la arquitectura de microservicios.}
+	\caption{Abstracción de la arquitectura de microservicios.}
 	\label{fig:microservicios}
 \end{figure}
 
