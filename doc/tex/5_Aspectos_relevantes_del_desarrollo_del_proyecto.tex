@@ -172,7 +172,16 @@ Para empezar, una de las primeras decisiones que se tomó fue para qué versione
 
 \subsection{Resumen de la arquitectura de la aplicación}
 
-TODO
+La arquitectura puede verse desde dos puntos de vista distintos. Si consideramos el sistema como una entidad completa, incluyendo la aplicación cliente y la API del servidor, podemos hablar, como hace mi compañero en su memoria, de arquitectura Modelo-Vista-Controlador (MVC), dentro de la cual mi aplicación sería considerada como una Vista, ya que la lógica de negocio está enteramente contenida en la API. 
+
+Por otro lado, si hablamos de aplicaciones que trabajan directamente con los datos proporcionados por una API encontramos menciones a lo que comúnmente se denomina <<arquetectura de microservicios>>. Según esta arquitectura, cada funcionalidad está contenida en un proceso del servidor, de forma que cada parte de la lógica de negocio se encuentra encapsulada y los procesos son independientes entre sí. El cliente se limita a hacer peticiones a los microservicios de la API del servidor para acceder a la lógica de negocio. 
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{../img/microservicios.png}
+	\caption{Resumen de la arquitectura de microservicios.}
+	\label{fig:microservicios}
+\end{figure}
 
 \subsection{Comunicación con la API}
 
