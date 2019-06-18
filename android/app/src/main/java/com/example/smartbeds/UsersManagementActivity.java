@@ -7,12 +7,9 @@ import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.design.widget.NavigationView;
-import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -49,7 +46,9 @@ public class UsersManagementActivity extends AppCompatActivity implements Naviga
             bottomNavigation.setVisibility(View.GONE);
             tvSelected.setVisibility(View.GONE);
             itemSelected = false;
-        } else {
+        }else if(drawer.isDrawerOpen(Gravity.LEFT)){
+            drawer.closeDrawers();
+        }else{
             super.onBackPressed();
         }
     }
@@ -159,7 +158,7 @@ public class UsersManagementActivity extends AppCompatActivity implements Naviga
         navigation.setNavigationItemSelectedListener(this);
     }
 
-    protected void showMenu(View view) {
+    public void showMenu(View view) {
         drawer.openDrawer(Gravity.LEFT);
     }
 

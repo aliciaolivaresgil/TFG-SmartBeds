@@ -14,7 +14,4 @@ public class ConnectivityUtil {
         return activeNetwork != null && activeNetwork.isConnected();
     }
 
-    public static boolean checkSessionActive(){
-        return false;
-    }
 }

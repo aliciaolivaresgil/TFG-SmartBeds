@@ -320,7 +320,7 @@ public class BedChartsActivity extends AppCompatActivity {
             updateChart(chartProb, listProb, dataSetProb, lineDataProb, ContextCompat.getColor(context, R.color.chart_1), "Probabilidad de crisis");
             updateChart(chartHR, listHR, dataSetVital, lineDataVital, ContextCompat.getColor(context, R.color.chart_1), "Frec. cardíaca (puls/min)");
             updateChart(chartRR, listRR, dataSetVital, lineDataVital, ContextCompat.getColor(context, R.color.chart_2), "Frec. respiratoria (resp/min)");
-            updateChart(chartSV, listSV, dataSetVital, lineDataVital, ContextCompat.getColor(context, R.color.chart_3), "Volumen sitólico (mm)");
+            updateChart(chartSV, listSV, dataSetVital, lineDataVital, ContextCompat.getColor(context, R.color.chart_3), "Volumen sitólico (ml)");
             updateChart(chartHRV, listHRV, dataSetVital, lineDataVital, ContextCompat.getColor(context, R.color.chart_4), "Variabilidad de HR (ms)");
             updateChart(chartB2B, listB2B, dataSetVital, lineDataVital, ContextCompat.getColor(context, R.color.chart_5), "Tiempo entre pulaciones (ms)");
 
@@ -404,7 +404,7 @@ public class BedChartsActivity extends AppCompatActivity {
         chart.setNoDataTextColor(ContextCompat.getColor(context, R.color.colorAccent));
     }
 
-    protected void back(View view){
+    public void back(View view){
         finish();
     }
 

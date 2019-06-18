@@ -73,4 +73,25 @@ public class DialogUtil {
         dialog.setCancelable(false);
         dialog.show();
     }
+
+    public static void showInternalServerErrorDialog(Context context){
+        final Context finalContext = context;
+        AlertDialog dialog = new AlertDialog.Builder(context).create();
+        dialog.setTitle("Error interno del servidor");
+        dialog.setMessage("Se ha producido un error interno en el servidor.");
+        dialog.setButton(AlertDialog.BUTTON_POSITIVE, "Terminar", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                Activity activity = (Activity) finalContext;
+                Session.resetSession();
+                Intent intent;
+                intent = new Intent(finalContext, MainActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                activity.startActivity(intent);
+            }
+        });
+        dialog.setCanceledOnTouchOutside(false);
+        dialog.setCancelable(false);
+        dialog.show();
+    }
 }

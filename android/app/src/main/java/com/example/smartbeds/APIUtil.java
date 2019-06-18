@@ -32,6 +32,8 @@ public class APIUtil {
             Activity activity = (Activity) context;
             if(status==401 && !activity.getLocalClassName().equals("MainActivity")){
                 DialogUtil.showUnactiveSessionDialog(context);
+            }else if(status==500 && !activity.getLocalClassName().equals("MainActivity")){
+                DialogUtil.showInternalServerErrorDialog(context);
             }
             resultado = communication.getResult();
         }else{

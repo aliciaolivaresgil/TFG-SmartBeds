@@ -25,6 +25,15 @@ public class AdminActivity extends AppCompatActivity implements NavigationView.O
     private NavigationView navigation;
 
     @Override
+    public void onBackPressed() {
+        if(drawer.isDrawerOpen(Gravity.LEFT)){
+            drawer.closeDrawers();
+        }else {
+            super.onBackPressed();
+        }
+    }
+
+    @Override
     protected void onResume(){
         super.onResume();
         progressBar.setVisibility(View.GONE);
@@ -83,7 +92,7 @@ public class AdminActivity extends AppCompatActivity implements NavigationView.O
         navigation.setNavigationItemSelectedListener(this);
     }
 
-    protected void showMenu(View view){
+    public void showMenu(View view){
         drawer.openDrawer(Gravity.LEFT);
     }
 

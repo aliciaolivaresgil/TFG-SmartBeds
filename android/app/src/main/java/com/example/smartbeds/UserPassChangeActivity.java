@@ -45,7 +45,7 @@ public class UserPassChangeActivity extends AppCompatActivity {
         toolbar.setText(title+username);
     }
 
-    protected void cambiarContrasena(View view){
+    public void cambiarContrasena(View view){
 
         EditText oldPass = (EditText) findViewById(R.id.user_pass_change_input_antigua);
         EditText newPass = (EditText) findViewById(R.id.user_pass_change_input_nueva);
@@ -98,7 +98,7 @@ public class UserPassChangeActivity extends AppCompatActivity {
         }
     }
 
-    protected void back(View view){
+    public void back(View view){
         finish();
     }
 }

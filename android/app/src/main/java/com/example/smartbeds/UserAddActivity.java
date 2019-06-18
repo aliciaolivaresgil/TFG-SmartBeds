@@ -29,7 +29,7 @@ public class UserAddActivity extends AppCompatActivity {
         }
     }
 
-    protected void anadirUsuario(View view){
+    public void anadirUsuario(View view){
 
         EditText user = (EditText) findViewById(R.id.add_user_input_nombre);
         EditText pass = (EditText) findViewById(R.id.add_user_input_contrasena);
@@ -61,7 +61,7 @@ public class UserAddActivity extends AppCompatActivity {
         }
     }
 
-    protected void back(View view){
+    public void back(View view){
         finish();
     }
 

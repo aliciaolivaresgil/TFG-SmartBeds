@@ -2,24 +2,19 @@ package com.example.smartbeds;
 
 import android.content.Context;
 import android.content.Intent;
-import android.drm.DrmStore;
 import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
-import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Gravity;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ProgressBar;
@@ -29,7 +24,6 @@ import android.widget.TextView;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.w3c.dom.Text;
 
 
 import java.util.ArrayList;
@@ -74,6 +68,14 @@ public class BedsActivity extends AppCompatActivity implements NavigationView.On
         }
     };
 
+    @Override
+    public void onBackPressed() {
+        if(drawer.isDrawerOpen(Gravity.LEFT)){
+            drawer.closeDrawers();
+        }else {
+            super.onBackPressed();
+        }
+    }
 
     @Override
     protected void onDestroy(){
@@ -233,7 +235,7 @@ public class BedsActivity extends AppCompatActivity implements NavigationView.On
         adapter.addAll(bedsArray);
     }
 
-    protected void showMenu(View view){
+    public void showMenu(View view){
         drawer.openDrawer(Gravity.LEFT);
     }
 

@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.design.widget.NavigationView;
-import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -43,10 +42,12 @@ public class BedsManagementActivity extends AppCompatActivity implements Navigat
     public void onBackPressed(){
         bottomNavigation = findViewById(R.id.beds_management_navigation);
 
-        if(bottomNavigation.getVisibility()==View.VISIBLE){
+        if(bottomNavigation.getVisibility()==View.VISIBLE) {
             bottomNavigation.setVisibility(View.GONE);
             tvSelected.setVisibility(View.GONE);
-            itemSelected=false;
+            itemSelected = false;
+        }else if(drawer.isDrawerOpen(Gravity.LEFT)){
+            drawer.closeDrawers();
         }else{
             super.onBackPressed();
         }
@@ -133,7 +134,7 @@ public class BedsManagementActivity extends AppCompatActivity implements Navigat
         }
     }
 
-    protected void anadirCama(View view){
+    public void anadirCama(View view){
         DialogUtil.showDialog(context, "Añadir cama", "Esta acción no está disponible en la versión 1.0 de la aplicación.");
     }
 
@@ -186,7 +187,7 @@ public class BedsManagementActivity extends AppCompatActivity implements Navigat
         return true;
     }
 
-    protected void showMenu(View view){
+    public void showMenu(View view){
         drawer.openDrawer(Gravity.LEFT);
     }
 }
