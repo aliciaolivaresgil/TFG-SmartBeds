@@ -1,3 +1,33 @@
 \capitulo{6}{Trabajos relacionados}
 
-Este apartado sería parecido a un estado del arte de una tesis o tesina. En un trabajo final grado no parece obligada su presencia, aunque se puede dejar a juicio del tutor el incluir un pequeño resumen comentado de los trabajos y proyectos ya realizados en el campo del proyecto en curso. 
+Como ya se ha comentado, al inicio del proyecto se realizó una exploración inicial del estado del arte sobre detección automática de ataques epilépticos y otros problemas aplicables, como la detección de caídas. En este apartado se van a exponer los artículos más relevantes y aquellos que se centraban más en técnicas aplicables a nuestro problema concreto. 
+
+\section{Revisión de técnicas}
+
+Uno de los artículos más interesantes y que más información aportó fue \textbf{\textit{Seizure detection, seizure prediction, and closed-loop warning systemsin epilepsy}}~\cite{ramgopal2014epilepsy}, que realiza una revisión de los artículos más relevantes sobre el tema hasta 2014. En base a los artículos revisados, se expone el conjunto de técnicas utilizadas para la extracción de datos, abarcando desde electroencefalogramas (\textit{EEG}), electrocardiogramas (\textit{ECG}), acelerometría en dispositivos portátiles, sistemas de detección de vídeo y matrices de sensores de presión. Además, para cada artículo, se menciona la técnica de detección utilizada y finalmente una lista de compañías que comercializan los dispositivos de detección existentes. 
+
+En el conjunto general de técnicas destacan la detección automática mediante \textit{EEG} y la detección basada en datos biométricos captados mediante diversos dispositivos, por ser los más usados y los que parecen ofrecer mejores rendimientos.  
+
+Cabe destacar que aunque sí se menciona la existencia de dispositivos basados en matrices de sensores de presión, no se aporta ningún artículo en el que se expongan los métodos usados para lograr la detección de crisis mediante los datos recogidos de esta forma. 
+
+\section{Detección de crisis mediante electroencefalograma}
+
+Dentro de los artículos que hacían referencia al uso de electroencefalogramas, el que nos ha resultado más interesante es \textbf{\textit{Automated Epileptic Seizure Detection Methods: A Review
+Study
+}}~\cite{tzallas2012automated}, ya que enumera y explica las técnicas de detección de picos de señal más utilizadas. Sin embargo, aunque resulta interesante para ver distintas formas de tratar con datos en forma de señal, ninguna de ellas es directamente aplicable a nuestro problema, ya que el tipo de datos con los que trabaja son completamente distintos. 
+
+\section{Detección de crisis mediante \textit{wearables}}
+
+Según el artículo de revisión mencionado~\cite{ramgopal2014epilepsy}, otra de las técnicas más usadas para la recogida de datos para detección de crisis es la acelerometría aplicada a dispositivos portátiles como pulseras, o en la captación de constantes vitales a partir de pulseras y aparatos integrados en un parche pensado para colocarse en la zona del pecho. 
+
+En un principio, esta línea de trabajo sí nos resultó interesante, ya que nuestro conjunto de datos original contaba con datos relativos a las constantes vitales del paciente, pero como ya se ha explicado, la calidad de esos datos era demasiado mala y hubo que desecharlos en la fase de preprocesado. 
+
+\section{Detección mediante presiones y otros problemas aplicables}
+
+Otra técnica interesante encontrada, no necesariamente aplicada a la detección de crisis epilépticas, fue la estimación de la frecuencia respiratoria y la frecuencia cardíaca a partir de datos de presión. Esto, a priori, podría ayudarnos a abordar nuestro problema de falta de datos de ese tipo, pero como se deduce de las explicaciones de artículos~\cite{kortelainen2012, guerreromora2012}, la precisión de los sensores de presión con los que trabajamos nosotros no es en absoluto suficiente. 
+
+Por último, y dado que no se encontraron referencias a métodos concretos de aplicación de matrices de presión para la detección de crisis epilépticas, se exploró una línea de trabajo distinta, centrada en la detección de caídas mediante datos de presión, que aunque no tratara el mismo tipo de problema, los métodos de trabajo aplicados podrían servirnos de referencia para el nuestro. Uno de los artículos encontrados~\cite{huanwen2010} trabaja con datos de presión tomados desde el suelo y datos de imagen infrarroja, el otro~\cite{tolkiehn2011} trabaja con un acelerómetro y datos extraídos de un sensor de presión barométrica. 
+
+Aunque finalmente ninguna de estas líneas sirvió como punto de partida para nuestro proyecto, la exploración del estado del arte nos proporcionó una visión general de las técnicas más usadas y su precisión. 
+
+
