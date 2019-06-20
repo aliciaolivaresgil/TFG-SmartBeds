@@ -7,10 +7,12 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 public class UserPassChangeActivity extends AppCompatActivity {
@@ -59,14 +61,16 @@ public class UserPassChangeActivity extends AppCompatActivity {
             DialogUtil.showDialog(context, "Error" ,"Todos los campos son obligatorios.");
         }else if(!newPass.getText().toString().equals(reNewPass.getText().toString())) {
             DialogUtil.showDialog(context, "Error", "La nueva contraseña es incorrecta.");
-        }else if(!checkOldPass(oldPass.getText().toString())){
-            DialogUtil.showDialog(context, "Error", "La antigua contraseña es incorrecta. ");
-
         }else{
             Session session = Session.getInstance();
             String token = session.getToken();
-            String urlParameters = "token="+token+"&username="+username+"&password="+newPass.getText().toString()+"&password-re="+reNewPass.getText().toString();
-            JSONObject resultado = APIUtil.petitionAPI("/api/user/mod", urlParameters, context);
+            String urlParameters = null;
+            if(!username.equals("admin") && connectedUser.equals("admin")) {
+                urlParameters = "token=" + token + "&username=" + username + "&password=" + newPass.getText().toString() + "&password-re=" + reNewPass.getText().toString();
+            }else{
+                urlParameters = "token=" + token + "&username=" + username + "&password=" + newPass.getText().toString() + "&password-re=" + reNewPass.getText().toString() +"&password-old=" + oldPass.getText().toString();
+            }
+                JSONObject resultado = APIUtil.petitionAPI("/api/user/mod", urlParameters, context);
             int status = APIUtil.getStatusFromJSON(resultado);
 
             if(status==200){
@@ -74,29 +78,14 @@ public class UserPassChangeActivity extends AppCompatActivity {
                 oldPass.setText("");
                 newPass.setText("");
                 reNewPass.setText("");
+            }else if (status==403){
+                DialogUtil.showDialog(context, "Error", "La antigua contraseña es incorrecta. ");
             }else{
                 DialogUtil.showDialog(context, "Error", "No se ha podido modificar la contraseña.");
             }
         }
     }
 
-    private boolean checkOldPass(String pass){
-        Session session = Session.getInstance();
-        String token = session.getToken();
-        if(!username.equals("admin") && connectedUser.equals("admin")){
-            return true;
-        }else {
-            String urlParameters = "user=" + username + "&pass=" + pass;
-            JSONObject resultado = APIUtil.petitionAPI("/api/auth", urlParameters, context);
-            int status = APIUtil.getStatusFromJSON(resultado);
-
-            if (status == 200) {
-                return true;
-            } else {
-                return false;
-            }
-        }
-    }
 
     public void back(View view){
         finish();
