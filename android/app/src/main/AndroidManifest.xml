@@ -12,16 +12,16 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".AboutActivity"></activity>
-        <activity android:name=".BedAsignUsersActivity" />
-        <activity android:name=".BedChartsActivity" />
-        <activity android:name=".UserPassChangeActivity" />
-        <activity android:name=".UserAddActivity" />
-        <activity android:name=".UsersManagementActivity" />
-        <activity android:name=".BedsManagementActivity" />
-        <activity android:name=".BedsActivity" />
-        <activity android:name=".AdminActivity" />
-        <activity android:name=".MainActivity">
+        <activity android:name=".generalActivities.AboutActivity"></activity>
+        <activity android:name=".bedManagement.BedAsignUsersActivity" />
+        <activity android:name=".bedMonitoring.BedChartsActivity" />
+        <activity android:name=".userManagement.UserPassChangeActivity" />
+        <activity android:name=".userManagement.UserAddActivity" />
+        <activity android:name=".userManagement.UsersManagementActivity" />
+        <activity android:name=".bedManagement.BedsManagementActivity" />
+        <activity android:name=".bedMonitoring.BedsActivity" />
+        <activity android:name=".generalActivities.AdminActivity" />
+        <activity android:name=".generalActivities.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
