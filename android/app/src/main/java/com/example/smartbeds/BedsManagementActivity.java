@@ -183,6 +183,10 @@ public class BedsManagementActivity extends AppCompatActivity implements Navigat
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(intent);
                 break;
+            case "Acerca de":
+                intent = new Intent(context, AboutActivity.class);
+                startActivity(intent);
+                break;
         }
         return true;
     }
