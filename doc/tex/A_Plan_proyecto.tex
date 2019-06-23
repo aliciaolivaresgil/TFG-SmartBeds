@@ -257,7 +257,7 @@ Principalmente se exploraron formas de filtrar y combinar las mejores caracterí
 
 Fecha: 21/03/2019 - 28/03/2019
 
-Se planteó un filtrado de características mediante un algoritmo genético usando el framework deap~\cite{deap} de python y se realizó una investigación inicial de técnicas para la implementación de servidores de \textit{streaming}. 
+Se planteó un filtrado de características mediante un algoritmo genético usando el framework DEAP~\cite{deap} de python y se realizó una investigación inicial de técnicas para la implementación de servidores de \textit{streaming}. 
 
 \begin{table}[H]
 	\begin{tabularx}{\textwidth}{Xrr}
@@ -494,6 +494,126 @@ Se añadió una pantalla <<about>> a la aplicación, se comentó y documentó el
 \section{Estudio de viabilidad}
 
 \subsection{Viabilidad económica}
+
+Para considerar la viabilidad económica del proyecto se deben calcular los costes derivados de su realización. Se van a tener en cuenta tanto el coste del personal como el del softwares y el hardware empleados. Dado que este proyecto se ha realizado de forma conjunta con José Luis Garrido Labrador, ambos calcularemos el coste asumiendo que el proyecto cuenta con dos empleados.
+
+\subsubsection{Costes de personal} 
+
+Siguiendo estas consideraciones calculamos el coste total de personal de la siguiente forma: 
+
+\begin{longtable}[]{@{}lr@{}}
+	\toprule
+	\begin{minipage}[b]{0.60\columnwidth}\raggedright\strut
+		\textbf{Concepto}\strut
+	\end{minipage} & \begin{minipage}[b]{0.20\columnwidth}\raggedright\strut
+		\textbf{Coste}\strut
+	\end{minipage}\tabularnewline
+	\midrule
+	\endhead
+	\begin{minipage}[t]{0.60\columnwidth}\raggedright\strut
+		Salario mensual neto de una persona\strut
+	\end{minipage} & \begin{minipage}[t]{0.20\columnwidth}\raggedright\strut
+		1.225,7\euro{}~\cite{salariales}\strut
+	\end{minipage}\tabularnewline
+	\begin{minipage}[t]{0.60\columnwidth}\raggedright\strut
+		Retención IRPF (15\%)\strut
+	\end{minipage} & \begin{minipage}[t]{0.20\columnwidth}\raggedright\strut
+		216,3\euro{}\strut
+	\end{minipage}\tabularnewline
+	\begin{minipage}[t]{0.60\columnwidth}\raggedright\strut
+		Seguridad Social (29,9\%)\strut
+	\end{minipage} & \begin{minipage}[t]{0.20\columnwidth}\raggedright\strut
+		615,06\euro{}\strut
+	\end{minipage}\tabularnewline
+	\begin{minipage}[t]{0.60\columnwidth}\raggedright\strut
+		Salario mensual bruto de una persona\strut
+	\end{minipage} & \begin{minipage}[t]{0.20\columnwidth}\raggedright\strut
+		2.057,06\euro{}\strut
+	\end{minipage}\tabularnewline
+	\midrule
+	\begin{minipage}[t]{0.60\columnwidth}\raggedright\strut
+		\textbf{Total 7 meses y dos empleados}\strut
+	\end{minipage} & \begin{minipage}[t]{0.20\columnwidth}\raggedright\strut
+		28.798,84\euro{}\strut
+	\end{minipage}\tabularnewline
+	\bottomrule
+	\\
+	\caption{Costes de personal.}
+\end{longtable}
+
+La retribución de la seguridad social se ha realizado siguiendo la guía de GoBees~\cite{gobees}.
+
+\subsubsection{Costes del \textit{software}}
+
+El \textit{software} empleado no supone ningún coste en este proyecto ya que todas las herramientas y bibliotecas utilizadas son de código abierto o gratuitas. 
+
+\subsubsection{Costes del \textit{hardware}}
+
+Para el desarrollo de este proyecto no se ha adquirido ningún \textit{hardware} nuevo, por lo que únicamente se incluirán los costes del material con el que ya se contaba asumiendo una amortización en 5 años: 
+
+\begin{longtable}[]{@{}lrr@{}}
+	\toprule
+	\begin{minipage}[b]{0.29\columnwidth}\raggedright\strut
+		\textbf{Concepto}\strut
+	\end{minipage} & \begin{minipage}[b]{0.18\columnwidth}\raggedright\strut
+		\textbf{Coste}\strut
+	\end{minipage} & \begin{minipage}[b]{0.32\columnwidth}\raggedright\strut
+		\textbf{Coste amortizado}\strut
+	\end{minipage}\tabularnewline
+	\midrule
+	\endhead
+	\begin{minipage}[t]{0.29\columnwidth}\raggedright\strut
+		Dispositivo móvil\strut
+	\end{minipage} & \begin{minipage}[t]{0.18\columnwidth}\raggedright\strut
+		150\euro{}\strut
+	\end{minipage} & \begin{minipage}[t]{0.32\columnwidth}\raggedright\strut
+		30\euro{}\strut
+	\end{minipage}\tabularnewline
+	\begin{minipage}[t]{0.29\columnwidth}\raggedright\strut
+		Ordenador portátil (x2)\strut
+	\end{minipage} & \begin{minipage}[t]{0.18\columnwidth}\raggedright\strut
+		800\euro{}\strut
+	\end{minipage} & \begin{minipage}[t]{0.32\columnwidth}\raggedright\strut
+		160\euro{}\strut
+	\end{minipage}\tabularnewline
+	\begin{minipage}[t]{0.29\columnwidth}\raggedright\strut
+		\textit{MainFrame}\strut
+	\end{minipage} & \begin{minipage}[t]{0.18\columnwidth}\raggedright\strut
+		3000\euro{}\strut
+	\end{minipage} & \begin{minipage}[t]{0.32\columnwidth}\raggedright\strut
+		600\euro{}\strut
+	\end{minipage}\tabularnewline
+	\begin{minipage}[t]{0.29\columnwidth}\raggedright\strut
+		\textit{MainFrame}\strut
+	\end{minipage} & \begin{minipage}[t]{0.18\columnwidth}\raggedright\strut
+		3000\euro{}\strut
+	\end{minipage} & \begin{minipage}[t]{0.32\columnwidth}\raggedright\strut
+		600\euro{}\strut
+	\end{minipage}\tabularnewline
+	\begin{minipage}[t]{0.29\columnwidth}\raggedright\strut
+		GPU (x3)\strut
+	\end{minipage} & \begin{minipage}[t]{0.18\columnwidth}\raggedright\strut
+		4500\euro{}\strut
+	\end{minipage} & \begin{minipage}[t]{0.32\columnwidth}\raggedright\strut
+		900\euro{}\strut
+	\end{minipage}\tabularnewline
+	\midrule
+	\begin{minipage}[t]{0.29\columnwidth}\raggedright\strut
+		\textbf{Total}\strut
+	\end{minipage} & \begin{minipage}[t]{0.18\columnwidth}\raggedright\strut
+		11450\euro{}\strut
+	\end{minipage} & \begin{minipage}[t]{0.32\columnwidth}\raggedright\strut
+		2290\euro{}\strut
+	\end{minipage}\tabularnewline
+	\bottomrule
+	\\
+	\caption{Costes de \emph{hardware}.}
+\end{longtable}
+
+\subsubsection{Coste total}
+
+Teniendo en cuenta los costes de personal y de \textit{hardware}, coste económico total del proyecto asciende a: $40248,84$\euro
+
 
 \subsection{Viabilidad legal}
 
