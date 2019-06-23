@@ -639,4 +639,34 @@ Teniendo en cuenta los costes de personal y de \textit{hardware}, el coste econ�
 
 \subsection{Viabilidad legal}
 
+En esta sección se hablará de la viabilidad legal del proyecto en términos de la licencia del software generado. A la hora de escoger la licencia más adecuada para nuestro software estamos limitados por las condiciones de las licencias de las herramientas o bibliotecas que hemos empleado para generarlos. 
+
+En la aplicación se han usado herramientas y bibliotecas con las siguientes licencias ordenadas de más a menos permisivas : 
+
+\begin{itemize}
+	\item MIT: Socket.IO-client Library. 
+	\item Apache 2.0: Android Studio, Gradle, Android Support Library, MPAndroidChart. 
+\end{itemize}
+
+Para la fase de investigación y documentación se usan herramientas y bibliotecas con las siguientes licencias ordenadas de más a menos permisivas: 
+
+\begin{itemize}
+	\item MIT: tsfresh.
+	\item Zero clause BSD: tmux. 
+	\item Modified BSD: Anaconda, Scikit-Learn, Jupyter Notebook.  
+	\item GPLv2: Pencil. 
+	\item GPLv3: Weka, DEAP. 
+\end{itemize}
+
+Todas las licencias son compatibles con GPL, siendo GPLv3 la más restrictiva. Para este proyecto se ha decidido usar la licencia AGPLv3\cite{wiki:agpl} (\textit{GNU Affero General Public License v3}), derivada de GPLv3 pero diseñada específicamente para asegurar la cooperación con la comunidad en el caso de software que corra en servidores de red.
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.6\textwidth]{../img/agpl.png}
+	\caption{\textit{GNU Affero General Public License v3.}}
+	\label{fig:agpl}
+\end{figure}
+
+
+
 
