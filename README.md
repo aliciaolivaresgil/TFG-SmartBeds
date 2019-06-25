@@ -25,3 +25,23 @@ In particular, dependent patients are more vulnerable, especially during the nig
 In this project we try to apply data mining techniques to generate a real-time seizure detection model based on data collected through a matrix of pressure sensors installed in a mattress. 
 
 Additionally, an Android application was developed to show the applicability of the model.
+
+---
+
+### Este respositorio contiene: 
+
+- notebooks con los experimentos realizados en la carpeta **jupyter notebooks**.
+- proyecto de Adroid Studio con el código de la aplicación en la carpeta **android**.
+- memoria del proyecto, anexos y cuderno de investigación en la carpeta **doc**. 
+
+---
+
+### Ejecución de los notebooks: 
+
+Para poder ejecutar los experimentos contenidos en los notebooks basta con copiar la carpeta **jupyter notebooks** y ejecutarlos con jupyter. Se recomienda instalar Anaconda para obtener un entorno con las bibliotecas necesarias. 
+
+--- 
+
+### Instalación de la aplicación de Android: 
+
+El archivo .apk para la instalación y la distribución de la aplicación se encuentra en la carpeta **/android/app/release**
