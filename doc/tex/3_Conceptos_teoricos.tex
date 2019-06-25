@@ -4,20 +4,35 @@ Este proyecto se centra principalmente en investigación, por lo que tiene una i
 
 Dado que el desarrollo de la investigación se ha basado en el proceso \textit{KDD} (explicado más detenidamente en el apartado de Técnicas y Herramientas), este apartado se estructurará en función de los pasos que incluye este proceso: 
 
-\section{Limpieza de datos}
+\section{Obtención de datos}
 
-Los datos de los que disponemos tienen los siguientes atributos: 
+Los datos se obtienen de un colchón con sensores de presión en forma de tubo integrados en su interior como representa la figura~\ref{fig:ngmatt}. Además, el colchón cuenta con un sensor de constantes vitales. Juntando los datos obtenidos por cada tipo de sensor disponemos de los siguientes atributos: 
 
 \begin{itemize}
-	\item \textbf{MAC\_NGMATT} y \textbf{UUID\_BSN}: identificador del colchón asociado alos tubos de presión e identificador del sensor de biométricas respectivamente. 
-	\item \textbf{DateTime}: día y hora en la que fue tomada cada instancia de dato. 
+	\item \textbf{MAC\_NGMATT} y \textbf{UUID\_BSN}: identificador del colchón asociado a los tubos de presión e identificador del sensor de biométricas (constantes vitales) respectivamente. 
+	\item \textbf{DateTime}: día y hora en la que fue tomada cada lectura de datos. 
 	\item \textbf{P1, P2, P3, P4, P5, P6, P7, P8, P9, P10, P11, P12}: presiones, en mBar, captadas por los 12 tubos de presión integrados en el colchón. 
-	\item \textbf{HR, RR, SV, HRV, B2B}: valores de las constantes vitales que corresponden con la frecuencia cardíaca (pulsaciones/minuto), la frecuencia respiratoria (respiraciones/minuto), el volumen sistólico (mililitros), la variabilidad del ritmo cardíaco (milisegundos) y el tiempo entre pulsaciones (milisegundos) respectivamente. 
+	\item \textbf{HR} (\textit{Heart rate}): frecuencia cardíaca medida en pulsaciones por minuto. 
+	\item \textbf{RR} (\textit{Respiration rate}): frecuencia de respiración medida en respiraciones por minuto. 
+	\item \textbf{SV} (\textit{Stroke volume}): volumen sistólico medido en mililitros. 
+	\item \textbf{HRV} (\textit{Heart rate variability}): variabilidad de la frecuencia cardíaca medida en milisegundos. 
+	\item \textbf{B2B} (\textit{Beat to beat}): tiempo entre pulsaciones medido en milisegundos. 
 	\item \textbf{SS}: potencia de la señal relativa a la matriz de tubos de presión. Un valor superior a 400 se considera aceptable. 
 	\item \textbf{STATUS}: estado de medición del sensor de constantes vitales. 0=\textit{low signal}, 1=\textit{ok signal}, 2=\textit{high signal}, 3=\textit{close to overload}, 4=\textit{close to max HR}. 
 \end{itemize}
 
 Por otra parte se nos proporcionaron unos rangos aproximados de horas en los que el paciente tuvo un ataque epiléptico, lo que nos permite etiquetar cada instancia de datos como <<crisis>> o <<no crisis>>.  
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{../img/ngmatt.png}
+	\caption{Imagen proporcional del colchón \textit{NGmatt2.0}.}
+	\label{fig:ngmatt}
+\end{figure}
+
+\section{Limpieza de datos}
+
+La limpieza de datos consiste en eliminar los datos inconsistentes o con ruido para evitar su interferencia en la extracción de conocimiento. 
 
 \subsection{Eliminación de instancias por baja señal}
 
@@ -155,7 +170,7 @@ Como se aprecia en la figura~\ref{fig:manifolds} con algunas de estas técnicas 
 
 \subsection{Cálculo de estadísticas móviles}
 
-Las técnicas de minería de datos se pueden aplicar directamente a los datos en bruto, pero en ocasiones ofrecen un mejor rendimiento aplicadas a datos estadísticos calculados a partir de estos. Para calcular estadísticas móviles se debe definir el tamaño de la ventana (\textit{N}), de forma que para cada ventana se calculará un valor estadístico a partir de los datos contenidos en ella. Se han usado tres estadísticas simples: 
+En problemas donde los datos tienen una componente temporal las técnicas de minería de datos se pueden aplicar directamente a los datos en bruto, pero en ocasiones ofrecen un mejor rendimiento aplicadas a datos estadísticos calculados a partir de estos. Para calcular estadísticas móviles se debe definir el tamaño de la ventana (\textit{N}), de forma que para cada ventana se calculará un valor estadístico a partir de los datos contenidos en ella. Se han usado tres estadísticas simples: 
 
 \begin{minipage}{\linewidth}
 \begin{itemize}
@@ -177,8 +192,6 @@ Además de las descritas en el apartado anterior, se pueden calcular multitud de
 
 Una serie temporal~\cite{wiki:serietemporal} no es más que una secuencia de instancias medidas en determinado momento de tiempo y ordenadas cronológicamente, por lo que nuestro conjunto de datos corresponde con la definición de serie temporal. Las series temporales se suelen usar para estudiar la relación causal entre diversas variables que cambian en el tiempo y pueden influirse entre sí. Para este cometido existen una serie de técnicas específicas basadas en cálculos estadísticos más complejos. 
 
-Para este proyecto se ha empleado la biblioteca tsfresh~\cite{christ2018time} que extrae algunas de esas características a partir de una serie temporal, y hemos tratado de usarlas para generar el modelo de clasificación. 
-
 \section{Minería de datos}
 
 En esta fase se ha tratado de generar un modelo capaz de encontrar los patrones que definen una crisis epiléptica. Para ello el modelo debe ser capaz de aprender a partir de los datos y, en función de como lo haga, se puede hablar de dos tipos básicos de aprendizaje: supervisado y no supervisado. 
@@ -199,14 +212,17 @@ Por otra parte, dentro de los modelos de clasificación podemos distinguir entre
 	\item Los \textbf{clasificadores simples} emplean un solo modelo que será el encargado de predecir la clase de las nuevas instancias. 
 	\item Los \textbf{\textit{ensembles}}~\cite{kuncheva2004combining} son conjuntos de clasificadores simples cuyas predicciones se combinan para obtener una predicción final. La idea es construir varios modelos que no necesariamente predigan la misma clase para la misma instancia, y será la combinación de estas predicciones, por ejemplo, mediante votación, la que determinará la clase que predice el \textit{ensemble}. Para que este sistema de clasificación tenga sentido los modelos que forman el \textit{ensemble} deben ser algo distintos entre sí, de lo contrario no ofrecerían ninguna ventaja, y esa diferencia puede radicar en varios mecanismos, por ejemplo: 
 	\begin{itemize}
-		\item El proceso de construcción del modelo no es determinista, por lo que al entrenar varias instancias de ese modelo no se generan clasificadores exactamente iguales. 
-		\item El \textit{ensemble} se compone de modelos obtenidos con distintos métodos, llamados métodos heterogéneos. 
-		\item Cada modelo se entrena con un conjunto de datos diferente.
-		\item Cada modelo se entrena con un subconjunto de atributos diferente para el conjunto de datos. 
-	\end{itemize} 
+		\item \textbf{\textit{Ensembles} heterogéneos:} El \textit{ensemble} se compone de modelos obtenidos con distintos métodos. 
+		\item \textbf{\textit{Ensembles} homogéneos:} Cada modelo se entrena con el mismo algoritmo. La diferencia entre modelos puede radicar en que: 
+		\begin{itemize}
+			\item El proceso de construcción del modelo no es determinista, por lo que al entrenar varias instancias de ese modelo no se generan clasificadores exactamente iguales. 
+			\item Cada modelo se entrena con un conjunto de datos diferente.
+			\item Cada modelo se entrena con un subconjunto de atributos diferente para el conjunto de datos. 
+		\end{itemize}
+	\end{itemize}
 \end{itemize} 
 
-\begin{figure}[H]
+\begin{figure}
 	\centering
 	\includegraphics[width=1\textwidth]{../img/ensembles.png}
 	\caption[Uso de \textit{ensembles} para problemas de clasificación complejos.]{Uso de \textit{ensembles} para problemas de clasificación complejos~\cite{polikar2006ensemble}.}
@@ -223,18 +239,6 @@ Además, durante la construcción de los árboles que componen el \textit{ensemb
 
 Dado que todos los modelos del \textit{ensemble} son independientes los unos de los otros, tienen la misma importancia, por lo que su voto tendrá el mismo peso a la hora de calcular la predicción final. 
 
-\subsection{One-Class}
-
-La detección de anomalías One-Class consiste en entrenar el modelo con instancias de una sola clase de forma que a la hora evaluar nuevas instancias, devolverá información sobre si cada una pertenece o no a la clase. Esto lo realiza basándose, de alguna forma, en su similitud con las instancias usadas en el entrenamiento. 
-
-Por ejemplo, si entrenamos el clasificador solo con instancias etiquetadas como <<no crisis>> y utilizamos datos de ambas clases para la predicción, esta puede devolver dos valores: 
-
-\begin{itemize}
-	\item La nueva instancia corresponde con la clase, por lo que se predice <<no crisis>>. 
-	\item La nueva instancia no corresponde con la clase, por lo que se predice <<crisis>>. 
-\end{itemize}
-
-Durante el entrenamiento no se indica explícitamente a qué clase pertenece cada instancia, pero dado que todas las instancias de entrenamiento pertenecen a la misma, sí se le está proporcionando cierta información sobre la clase a la que pertenecen, y por lo tanto puede ser considerado como un algoritmo de aprendizaje supervisado. 
 
 \subsection{AdaBoost.M1}
 
@@ -251,7 +255,20 @@ Debido a la forma en la que se construyen los modelos simples que lo componen, a
 
 \subsection{Rotation Forest}
 
-\textit{Rotation Forest}~\cite{rodriguez2006rotation} es también un \textit{ensemble} para clasificación que emplea aprendizaje supervisado mediante árboles de decisión. No se basa en un algoritmo iterativo como \textit{Boosting}, por lo que los clasificadores simples pueden ser generados de forma paralela. Se trata de un método algo más complejo que los anteriores, basado en la aplicación del ya mencionado \textit{PCA} a subconjuntos, preferiblemente disjuntos, de atributos. Además, al igual que en \textit{Bagging}, cada árbol se entrena con conjuntos de datos construidos mediante muestreo con reemplazo a partir del conjunto original. 
+\textit{Rotation Forest}~\cite{rodriguez2006rotation} es también un \textit{ensemble} para clasificación que emplea aprendizaje supervisado mediante árboles de decisión. No se basa en un algoritmo iterativo como \textit{Boosting}, por lo que los clasificadores simples pueden ser generados de forma paralela. Se trata de un método algo más complejo que los anteriores, basado en la aplicación del ya mencionado \textit{PCA} a subconjuntos, preferiblemente disjuntos, de atributos. Para la obtención de las proyecciones se usan subconjuntos distintos de los datos, pero cada árbol se entrena con todas las instancias de entrenamiento. 
+
+\subsection{One-Class}
+
+La detección de anomalías One-Class consiste en entrenar el modelo con instancias de una sola clase de forma que a la hora evaluar nuevas instancias, devolverá información sobre si cada una pertenece o no a la clase. Esto lo realiza basándose, de alguna forma, en su similitud con las instancias usadas en el entrenamiento. 
+
+Por ejemplo, si entrenamos el clasificador solo con instancias etiquetadas como <<no crisis>> y utilizamos datos de ambas clases para la predicción, esta puede devolver dos valores: 
+
+\begin{itemize}
+	\item La nueva instancia corresponde con la clase, por lo que se predice <<no crisis>>. 
+	\item La nueva instancia no corresponde con la clase, por lo que se predice <<crisis>>. 
+\end{itemize}
+
+Durante el entrenamiento no se indica explícitamente a qué clase pertenece cada instancia, pero dado que todas las instancias de entrenamiento pertenecen a la misma, sí se le está proporcionando cierta información sobre la clase a la que pertenecen, y por lo tanto puede ser considerado como un algoritmo de aprendizaje supervisado. 
 
 \section{Evaluación de patrones}
 
@@ -269,9 +286,9 @@ La precisión corresponde con el porcentaje de acierto del clasificador para la 
 En un problema de clasificación binaria como este, si consideramos una instancia de <<crisis>> como un positivo (P) y una instancia de <<no crisis>> como un negativo (N) podemos definir los siguientes valores: 
 
 \begin{itemize}
-	\item Verdaderos positivos (VP): número de instancias de <<crisis>> que son clasificadas como <<crisis>>. 
+	\item Verdaderos positivos (TP): número de instancias de <<crisis>> que son clasificadas como <<crisis>>. 
 	\item Falsos positivos (FP): número de instancias de <<no crisis>> que son clasificadas como <<crisis>>. 
-	\item Verdaderos negativos (VN): número de instancias de <<no crisis>> que son clasificadas como <<no crisis>>. 
+	\item Verdaderos negativos (TN): número de instancias de <<no crisis>> que son clasificadas como <<no crisis>>. 
 	\item Falsos negativos (FN): número de instancias de <<crisis>> que son clasificadas como <<no crisis>>.  
 \end{itemize}
 
@@ -289,21 +306,21 @@ Estos valores se suelen visualizar en forma de matriz de confusión, la cual tie
 A partir de los valores anteriores se pueden calcular los siguientes: 
 
 \begin{itemize}
-	\item \textbf{Sensibilidad o Razón de Verdaderos Positivos (VPR):}
+	\item \textbf{Sensibilidad o Razón de Verdaderos Positivos (TPR):}
 	\begin{center}
-		$VPR=\frac{VP}{P}=\frac{VP}{(VP+FN)}$ 
+		$TPR=\frac{TP}{P}=\frac{TP}{(TP+FN)}$ 
 	\end{center} 
 	\item \textbf{Razón de Falsos positivos (FPR):} 
 	\begin{center}
-		$VPR=\frac{VP}{P}=\frac{VP}{(VP+FN)}$ 
+		$FPR=\frac{FP}{P}=\frac{FP}{(FP+TN)}$ 
 	\end{center} 
 \end{itemize}
 
 Algunos clasificadores binarios, como los que se usan en este trabajo, además de predecir la etiqueta de la clase a la que creen que pertenece la instancia, son capaces de devolver la probabilidad entre 0 y 1 de que la instancia pertenezca a esa clase. Usando estas probabilidades podríamos clasificar las instancias en función de un umbral, por ejemplo, una instancia sería considerada <<crisis>> si la probabilidad de que pertenezca a esa clase es mayor o igual a 0.8 y <<no crisis>> si es menor. 
 
-El área bajo la curva ROC (\textit{Receiver Operating Characteristic}) representa la relación entre la VPR y la FPR según se varía ese umbral. Se representará la VPR en el eje $y$, y FPR en el eje $x$. Cada punto corresponderá con los valores VPR y FPR resultantes de escoger cada uno de los posibles umbrales de clasificación, y la unión de esos puntos será lo que llamamos la curva ROC del clasificador.
+El área bajo la curva ROC (\textit{Receiver Operating Characteristic}) representa la relación entre la TPR y la FPR según se varía ese umbral. Se representará la TPR en el eje $y$, y FPR en el eje $x$. Cada punto corresponderá con los valores TPR y FPR resultantes de escoger cada uno de los posibles umbrales de clasificación, y la unión de esos puntos será lo que llamamos la curva ROC del clasificador.
 
-Nos interesa que el VPR ($sensibilidad$) sea lo mayor posible y que el FPR ($1-especificidad$) sea lo menor posible, por lo que el clasificador óptimo corresponderá con aquel que presenta un área bajo la curva ROC (AUC) igual a 1, mientras que el peor clasificador será aquel con un AUC igual a 0.5, ya que ofrecería una predicción equivalente a lanzar una moneda al aire. 
+Nos interesa que el TPR ($sensibilidad$) sea lo mayor posible y que el FPR ($1-especificidad$) sea lo menor posible, por lo que el clasificador óptimo corresponderá con aquel que presenta un área bajo la curva ROC (AUC) igual a 1, mientras que el peor clasificador será aquel con un AUC igual a 0.5, ya que ofrecería una predicción equivalente a lanzar una moneda al aire. 
 
 \begin{figure}[H]
 	\centering
@@ -316,10 +333,10 @@ Nos interesa que el VPR ($sensibilidad$) sea lo mayor posible y que el FPR ($1-e
 
 Se definen las siguientes variables: 
 \begin{center}
-	$Precision=\frac{VP}{VP+FP}$
+	$Precision=\frac{TP}{TP+FP}$
 \end{center}
 \begin{center}
-	$Recall=\frac{VP}{VP+FN}$
+	$Recall=\frac{TP}{TP+FN}$
 \end{center}
 
 La precisión media (AV)~\cite{precisionrecall} se define como lo siguiente: 

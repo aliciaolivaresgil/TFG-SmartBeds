@@ -2,7 +2,7 @@
 
 En este apartado se presentarán los aspectos relevantes del desarrollo del proyecto, exponiendo los problemas y las principales decisiones tomadas en cada una de las fases. Se distinguirá, de nuevo, entre la fase de investigación y la fase de desarrollo de la aplicación de Android. 
 
-\section{Fase de invstigación}
+\section{Fase de investigación}
 
 A continuación se expondrán las distintas situaciones que obligaron a tomar decisiones sobre cómo proseguir con la investigación y se explicará la razón por la que se tomó cada decisión concreta. También se hablará de detalles de implementación que fueron necesarios para abordar algunos de esos problemas. 
 
@@ -96,7 +96,7 @@ Este filtrado consistió en usar la función \texttt{select\_features} de la bib
 
 \subsection{Selección final de características mediante algoritmo genético}
 
-Una vez filtradas las características más relevantes, es decir, que aportan más información, el último paso consiste en seleccionar un subconjunto más pequeño de ellas que sea suficiente para lograr un buen rendimiento del clasificador. De nuevo, se plantearon varias estrategias cuyo desarrollo se puede consultar en el cuaderno de investigación, y aquí se expondrá la que obtuvo un mejor rendimiento. 
+Una vez obtenidas las características más relevantes, es decir, que aportan más información, el último paso consiste en seleccionar un subconjunto más pequeño de ellas que sea suficiente para lograr un buen rendimiento del clasificador. De nuevo, se plantearon varias estrategias cuyo desarrollo se puede consultar en el cuaderno de investigación, y aquí se expondrá la que obtuvo un mejor rendimiento. 
 
 Esta estrategia es la que emplea un algoritmo genético implementado mediante la biblioteca DEAP. Una de las decisiones que hay que tomar a la hora de diseñar un algoritmo genético es qué tipo de genotipo se va a utilizar. En este caso se decidió que el genotipo sería un array unidimensional en el que cada gen (cada posición del array) contiene un número entero entre 0 y 123, que hace referencia a cada una de las 124 características resultantes del filtrado. El tamaño de este array corresponderá con el tamaño máximo de características que pueden ser seleccionadas, y se tomó la decisión de restringir este valor a únicamente 10 características, para que fuera cual fuera el tipo de clasificador escogido finalmente, la clasificación fuese rápida. Esto es importante ya que, en teoría, debe aplicarse a un sistema de recepción de datos en tiempo real. 
 
@@ -224,7 +224,7 @@ Para empezar, una de las primeras decisiones que se tomó fue para qué versione
 
 La arquitectura puede verse desde dos puntos de vista distintos. Si consideramos el sistema como una entidad completa, incluyendo la aplicación cliente y la API del servidor, podemos hablar, como hace mi compañero en su memoria, de arquitectura Modelo-Vista-Controlador (MVC), dentro de la cual mi aplicación sería considerada como una Vista, ya que la lógica de negocio está enteramente contenida en la API. 
 
-Por otro lado, si hablamos de aplicaciones que trabajan directamente con los datos proporcionados por una API encontramos menciones a lo que comúnmente se denomina <<arquetectura de microservicios>>. Según esta arquitectura, cada funcionalidad está contenida en un proceso del servidor, de forma que cada parte de la lógica de negocio se encuentra encapsulada y los procesos son independientes entre sí. El cliente se limita a hacer peticiones a los microservicios de la API del servidor para acceder a la lógica de negocio. 
+Por otro lado, si hablamos de aplicaciones que trabajan directamente con los datos proporcionados por una API encontramos menciones a lo que comúnmente se denomina <<arquitectura de microservicios>>. Según esta arquitectura, cada funcionalidad está contenida en un proceso del servidor, de forma que cada parte de la lógica de negocio se encuentra encapsulada y los procesos son independientes entre sí. El cliente se limita a hacer peticiones a los microservicios de la API del servidor para acceder a la lógica de negocio. 
 
 \begin{figure}[H]
 	\centering
