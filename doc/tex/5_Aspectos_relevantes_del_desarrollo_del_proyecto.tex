@@ -16,7 +16,7 @@ Por otro lado, dado que el conjunto de datos disponibles es claramente desequili
 
 \subsection{Etiquetado de los datos}
 
-Uno de los principales problemas que se tuvo que afrontar fue el del etiquetado de los datos, ya que, aunque los proveedores de los datos indicaron también un rango de horas en los que supuestamente tuvo lugar una crisis epiléptica, estos rangos eran muy aproximados y demasiado amplios para lo que dura una crisis epiléptica, según la bibliografía, sin que se produzcan consecuencias fatales o irreversibles. 
+Uno de los principales problemas que se tuvo que afrontar fue el del etiquetado de los datos, ya que, aunque los proveedores de los datos indicaron también un rango de horas en los que supuestamente tuvo lugar una crisis epiléptica, estos rangos eran muy aproximados y demasiado amplios para lo que dura una crisis epiléptica, según la bibliografía, sin que se produzcan consecuencias fatales o irreversibles~\cite{epilepsia}. 
 
 Esto nos obligó a realizar una inspección visual de los datos, y ajustar los tiempos de la crisis teniendo en cuenta: 
 
@@ -71,7 +71,7 @@ Para cada una de las métricas de evaluación del clasificador (AUC y Precisión
 
 \subsection{Extracción de características de series temporales para una ventana de datos}
 
-La extracción de características de series temporales aplicada a un cierto tamaño de ventana no es tan sencilla y merece un comentario sobre cómo se ha resuelto. La función encargada de la extracción de características pertenece la biblioteca \texttt{tsfresh} y se llama \texttt{extract\_features}. Esta función recibe un \texttt{pandas.DataFrame} como parámetro y devuelve una fila de características por cada grupo de filas con el mismo <<id>> (debemos añadir un atributo <<id>> a nuestro conjunto de datos en bruto). Puedes indicarle mediante un diccionario pasado como parámetro el conjunto de características concreto que se desea calcular, o por el contrario, hacer que calcule todo su repertorio de características. Esta misma biblioteca ofrece una función llamada \texttt{utilities.dataframe\_functions.roll\_time\_series()} que, a efectos prácticos, permite la extracción de características aplicada a una ventana, pero lo hace con un coste de memoria tan grande que no resulta práctica para conjuntos de datos como el nuestro. Básicamente, crea un \texttt{pandas.DataFrame} con un <<id>> distinto para cada ventana. Pongamos un ejemplo para comprender su funcionamiento: si tenemos un conjunto de datos con 10 filas y queremos aplicar una ventana de tamaño 3, esta función devuelve: 
+La extracción de características de series temporales aplicada a un cierto tamaño de ventana no es tan sencilla y merece un comentario sobre cómo se ha resuelto. La función encargada de la extracción de características pertenece a la biblioteca \texttt{tsfresh} y se llama \texttt{extract\_features}. Esta función recibe un \texttt{pandas.DataFrame} como parámetro y devuelve una fila de características por cada grupo de filas con el mismo <<id>> (debemos añadir un atributo <<id>> a nuestro conjunto de datos en bruto). Puedes indicarle mediante un diccionario pasado como parámetro el conjunto de características concreto que se desea calcular, o por el contrario, hacer que calcule todo su repertorio de características. Esta misma biblioteca ofrece una función llamada \texttt{utilities.dataframe\_functions.roll\_time\_series()} que, a efectos prácticos, permite la extracción de características aplicada a una ventana, pero lo hace con un coste de memoria tan grande que no resulta práctica para conjuntos de datos como el nuestro. Básicamente, crea un \texttt{pandas.DataFrame} con un <<id>> distinto para cada ventana. Pongamos un ejemplo para comprender su funcionamiento: si tenemos un conjunto de datos con 10 filas y queremos aplicar una ventana de tamaño 3, esta función devuelve: 
 \begin{itemize}
 	\item 3 filas correspondientes a las filas 1, 2, y 3 del conjunto original y con un <<id>>=1. 
 	\item 3 filas correspondientes a las filas 2, 3, y 4 del conjunto original y con un <<id>>=2. 
@@ -85,12 +85,12 @@ La extracción de características de series temporales aplicada a un cierto tam
 	\label{fig:rolltimeseries}
 \end{figure}
 
-Por cómo funciona en relación al atributo <<id>>, si aplicamos este nuevo conjunto de datos a la función \texttt{extract\_features} obtenemos lo que buscamos, una fila de características por cada ventana, pero el coste computacional y de memoria que supone la generación de este nuevo conjunto, que tiene una enorme cantidad de datos repetidos, es tan alto que no resulta viable. Por ello, en lugar de usar esta función, se tomó la decisión de realizar el desplazamiento de la ventana de forma manual mediante un bucle.
+Por cómo funciona en relación al atributo <<id>>, si aplicamos este nuevo conjunto de datos a la función \texttt{extract\_features} obtenemos lo que buscamos: una fila de características por cada ventana, pero el coste computacional y de memoria que supone la generación de este nuevo conjunto, que tiene una enorme cantidad de datos repetidos, es tan alto que no resulta viable. Por ello, en lugar de usar esta función, se tomó la decisión de realizar el desplazamiento de la ventana de forma manual mediante un bucle.
 
 
 \subsection{Filtrado de características de series temporales}
 
-Al ejecutar la extracción de características de las datos de las dos noches en las que tuvo lugar una crisis epiléptica, obtenemos 4\,764 características en total, 794 por cada tubo de presión. Este número de atributos es excesivo para aplicarlo directamente a un clasificador, por lo que planteamos varias estrategias para quedarnos con aquellos que aporten mayor información. Estas estrategias se encuentran recogidas y explicadas en el cuaderno de investigación, por lo que aquí se expone la que, por presentar un mejor rendimiento, se empleó como entrada a métodos de selección posteriores. 
+Al ejecutar la extracción de características de las datos de las dos noches en las que tuvo lugar una crisis epiléptica, obtenemos 4\,764 características en total, 794 por cada tubo de presión. Este número de atributos es excesivo para aplicarlo directamente a un clasificador, por lo que planteamos varias estrategias para quedarnos con aquellos que aporten mayor información. Estas estrategias se encuentran recogidas y explicadas en el Anexo del Cuaderno de investigación, por lo que aquí se expone la que, por presentar un mejor rendimiento, se empleó como entrada a métodos de selección posteriores. 
 
 Este filtrado consistió en usar la función \texttt{select\_features} de la biblioteca tsfresh, que realiza una selección supervisada de las características (recibe el el valor de las etiquetas de cada instancia). Al aplicar esta función el número de características se redujo a 1\,731. Además, asumimos que una característica solo sería relevante si resulta relevante para todos los tubos de presión, por lo que eliminamos aquellas que, tras el filtrado, no permanecieran para todos los tubos, quedándonos únicamente con 744 (124 para cada tubo de presión).  
 
@@ -135,7 +135,7 @@ Las características seleccionadas mediante el algoritmo genético no se probaro
 
 En resumen, aquí se pueden exponer los resultados conseguidos al utilizar, como datos de entrenamiento, el conjunto de características seleccionado por el algoritmo genético usando la métrica de la precisión media en la función de adaptación, ya que, según la bibliografía~\cite{Davis2006RPR, saito2015pr}, esta métrica es más adecuada para la evaluación de clasificadores en conjuntos de datos desequilibrados. 
 
-Como se explica en el cuaderno de investigación, tras una exploración más amplia de varios tipos de clasificador, finalmente se escogen y comparan 3 métodos de remuestreo junto con 3 tipos de \textit{ensembles} distintos. Los métodos de remuestreo son: \textit{Random Balance}~\cite{diez2015random}, \textit{SMOTE}~\cite{galar2012review} y \textit{Random under sampling}~\cite{diez2015diversity}. Los \textit{ensembles} son: \textit{Bagging}~\cite{galar2012review}, \textit{Rotation Forest}~\cite{rodriguez2006rotation} y \textit{RandomCommittee}~\cite{diez2015diversity}. Las tablas~\ref{tab:crisis1} y~\ref{tab:crisis2} muestran los resultado medios obtenidos para 10 ejecuciones con cada una de las combinaciones de remuestreo-\textit{ensemble}. Cada fila corresponde con un método distinto y cada columna con una métrica de rendimiento, donde \textit{TPR}=tasa de verdaderos positivos, \textit{FPR}=tasa de falsos positivos, \textit{TNR}=tasa de verdaderos negativos, \textit{FNR}=tasa de falsos negativos, \textit{PRC}=\textit{Precision-Recall} (precisión media), \textit{ACC}=área bajo la curva ROC y \textit{ACC}=\textit{accuracy}. 
+Como se explica en el cuaderno de investigación, tras una exploración más amplia de varios tipos de clasificador, finalmente se escogen y comparan 3 métodos de remuestreo junto con 3 tipos de \textit{ensembles} distintos. Los métodos de remuestreo son: \textit{Random Balance} (RB)~\cite{diez2015random}, \textit{SMOTE} (SM)~\cite{galar2012review} y \textit{Random under sampling} (RUS)~\cite{diez2015diversity}. Los \textit{ensembles} son: \textit{Bagging} (Bag)~\cite{galar2012review}, \textit{Rotation Forest} (RotF)~\cite{rodriguez2006rotation} y \textit{RandomCommittee} (RC)~\cite{diez2015diversity}. Las tablas~\ref{tab:crisis1} y~\ref{tab:crisis2} muestran los resultado medios obtenidos para 10 ejecuciones con cada una de las combinaciones de remuestreo-\textit{ensemble}. Cada fila corresponde con un método distinto y cada columna con una métrica de rendimiento, donde \textit{TPR}=tasa de verdaderos positivos, \textit{FPR}=tasa de falsos positivos, \textit{TNR}=tasa de verdaderos negativos, \textit{FNR}=tasa de falsos negativos, \textit{PRC}=\textit{Precision-Recall} (precisión media), \textit{ACC}=área bajo la curva ROC y \textit{ACC}=\textit{accuracy}. 
 
 \begin{table}\scriptsize
 	\begin{center}
@@ -202,12 +202,14 @@ El desarrollo de una aplicación en Android requiere de unos conocimientos previ
 	
 	\begin{minipage}{\linewidth}
 	\begin{itemize}
-		\item \textit{User input}
-		\item \textit{Multiple App Screens}
-		\item \textit{Networking}
-		\item \textit{Data Storage} 
+		\item \textit{User input} (Aprox. 4 Semanas)
+		\item \textit{Multiple App Screens} (Aprox. 2 meses)
+		\item \textit{Networking} (Aprox. 5 semanas)
+		\item \textit{Data Storage} (Aprox. 8 semanas)
 	\end{itemize}
 	\end{minipage}
+	
+	Este curso está preparado para personas sin ningún conocimiento de programación previo, por lo que los tiempos estimados son demasiado amplios para alguien que ya cuenta con conocimientos de programación en Java y diseño y desarrollo de software en general. 
 	\item La página web de \textit{Android Developers}~\cite{androiddevelopers}, que contiene la documentación oficial de las herramientas del SDK de Android y la API. 
 	\item La página web de \textit{Stack Overflow}~\cite{stackoverflow}, donde se encontró solución a muchas de las pequeñas cuestiones que surgieron a lo largo del desarrollo. 
 \end{itemize}
@@ -244,33 +246,19 @@ Como se expone detenidamente en el apéndice de Especificación de requisitos, l
 Todas estas funcionalidades se basan en los servicios disponibles en la API de mi compañero. Las especificaciones de la API se exponen en el Manual del programador contenido en los anexos de su trabajo, donde se explica que se distingue entre dos tipos de comunicación: 
 
 \begin{enumerate}
-	\item La mayor parte de los servicios se basan en peticiones POST a rutas específicas en función del servicio. Este tipo de comunicación abarca servicios de autentificación, consulta y modificación de datos de gestión (tanto de usuarios como de camas). 
+	\item La mayor parte de los servicios se basan en peticiones POST a rutas específicas en función del servicio. Este tipo de comunicación abarca servicios de autenticación, consulta y modificación de datos de gestión (tanto de usuarios como de camas). 
 	\item De forma particular, el sistema que proporciona los datos captados por las camas en tiempo real se maneja a través de mensajes entre \textit{WebSockets} usando la librería Socket.IO. 
 \end{enumerate}
 
 \subsubsection{Peticiones POST}
-Dado que el funcionamiento de la aplicación depende casi enteramente de la comunicación con la API, debemos estar seguros de que existe conexión antes de realizar cada petición POST. Además, tal y como se implementa la API, un usuario solo puede mantener la autentificación en un dispositivo al mismo tiempo, de forma que, si el usuario <<alicia>> entra al sistema desde un dispositivo, y posteriormente lo hace desde otro, solo mantendrá la autentificación desde este último y perderá las credenciales desde el primero. Para gestionar estos dos problemas se define el siguiente esquema general de comunicación para cada petición POST:  
+Dado que el funcionamiento de la aplicación depende casi enteramente de la comunicación con la API, debemos estar seguros de que existe conexión antes de realizar cada petición POST. Además, tal y como se implementa la API, un usuario solo puede mantener la autenticación en un dispositivo al mismo tiempo, de forma que, si el usuario <<alicia>> entra al sistema desde un dispositivo, y posteriormente lo hace desde otro, solo mantendrá la autenticación desde este último y perderá las credenciales desde el primero. Para gestionar estos dos problemas se define el esquema general representado en la figura~\ref{fig:flowchart}.   
 
-\begin{minipage}{\linewidth}
-\begin{enumerate}
-	\item Se comprueba que existe conexión a internet.
-	\begin{enumerate}
-		\item Si existe se continúa. 
-		\item Si no existe se espera a recuperar la conexión o se pregunta al usuario si desea volver a la pantalla de inicio. 
-	\end{enumerate}
-	\item Se comprueba que el usuario sigue teniendo credenciales en el sistema.
-	\begin{enumerate}
-		\item Si es así se continúa. 
-		\item Si no, se muestra un mensaje comunicando que se ha abierto sesión desde un dispositivo distinto y se redirige a la pantalla de inicio. 
-	\end{enumerate}
-	\item Se realiza la petición POST
-	\begin{enumerate}
-		\item Si la respuesta es satisfactoria se refleja el resultado en la interfaz o se indica que la operación se ha llevado a cabo con éxito.  
-		\item Si la respuesta no es satisfactoria pero no se debe a un error del servidor, se muestra un mensaje de error al usuario. 
-		\item Si la respuesta no es satisfactoria debido a un error del servidor se muestra un mensaje de error y se redirige a la pantalla de inicio. 
-	\end{enumerate}
-\end{enumerate}
-\end{minipage}
+\begin{figure}
+	\centering
+	\includegraphics[width=1\textwidth]{../img/flowchart.png}
+	\caption{Diagrama de flujo, peticiones POST a la API.}
+	\label{fig:flowchart}
+\end{figure}
 
 Además, se tomó la decisión de que cada petición a la API, tanto POST como mediante WebSockets para la recepción de mensajes en tiempo real, se gestione por un hilo independiente. De esta forma se pueden recibir y mostrar datos de varias camas al mismo tiempo de forma sencilla y transparente. 
 
@@ -281,8 +269,8 @@ Al emplear esta biblioteca en la API, también debe usarse en el cliente para qu
 A rasgos generales la comunicación se realiza en dos pasos: 
 
 \begin{enumerate}
-	\item Se conecta un \textit{Socket} a la ruta genérica del servidor y se emite un evento <<give\_me\_data>>. 
-	\item Se conecta otro \textit{Socket} a la ruta formada por por la concatenación de la ruta genérica y el namespace que identifica la cama que se desea escuchar. A través de este \textit{Socket} se recibirán los eventos <<package>> con los datos en tiempo real. 
+	\item Se conecta un \textit{Socket} a la ruta genérica del servidor y se emite un evento <<\texttt{give\_me\_data}>>. 
+	\item Se conecta otro \textit{Socket} a la ruta formada por por la concatenación de la ruta genérica y el namespace que identifica la cama que se desea escuchar. A través de este \textit{Socket} se recibirán los eventos <<\texttt{package}>> con los datos en tiempo real. 
 \end{enumerate}
 
 \subsection{Autenticación}
@@ -306,11 +294,11 @@ Según se muestra en la figura~\ref{fig:observador}, la interfaz (Activity) tend
 
 Esta es una solución muy simple y efectiva para muchas plataformas, pero no funciona en el caso de Android, ya que la actualización de los elementos de la interfaz (\textit{Layouts}) solo se puede realizar desde el hilo principal. Al llamar al método \texttt{actualizar()} desde el hilo, saltaría una excepción si dentro de este método se manipula algún elemento de la interfaz. 
 
-Android ofrece varias alternativas para abordar este problema, y en mi caso he usado la que me ha parecido más sencilla: \textbf{el uso de \textit{Handlers}}~\cite{handler}. La idea es la misma, pero en este caso el \textit{Activity} tiene una referencia a un objeto \textit{Handler} que contiene el método \texttt{handleMessage}, el cual será el encargado de actualizar la interfaz. Cuando el \textit{Activity} lanza el hilo, le pasa la referencia al objeto \textit{Handler} como argumento. Cuando el hilo reciba un nuevo dato, se lo notificará ejecutando el método \texttt{sendMessage} del \textit{Handler}. Esta llamada activará el método \texttt{handleMessage}, que a diferencia del método \texttt{actualizar} del patrón observador, sí se ejecuta en el hilo principal. 
+Android ofrece varias alternativas para abordar este problema, y en mi caso he usado la que me ha parecido más sencilla: \textbf{el uso de \textit{Handlers}}~\cite{handler}. La idea es la misma, pero en este caso el \textit{Activity} tiene una referencia a un objeto \textit{Handler} que contiene el método \texttt{handleMessage}, el cual será el encargado de actualizar la interfaz. Cuando el \textit{Activity} lanza el hilo, le pasa la referencia al objeto \textit{Handler} como argumento. Cuando el hilo reciba un nuevo dato, se lo notificará ejecutando el método \texttt{sendMessage} del \textit{Handler}. Esta llamada activará el método \texttt{handleMessage} que, a diferencia del método \texttt{actualizar} del patrón observador, sí se ejecuta en el hilo principal. 
 
 \section{Aspectos relevantes generales}
 
-Este proyecto se me asignó gracias a la concesión de la \textbf{beca de colaboración de estudiantes en departamentos universitarios}, en este caso el departamento de Ingeniería Civil. Esta beca tiene como objetivo la implicación del estudiante en un proyecto de investigación, ofreciendo la posibilidad de ampliar sus conocimiento y concretar sus intereses para la posible incorporación a futuras tareas docentes o investigadoras. 
+Este proyecto se me asignó gracias a la concesión de la \textbf{beca de colaboración de estudiantes en departamentos universitarios}, en este caso en el departamento de Ingeniería Civil. Esta beca tiene como objetivo la implicación del estudiante en un proyecto de investigación, ofreciendo la posibilidad de ampliar sus conocimiento y concretar sus intereses para la posible incorporación a futuras tareas docentes o investigadoras. 
 
 La realización de este proyecto me ha permitido experimentar a grandes rasgos en qué consiste la labor de un investigador, y la experiencia, definitivamente, me ha llevado a considerar muy positivamente esta salida laboral. 
 

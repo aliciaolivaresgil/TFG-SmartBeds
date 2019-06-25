@@ -501,47 +501,23 @@ Para considerar la viabilidad económica del proyecto se deben calcular los cost
 
 Siguiendo estas consideraciones calculamos el coste total de personal de la siguiente forma: 
 
-\begin{longtable}[]{@{}lr@{}}
-	\toprule
-	\begin{minipage}[b]{0.60\columnwidth}\raggedright\strut
-		\textbf{Concepto}\strut
-	\end{minipage} & \begin{minipage}[b]{0.20\columnwidth}\raggedright\strut
-		\textbf{Coste}\strut
-	\end{minipage}\tabularnewline
-	\midrule
-	\endhead
-	\begin{minipage}[t]{0.60\columnwidth}\raggedright\strut
-		Salario mensual neto de una persona\strut
-	\end{minipage} & \begin{minipage}[t]{0.20\columnwidth}\raggedright\strut
-		1.225,7\euro{}~\cite{salariales}\strut
-	\end{minipage}\tabularnewline
-	\begin{minipage}[t]{0.60\columnwidth}\raggedright\strut
-		Retención IRPF (15\%)\strut
-	\end{minipage} & \begin{minipage}[t]{0.20\columnwidth}\raggedright\strut
-		216,3\euro{}\strut
-	\end{minipage}\tabularnewline
-	\begin{minipage}[t]{0.60\columnwidth}\raggedright\strut
-		Seguridad Social (29,9\%)\strut
-	\end{minipage} & \begin{minipage}[t]{0.20\columnwidth}\raggedright\strut
-		615,06\euro{}\strut
-	\end{minipage}\tabularnewline
-	\begin{minipage}[t]{0.60\columnwidth}\raggedright\strut
-		Salario mensual bruto de una persona\strut
-	\end{minipage} & \begin{minipage}[t]{0.20\columnwidth}\raggedright\strut
-		2.057,06\euro{}\strut
-	\end{minipage}\tabularnewline
-	\midrule
-	\begin{minipage}[t]{0.60\columnwidth}\raggedright\strut
-		\textbf{Total 7 meses y dos empleados}\strut
-	\end{minipage} & \begin{minipage}[t]{0.20\columnwidth}\raggedright\strut
-		28.798,84\euro{}\strut
-	\end{minipage}\tabularnewline
-	\bottomrule
-	\\
+\begin{table}[H]
+	\centering
+	\begin{tabular}[]{@{}l r@{}}
+		\toprule
+		\textbf{Concepto} & \textbf{Coste(\euro{})} \\
+		\midrule
+		Salario mensual neto~\cite{salariales} & 1.225,7 \\
+		Retención IRPF (15\%) & 216,3 \\
+		Seguridad Social (28,3\%) & 569,16 \\
+		Salario mensual bruto & 2.011,16 \\\hubu
+		\textbf{Total 7 meses y dos empleados} &  28.156,24 \\
+		\bottomrule
+	\end{tabular}
 	\caption{Costes de personal.}
-\end{longtable}
+	\label{tab:costes_personal}
+\end{table}
 
-La retribución de la seguridad social se ha calculado siguiendo la guía de GoBees~\cite{gobees}. 
 
 \subsubsection{Costes del \textit{software}}
 
@@ -551,97 +527,47 @@ El \textit{software} empleado no supone ningún coste en este proyecto ya que to
 
 Para el desarrollo de este proyecto no se ha adquirido ningún \textit{hardware} nuevo, por lo que únicamente se incluirán los costes del material con el que ya se contaba asumiendo una amortización en 5 años, y calculando solo el coste de amortización correspondiente a la duración del proyecto (7 meses): 
 
-\begin{longtable}[]{@{}lrr@{}}
-	\toprule
-	\begin{minipage}[b]{0.29\columnwidth}\raggedright\strut
-		\textbf{Concepto}\strut
-	\end{minipage} & \begin{minipage}[b]{0.18\columnwidth}\raggedright\strut
-		\textbf{Coste}\strut
-	\end{minipage} & \begin{minipage}[b]{0.32\columnwidth}\raggedright\strut
-		\textbf{Coste amortizado}\strut
-	\end{minipage}\tabularnewline
-	\midrule
-	\endhead
-	\begin{minipage}[t]{0.29\columnwidth}\raggedright\strut
-		Dispositivo móvil\strut
-	\end{minipage} & \begin{minipage}[t]{0.18\columnwidth}\raggedright\strut
-		150\euro{}\strut
-	\end{minipage} & \begin{minipage}[t]{0.32\columnwidth}\raggedright\strut
-		17,5\euro{}\strut
-	\end{minipage}\tabularnewline
-	\begin{minipage}[t]{0.29\columnwidth}\raggedright\strut
-		Ordenador portátil (x2)\strut
-	\end{minipage} & \begin{minipage}[t]{0.18\columnwidth}\raggedright\strut
-		800\euro{}\strut
-	\end{minipage} & \begin{minipage}[t]{0.32\columnwidth}\raggedright\strut
-		93,33\euro{}\strut
-	\end{minipage}\tabularnewline
-	\begin{minipage}[t]{0.29\columnwidth}\raggedright\strut
-		\textit{MainFrame}\strut
-	\end{minipage} & \begin{minipage}[t]{0.18\columnwidth}\raggedright\strut
-		3.000\euro{}\strut
-	\end{minipage} & \begin{minipage}[t]{0.32\columnwidth}\raggedright\strut
-		350\euro{}\strut
-	\end{minipage}\tabularnewline
-	\begin{minipage}[t]{0.29\columnwidth}\raggedright\strut
-		GPU (x3)\strut
-	\end{minipage} & \begin{minipage}[t]{0.18\columnwidth}\raggedright\strut
-		4.500\euro{}\strut
-	\end{minipage} & \begin{minipage}[t]{0.32\columnwidth}\raggedright\strut
-		525\euro{}\strut
-	\end{minipage}\tabularnewline
-	\midrule
-	\begin{minipage}[t]{0.29\columnwidth}\raggedright\strut
-		\textbf{Total}\strut
-	\end{minipage} & \begin{minipage}[t]{0.18\columnwidth}\raggedright\strut
-		8.450\euro{}\strut
-	\end{minipage} & \begin{minipage}[t]{0.32\columnwidth}\raggedright\strut
-		985,83\euro{}\strut
-	\end{minipage}\tabularnewline
-	\bottomrule
-	\\
-	\caption{Costes de \emph{hardware}.}
-\end{longtable}
+\begin{table}[H]
+	\centering
+	\begin{tabular}[]{@{}l c r@{}}
+		\toprule
+		\textbf{Concepto} & \textbf{Coste(\euro{})} & \textbf{Coste amortizado(\euro{})} \\
+		\midrule
+		Dispositivo móvil & 150 & 17,5 \\
+		Ordenador portátil (x2) & 800 & 93,33 \\
+		\textit{MainFrame} & 3.000 & 350 \\ 
+		GPU (x3) & 4.500 & 525 \\\hubu
+		\textbf{Total} & 8.450 & 985,83 \\
+		\bottomrule
+	\end{tabular}
+	\caption{Costes de \textit{hardware}.}
+	\label{tab:costes_hardware}.
+\end{table}
 
 \subsubsection{Coste total}
 
 Teniendo en cuenta los costes de personal y de \textit{hardware}, el coste económico total del proyecto asciende a:
 
-\begin{longtable}[]{@{}lr@{}}
-	\toprule
-	\begin{minipage}[b]{0.40\columnwidth}\raggedright\strut
-		\textbf{Concepto}\strut
-	\end{minipage} & \begin{minipage}[b]{0.20\columnwidth}\raggedright\strut
-		\textbf{Coste}\strut
-	\end{minipage}\tabularnewline
-	\midrule
-	\endhead
-	\begin{minipage}[t]{0.40\columnwidth}\raggedright\strut
-		Coste de personal\strut
-	\end{minipage} & \begin{minipage}[t]{0.20\columnwidth}\raggedright\strut
-		28.798,84\euro{}\strut
-	\end{minipage}\tabularnewline
-	\begin{minipage}[t]{0.40\columnwidth}\raggedright\strut
-		Coste del \textit{hardware}\strut
-	\end{minipage} & \begin{minipage}[t]{0.20\columnwidth}\raggedright\strut
-		985,83\euro{}\strut
-	\end{minipage}\tabularnewline
-	\midrule
-	\begin{minipage}[t]{0.40\columnwidth}\raggedright\strut
-		\textbf{Total}\strut
-	\end{minipage} & \begin{minipage}[t]{0.20\columnwidth}\raggedright\strut
-		\textbf{29.784,67\euro{}}\strut
-	\end{minipage}\tabularnewline
-	\bottomrule
-	\\
+\begin{table}[H]
+	\centering
+	\begin{tabular}[]{@{}l r@{}}
+		\toprule
+		\textbf{Concepto} & \textbf{Coste(\euro{})} \\
+		\midrule
+		Coste de personal & 28.156,24 \\ 
+		Coste del \textit{hardware} & 985,83 \\\hubu
+		\textbf{Total} & \textbf{29.142,07} \\	
+		\bottomrule	
+	\end{tabular}
 	\caption{Coste total.}
-\end{longtable}
+	\label{tab:coste_total}
+\end{table}
 
 \subsection{Viabilidad legal}
 
 En esta sección se hablará de la viabilidad legal del proyecto en términos de la licencia del software generado. A la hora de escoger la licencia más adecuada para nuestro software estamos limitados por las condiciones de las licencias de las herramientas o bibliotecas que hemos empleado para generarlos. 
 
-En la aplicación se han usado herramientas y bibliotecas con las siguientes licencias ordenadas de más a menos permisivas : 
+En la aplicación se han usado herramientas y bibliotecas con las siguientes licencias ordenadas de más a menos permisivas: 
 
 \begin{itemize}
 	\item MIT: Socket.IO-client Library. 
@@ -660,12 +586,6 @@ Para la fase de investigación y documentación se usan herramientas y bibliotec
 
 Todas las licencias son compatibles con GPL, siendo GPLv3 la más restrictiva. Para este proyecto se ha decidido usar la licencia AGPLv3\cite{wiki:agpl} (\textit{GNU Affero General Public License v3}), derivada de GPLv3 pero diseñada específicamente para asegurar la cooperación con la comunidad en el caso de software que corra en servidores de red.
 
-\begin{figure}[H]
-	\centering
-	\includegraphics[width=0.6\textwidth]{../img/agpl.png}
-	\caption{\textit{GNU Affero General Public License v3.}}
-	\label{fig:agpl}
-\end{figure}
 
 
 

@@ -11,9 +11,9 @@ En esta sección se va a hablar de los aspectos más relevantes del diseño de l
 
 \section{Diseño de datos}
 
-Para el desarrollo de la aplicación Android no podemos hablar estrictamente de un diseño de los datos, ya que se trata de un cliente que no interactúa directamente con la base de datos, sino que lo hace a través de la API del servidor, la cual devuelve siempre todos los datos en un objeto con formato JSON. 
+Para el desarrollo de la aplicación Android no podemos hablar estrictamente de un diseño de los datos, ya que se trata de un cliente que no interactúa directamente con la base de datos. El acceso a la persistencia se hace a través de peticiones a la API del servidor, la cual devuelve siempre todos los datos en un objeto con formato JSON. 
 
-En este sentido, podemos abstraernos del diseño e implementación concretas de la base de datos, ya que nuestra gestión de los datos solo depende de las características del JSON que nos va a devolver cada petición. La estructura de la respuesta de cada petición a la API se especifica en el Manual del programador de mi compañero José Luis Garrido Labrador. 
+En este sentido, podemos abstraernos del diseño e implementación concretos de la base de datos, ya que nuestra gestión de los datos solo depende de las características del JSON que nos va a devolver cada petición. La estructura de la respuesta de cada petición a la API se especifica en el Manual del programador de mi compañero José Luis Garrido Labrador. 
 
 \section{Diseño procedimental}
 
@@ -33,7 +33,7 @@ Tal y como se ha planteado la aplicación de Android, existen dos procesos relev
 
 \begin{figure}[H]
 	\centering
-	\includegraphics[width=1.2\textwidth]{../img/sequenceAPI.png}
+	\includegraphics[width=1\textwidth]{../img/sequenceAPI.png}
 	\caption{Diagrama de secuencias, llamada a los servicios genéricos de la API.}
 	\label{fig:sequenceAPI}
 \end{figure}

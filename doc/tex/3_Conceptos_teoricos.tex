@@ -14,14 +14,14 @@ Los datos de los que disponemos tienen los siguientes atributos:
 	\item \textbf{P1, P2, P3, P4, P5, P6, P7, P8, P9, P10, P11, P12}: presiones, en mBar, captadas por los 12 tubos de presión integrados en el colchón. 
 	\item \textbf{HR, RR, SV, HRV, B2B}: valores de las constantes vitales que corresponden con la frecuencia cardíaca (pulsaciones/minuto), la frecuencia respiratoria (respiraciones/minuto), el volumen sistólico (mililitros), la variabilidad del ritmo cardíaco (milisegundos) y el tiempo entre pulsaciones (milisegundos) respectivamente. 
 	\item \textbf{SS}: potencia de la señal relativa a la matriz de tubos de presión. Un valor superior a 400 se considera aceptable. 
-	\item \textbf{STATUS}: estado de medición del sensor de constantes vitales. 0=\textit{low signal}, 1=\textit{ok signal}, 2=\textit{high signal}, 3= \textit{close to overload}, 4= \textit{close to max HR}. 
+	\item \textbf{STATUS}: estado de medición del sensor de constantes vitales. 0=\textit{low signal}, 1=\textit{ok signal}, 2=\textit{high signal}, 3=\textit{close to overload}, 4=\textit{close to max HR}. 
 \end{itemize}
 
 Por otra parte se nos proporcionaron unos rangos aproximados de horas en los que el paciente tuvo un ataque epiléptico, lo que nos permite etiquetar cada instancia de datos como <<crisis>> o <<no crisis>>.  
 
 \subsection{Eliminación de instancias por baja señal}
 
-Dos de estos atributos, SS y STATUS, hacen referencia a la calidad de la instancia de los datos, uno haciendo referencia a la matriz de tubos de presión y otro al sensor de constantes vitales, y dado que la fase de limpieza de datos consiste en eliminar el ruido y las instancias incorrectas, es aquí donde eliminaremos todas las instancias cuyos datos no consideremos fiables en función de los valores de estos dos atributos. 
+Dos de estos atributos, SS y STATUS, hacen referencia a la calidad de las instancias de los datos, uno haciendo referencia a la matriz de tubos de presión y otro al sensor de constantes vitales. Dado que la fase de limpieza de datos consiste en eliminar el ruido y las instancias incorrectas, es aquí donde eliminaremos todas las instancias cuyos datos no consideremos fiables en función de los valores de estos dos atributos. 
 
 \subsection{Eliminación manual del ruido}
 
@@ -56,7 +56,7 @@ Otra forma de eliminar el ruido de una señal consiste en usar filtros. Un filtr
 
 \subsection{Eliminación de atributos inconsistentes}
 
-Al trabajar con datos reales, cabe la posibilidad de que algunos de los atributos contengan datos inconsistente, ya sea por que se produjeron errores (humanos o sistemáticos) durante la captación de los mismos o porque se corrompieron o perdieron durante su almacenamiento o su envío. Estos datos deberán ser eliminados para no interferir en la fase de minería de datos. Como se explicará en el apartado \ref{aspectos relevantes} de Aspectos Relevantes, en esta fase nos vimos obligados a eliminar los datos relativos a las constantes vitales. 
+Al trabajar con datos reales, cabe la posibilidad de que algunos de los atributos contengan datos inconsistente, ya sea por que se produjeron errores (humanos o sistemáticos) durante la captación de los mismos o porque se corrompieron o perdieron durante su almacenamiento o su envío. Estos datos deberán ser eliminados para no interferir en la fase de minería de datos. Como se explicará en el apartado \ref{aspectos relevantes} (Aspectos Relevantes), en esta fase nos vimos obligados a eliminar los datos relativos a las constantes vitales. 
 
 \section{Integración de datos}
 
@@ -64,7 +64,7 @@ Los datos disponibles corresponden con las instancias recogidas a lo largo de va
 
 \section{Selección de datos}
 
-La selección de los datos consiste en desechar aquellos atributos o instancias que no resultan útiles para la extracción de conocimiento. A estas alturas del proceso seguimos teniendo datos relativos a la identificación del colchón, a la hora en la que se tomó la instancia de dato y a las presiones. 
+La selección de los datos consiste en desechar aquellos atributos o instancias que no resultan útiles para la extracción de conocimiento. A estas alturas del proceso, se siguen teniendo datos relativos a la identificación del colchón, a la hora en la que se tomó la instancia de dato y a las presiones. 
 
 \subsection{Eliminación de identificadores}
 
@@ -121,9 +121,9 @@ Con esto, el objetivo que se persiguió fue comprobar si las instancias de <<cri
 
 \subsubsection{Transformaciones lineales}
 
-Este tipo de transformaciones supone que los datos observados son combinación lineal de una cierta base, y en ellas se engloba el \textbf{Análisis de Componentes Principales} (\textit{PCA})~\cite{pca}. 
+Este tipo de transformaciones suponen que los datos observados son combinación lineal de una cierta base, y en ellas se engloba el \textbf{Análisis de Componentes Principales} (\textit{PCA})~\cite{pca}. 
 
-\textit{PCA} es una de las técnicas más utilizadas y consiste en escoger el nuevo sistema de coordenadas (o base) de forma que se maximice la varianza entre las instancias. Cabe destacar que para el nuevo sistema de coordenadas se puede escoger cualquier dimensionalidad menor o igual a la del conjunto original de datos. Sin embargo, a mayor dimensionalidad, mayor coste de computación, y no es posible representar en papel proyecciones de más de 2 dimensiones, por lo que solo se ha probado esta última. 
+\textit{PCA} es una de las técnicas más utilizadas y consiste en escoger el nuevo sistema de coordenadas (o base) de forma que se maximice la varianza entre las instancias. Cabe destacar que, para el nuevo sistema de coordenadas, se puede escoger cualquier dimensionalidad menor o igual a la del conjunto original de datos. Sin embargo, a mayor dimensionalidad, mayor coste de computación, y no es posible representar en papel proyecciones de más de 2 dimensiones, por lo que solo se ha probado esta última. 
 
 \begin{figure}[H]
 	\centering
@@ -132,7 +132,7 @@ Este tipo de transformaciones supone que los datos observados son combinación l
 	\label{fig:pca}
 \end{figure}
 
-En la figura~\ref{fig:pca} los puntos rojos corresponden con instancias de <<crisis>> y los azules con instancias de <<no crisis>>. Como se puede ver no existe separación entre ellas. Los puntos amarillos corresponden con instancias de la otra crisis, y se puede ver que tampoco comparten espacio. 
+En la figura~\ref{fig:pca}, los puntos rojos corresponden con instancias de <<crisis>> y los azules con instancias de <<no crisis>>. Como se puede ver no existe separación entre ellas. Los puntos amarillos corresponden con instancias de la otra crisis, y se puede ver que tampoco comparten espacio. 
 
 \subsubsection{Transformaciones no lineales}
 
@@ -147,11 +147,11 @@ Las transformaciones no lineales~\cite{manifold}, no asumen que los datos sean u
 \begin{figure}
 	\centering
 	\includegraphics[width=1\textwidth]{../img/manifolds.png}
-	\caption{Comparativa de las técnicas de transformación no lineal.}
+	\caption{Comparativa de las técnicas de transformación no lineal con los datos en bruto y usando estadísticos.}
 	\label{fig:manifolds}
 \end{figure}
 
-Como se aprecia en la figura~\ref{fig:manifolds} con algunas de estas técnicas se consigue un grado algo mayor de separación, pero las instancias siguen sin ser fácilmente separables. En este caso, y como se puede observar, hemos aplicado las técnicas no solo a los datos en bruto sino también a los datos estadísticos, lo que nos lleva al siguiente tipo de transformación. 
+Como se aprecia en la figura~\ref{fig:manifolds} con algunas de estas técnicas se consigue un grado algo mayor de separación, pero las instancias siguen sin ser fácilmente separables. En este caso, y como se puede observar, hemos aplicado las técnicas no solo a los datos en bruto, sino también a los datos estadísticos, lo que nos lleva al siguiente tipo de transformación. 
 
 \subsection{Cálculo de estadísticas móviles}
 
@@ -181,10 +181,10 @@ Para este proyecto se ha empleado la biblioteca tsfresh~\cite{christ2018time} qu
 
 \section{Minería de datos}
 
-En esta fase se ha tratado de generar un modelo capaz de encontrar los patrones que definen una crisis epiléptica. Para ello el modelo debe ser capaz de aprender a partir de los datos, y en función de como lo haga se puede hablar de dos tipos básicos de aprendizaje: supervisado y no supervisado. 
+En esta fase se ha tratado de generar un modelo capaz de encontrar los patrones que definen una crisis epiléptica. Para ello el modelo debe ser capaz de aprender a partir de los datos y, en función de como lo haga, se puede hablar de dos tipos básicos de aprendizaje: supervisado y no supervisado. 
 
 \begin{itemize}
-	\item Un modelo de \textbf{aprendizaje supervisado} se entrena con un conjunto de datos etiquetado, es decir, que cada instancia de dato de entrenamiento tiene asociado un valor categórico que ofrece información sobre a qué clase pertenece (para un problema de clasificación) o un valor nominal (para un problema de regresión). Este es un problema de clasificación y las dos clases posibles son <<crisis>> o <<no crisis>>. Tras el entrenamiento, el modelo deberá ser capaz de etiquetar nuevas instancias de dato distintas a las que se han usado en el entrenamiento como instancias de <<crisis>> o <<no crisis>> basándose en lo aprendido. En definitiva, el ciclo de vida de un clasificador supervisado tiene dos fases: 
+	\item Un modelo de \textbf{aprendizaje supervisado} se entrena con un conjunto de datos etiquetado, es decir, que cada instancia de dato de entrenamiento tiene asociado un valor categórico que ofrece información sobre a qué clase pertenece (para un problema de clasificación) o un valor numérico (para un problema de regresión). Este es un problema de clasificación y las dos clases posibles son <<crisis>> o <<no crisis>>. Tras el entrenamiento, el modelo deberá ser capaz de etiquetar nuevas instancias de dato distintas a las que se han usado en el entrenamiento como instancias de <<crisis>> o <<no crisis>> basándose en lo aprendido. En definitiva, el ciclo de vida de un clasificador supervisado tiene dos fases: 
 	\begin{enumerate}
 		\item \textbf{Entrenamiento:} El modelo aprende a partir de un conjunto de datos etiquetado. 
 		\item \textbf{Predicción:} El modelo predice la clase de un dato no etiquetado, es decir, cuya clase real se desconoce. 
@@ -225,16 +225,14 @@ Dado que todos los modelos del \textit{ensemble} son independientes los unos de 
 
 \subsection{One-Class}
 
-La detección de anomalías One-Class consiste en entrenar el modelo con instancias de una sola clase de forma que a la hora evaluar nuevas instancias, devolverá información sobre si cada una pertenece o no a la clase basándose, de alguna forma, en su similitud con las instancias usadas en el entrenamiento. 
+La detección de anomalías One-Class consiste en entrenar el modelo con instancias de una sola clase de forma que a la hora evaluar nuevas instancias, devolverá información sobre si cada una pertenece o no a la clase. Esto lo realiza basándose, de alguna forma, en su similitud con las instancias usadas en el entrenamiento. 
 
 Por ejemplo, si entrenamos el clasificador solo con instancias etiquetadas como <<no crisis>> y utilizamos datos de ambas clases para la predicción, esta puede devolver dos valores: 
 
-\begin{minipage}{\linewidth}
 \begin{itemize}
 	\item La nueva instancia corresponde con la clase, por lo que se predice <<no crisis>>. 
 	\item La nueva instancia no corresponde con la clase, por lo que se predice <<crisis>>. 
 \end{itemize}
-\end{minipage}
 
 Durante el entrenamiento no se indica explícitamente a qué clase pertenece cada instancia, pero dado que todas las instancias de entrenamiento pertenecen a la misma, sí se le está proporcionando cierta información sobre la clase a la que pertenecen, y por lo tanto puede ser considerado como un algoritmo de aprendizaje supervisado. 
 
