@@ -108,10 +108,9 @@ public class MainActivity extends AppCompatActivity {
             case 502:
                 DialogUtil.showDialog(context, "Error de conexión con el servidor", "Inténtelo más tarde.");
                 break;
-            case 401:
+            case 403:
                 DialogUtil.showDialog(context, "Error de autentificación del usuario", "Nombre de usuaro o contraseña incorrectos.");
                 break;
         }
     }
-
 }
