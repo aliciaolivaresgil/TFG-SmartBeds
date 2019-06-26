@@ -353,7 +353,7 @@ public class BedChartsActivity extends AppCompatActivity {
             updateChart(chartRR, listRR, dataSetVital, lineDataVital, ContextCompat.getColor(context, R.color.chart_2), "Frec. respiratoria (resp/min)");
             updateChart(chartSV, listSV, dataSetVital, lineDataVital, ContextCompat.getColor(context, R.color.chart_3), "Volumen sitólico (ml)");
             updateChart(chartHRV, listHRV, dataSetVital, lineDataVital, ContextCompat.getColor(context, R.color.chart_4), "Variabilidad de HR (ms)");
-            updateChart(chartB2B, listB2B, dataSetVital, lineDataVital, ContextCompat.getColor(context, R.color.chart_5), "Tiempo entre pulaciones (ms)");
+            updateChart(chartB2B, listB2B, dataSetVital, lineDataVital, ContextCompat.getColor(context, R.color.chart_5), "Tiempo entre pulsaciones (ms)");
 
             //actualizar grafica Pressures
             updatePressuresChart();

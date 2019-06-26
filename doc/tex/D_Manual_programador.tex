@@ -47,9 +47,9 @@ En caso de heredar este proyecto y contar con el directorio /data que contiene l
 
 \subsection{Aplicación Android}
 
-Para trabajar con el proyecto de Android Studio es necesario tener instalado \textbf{Java JDK 8} y \textbf{Android Studio}. En este caso se ha usado una versión de Android Studio 3.3.2. El resto de dependencias se encuentran indicadas en los ficheros de configuración de gradle, y se añaden al construir la aplicación. Concretamente las dependencias de la aplicación se encuentran en el fichero \textbf{/android/app/build.gradle}, y será aquí donde se deberán añadir las dependencias nuevas si son necesarias. En este archivo también se indica la versión mínima del SDK de android que se soporta, en este caso la 23, que corresponde con la versión de Android 6 (\textit{Marshmallow}). Esto supone que la aplicación funcionará en dispositivos con una versión de Android 6 o superior. 
+Para trabajar con el proyecto de Android Studio es necesario tener instalado \textbf{Java JDK 8} y \textbf{Android Studio}. En este caso se ha usado una versión de Android Studio 3.3.2. El resto de dependencias se encuentran indicadas en los ficheros de configuración de gradle, y se añaden al construir la aplicación. Concretamente las dependencias de la aplicación se encuentran en el fichero \textbf{/android/app/build.gradle}, y será aquí donde se deberán añadir las dependencias nuevas si son necesarias. En este archivo también se indica la versión mínima de la API de Android que se soporta, en este caso la 23, que corresponde con la versión de Android 6 (\textit{Marshmallow}). Esto supone que la aplicación funcionará en dispositivos con una versión de Android 6 o superior. 
 
-Además, el funcionamiento de esta interfaz depende de los servicios ofrecidos por la API implementada por mi compañero José Luis Garrido Labrador. Los requisitos e instalación de la API del servidor remoto se encuentran documentados en los anexos de su trabajo. 
+Además, el funcionamiento de esta aplicación depende de los servicios ofrecidos por la API implementada por mi compañero José Luis Garrido Labrador. Los requisitos e instalación de la API del servidor remoto se encuentran documentados en los anexos de su trabajo: \url{https://github.com/jlgarridol/TFG-SmartBeds}.
 
 \section{Compilación, instalación y ejecución del proyecto}
 
@@ -64,7 +64,7 @@ Una vez instalados Java JDK 8 y Android Studio, para importar el proyecto en se 
 	\item Descargar el contenido del repositorio desde \textbf{Clone or download >~Download ZIP}. 
 	\begin{figure}[H]
 		\centering
-		\includegraphics[width=0.6\textwidth]{../img/download.png}
+		\includegraphics[width=0.5\textwidth]{../img/download.png}
 		\caption{Descarga del contenido del repositorio.}
 		\label{fig:download}
 	\end{figure}
@@ -73,7 +73,7 @@ Una vez instalados Java JDK 8 y Android Studio, para importar el proyecto en se 
 	\item En el menú de opciones de Android Studio ir a \textbf{File >~Open} y seleccionar el directorio \textbf{/android}. 
 	\begin{figure}[H]
 		\centering
-		\includegraphics[width=0.6\textwidth]{../img/open.png}
+		\includegraphics[width=0.5\textwidth]{../img/open.png}
 		\caption{Importar proyecto de Android Studio.}
 		\label{fig:open}
 	\end{figure}
