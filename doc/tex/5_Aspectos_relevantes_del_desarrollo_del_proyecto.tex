@@ -296,6 +296,54 @@ Esta es una solución muy simple y efectiva para muchas plataformas, pero no fun
 
 Android ofrece varias alternativas para abordar este problema, y en mi caso he usado la que me ha parecido más sencilla: \textbf{el uso de \textit{Handlers}}~\cite{handler}. La idea es la misma, pero en este caso el \textit{Activity} tiene una referencia a un objeto \textit{Handler} que contiene el método \texttt{handleMessage}, el cual será el encargado de actualizar la interfaz. Cuando el \textit{Activity} lanza el hilo, le pasa la referencia al objeto \textit{Handler} como argumento. Cuando el hilo reciba un nuevo dato, se lo notificará ejecutando el método \texttt{sendMessage} del \textit{Handler}. Esta llamada activará el método \texttt{handleMessage} que, a diferencia del método \texttt{actualizar} del patrón observador, sí se ejecuta en el hilo principal. 
 
+\subsection{Test de usabilidad}
+
+De forma adicional a los test unitarios y los test de interfaz, se realizó un test de usabilidad tanto de la aplicación web generada por mi compañero José Luis Garrido Labrador como de mi aplicación Android. Este tipo de test involucra a los usuarios finales, y tiene como objetivo comprobar en qué medida el producto final cumple el propósito para el que fue diseñado y resulta adecuado y fácil de usar para los usuarios. 
+
+Este test se realizó mediante una encuesta de Google que se difundió entre personas con perfiles sanitarios, educativos y tecnológicos principalmente. En esta encuesta se le proporcionaba un nombre de usuario y una contraseña al participante y se le pedía que realizara las siguientes tareas tanto en la aplicación web como en la aplicación Android: 
+
+\begin{enumerate}
+	\item Iniciar sesión con el usuario y contraseña que te hemos proporcionado. 
+	\item Cambiar tu contraseña (ten en cuenta que una vez cambies tu contraseña deberás usar la nueva en cualquiera de las dos aplicaciones). 
+	\item Consultar el estado de los pacientes. 
+	\item Consultar las gráficas explicativas sobre el estado de los pacientes. 
+	\item Cerrar sesión. 
+\end{enumerate}
+
+Para recoger las opiniones sobre cada una de las aplicaciones se pedía al usuario que valorara las siguientes afirmaciones dos veces: una sobre la aplicación web y otra sobre la aplicación Android. Las valoraciones se daban entre 1 y 5 siendo 1=\textit{completamente en desacuerdo} y 5=\textit{completamente de acuerdo}. 
+
+\begin{enumerate}
+	\item Me ha resultado fácil realizar las tareas propuestas. (\textbf{Facilidad de uso})
+	\item Me ha resultado fácil interpretar los elementos gráficos (iconos, botones, gráficas...). (\textbf{Interpretabilidad})
+	\item La selección de elementos gráficos usados en la aplicación (colores, tipografías...) me ha parecido acertada. (\textbf{Uso de gráficos})
+	\item La aplicación me ha parecido muy buena. (\textbf{Global})
+\end{enumerate}
+
+\subsubsection{Resultados del test}
+
+En total, sobre las preguntas relativas a la aplicación Android respondieron 10 personas, cuyos perfiles profesionales se distribuyen como se muestra en la figura~\ref{fig:mobile_proportion}. 
+
+\begin{figure}
+	\centering
+	\includegraphics[width=0.9\textwidth]{../img/mobile_proportion.png}
+	\caption{Proporción del perfil profesional de los participantes.}
+	\label{fig:mobile_proportion}
+\end{figure}
+
+\begin{figure}
+	\centering
+	\includegraphics[width=0.7\textwidth]{../img/mobile_general.pdf}
+	\caption{Valoraciones de todos los encuestados.}
+	\label{fig:mobile_general}
+\end{figure}
+
+\begin{figure}
+	\centering
+	\includegraphics[width=1\textwidth]{../img/mobile_comparation.pdf}
+	\caption{Comparación de valoraciones entre personas con perfil tecnológico y no tecnológico.}
+	\label{fig:mobile_comparation}
+\end{figure}
+
 \section{Aspectos relevantes generales}
 
 Este proyecto se me asignó gracias a la concesión de la \textbf{beca de colaboración de estudiantes en departamentos universitarios}, en este caso en el departamento de Ingeniería Civil. Esta beca tiene como objetivo la implicación del estudiante en un proyecto de investigación, ofreciendo la posibilidad de ampliar sus conocimiento y concretar sus intereses para la posible incorporación a futuras tareas docentes o investigadoras. 
