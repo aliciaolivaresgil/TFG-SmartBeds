@@ -69,13 +69,30 @@ Por otro lado, cuando se habla de este tipo de aplicaciones, es común encontrar
 
 \section{Diseño de interfaces}
 
-Inicialmente se realizaron una serie de prototipos básicos en los que se plasmaron las principales funcionalidades de la aplicación, sin prestar especial atención a los aspectos estéticos de la misma. Para ello se usó la herramienta de prototipado Pencil, ya que permite incorporar elementos propios de la guía de estilos que se ha seguido para el diseño de las interfaces de usuario: \textit{Material Design}. 
+Inicialmente se realizaron una serie de prototipos básicos en los que se plasmaron las principales funcionalidades de la aplicación, sin prestar especial atención a los aspectos estéticos de la misma. Para ello se usó la herramienta de prototipado Pencil, ya que permite incorporar elementos propios de la guía de estilos que se ha seguido para el diseño de las interfaces de usuario: \textit{Material Design}a~\cite{materialdesign}. 
 
 \begin{figure}[H]
 	\centering
 	\includegraphics[width=0.75\textwidth]{../img/prototipos.png}
 	\caption{Prototipos iniciales de las pantallas de: login, administración, visualización de camas y visualización de datos.}
 	\label{fig:prototipos}
+\end{figure}
+
+Tal y como se recomienda en la guía de estilos y como se muestra en la figura~\ref{fig:paletacolores}, se escogieron dos colores principales para la interfaz: un color primario y un color secundario, más las consiguientes derivados de los mismos. 
+\begin{itemize}
+	\item El color primario y sus derivados se emplearon en las barras de herramientas, los botones y el menú de navegación. 
+	\item El color secundario y su derivado se empleó para enfatizar elementos en los que el usuario debía realizar una acción, o elementos a los que debe prestar especial atención (como una cama en estado de crisis epiléptica). 
+\end{itemize}
+
+Además, para dar una sensación de claridad y limpieza se decidieron mantener los fondos blancos, y el color del texto se estableció como claro (blanco) u oscuro (negro/gris) dependiendo del color del elemento donde se encontraba, generando un contraste suficiente para que resultara legible y claro. 
+
+Los tamaños y separaciones entre textos y el resto de elementos se establecieron según las recomendaciones de la guía de estilos. 
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{../img/paletacolores.png}
+	\caption{Paleta de colores.}
+	\label{fig:paletacolores}
 \end{figure}
 
 Durante el proceso de desarrollo se tomaron varias decisiones de diseño cuyo resultado fueron las interfaces de usuario finales que se muestran en la figura~\ref{fig:interfaces}
@@ -86,3 +103,4 @@ Durante el proceso de desarrollo se tomaron varias decisiones de diseño cuyo re
 	\caption{Interfaces de usuario finales de las pantallas de: login, administración, visualización de camas y visualización de datos.}
 	\label{fig:interfaces}
 \end{figure}
+
