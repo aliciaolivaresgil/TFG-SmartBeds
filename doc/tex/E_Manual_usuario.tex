@@ -19,13 +19,25 @@ Para poder instalar y usar la aplicación el dispositivo del usuario debe compli
 	\item Contar con conexión a internet. 
 \end{itemize}
 
-Además, para poder entrar en la aplicación deberá tener un usuario y una contraseña asignados. 
+Además, para poder entrar en la aplicación deberá tener un usuario y una contraseña asignados. Para que el tribunal pueda acceder al sistema se proporcionan dos cuentas de usuario: una con rol de administrador y otra con rol de usuario genérico: 
+\begin{itemize}
+	\item \textbf{Administrador:} 
+	\begin{itemize}
+		\item Nombre de usuario: \textbf{admin}
+		\item Contraseña: \textbf{admin}
+	\end{itemize}
+	\item \textbf{Usuario genérico:} 
+	\begin{itemize}
+		\item Nombre de usuario: \textbf{tfg}
+		\item Contraseña: \textbf{tfg}
+	\end{itemize}
+\end{itemize}
 
 \section{Instalación}
 
-La instalación de una aplicación Android es muy sencilla. Solo es necesario pasar el archivo \textbf{SmartBeds.apk} al sistema de ficheros del dispositivo Android y seleccionarlo. En caso de tener activada la opción de permitir la instalación de aplicaciones de orígenes desconocidos y contar con el suficiente espacio de almacenamiento la aplicación se instalará automáticamente. 
+La instalación de una aplicación Android es muy sencilla. Solo es necesario pasar el archivo \textbf{SmartBeds.apk} al sistema de ficheros del dispositivo Android y seleccionarlo. En caso de tener activada la opción de permitir la instalación de aplicaciones de orígenes desconocidos y contar con el suficiente espacio de almacenamiento la aplicación, se instalará automáticamente. 
 
-Se recuerda que el archivo .apk se encuentra en el repositorio del proyecto\footnote{\url{https://github.com/aog0036/TFG-SmartBeds}}, en la ruta \textbf{/android/app/release}.
+Se puede acceder al archivo .apk desde el \textit{release} 1.0 del repositorio del proyecto\footnote{\url{https://github.com/aog0036/TFG-SmartBeds}}, o en la ruta \texttt{/android/app/release}.
 
 \section{Manual del usuario}
 
@@ -47,18 +59,18 @@ Si el usuario introducido tiene un rol de administrador la siguiente pantalla se
 
 \begin{figure}[H]
 	\centering
-	\includegraphics[width=0.7\textwidth]{../img/iniciasesion.png}
+	\includegraphics[width=0.8\textwidth]{../img/iniciasesion.png}
 	\caption{Iniciar sesión.}
 	\label{fig:iniciasesion}
 \end{figure}
 
 \subsection{Menú de administración}
 
-Este menú solo está disponible si el usuario tiene un rol de administrador. En él puedes escoger a qué función de la aplicación deseas acceder: <<\textbf{Gestión de usuarios}>>, <<\textbf{Gestión de camas}>> o <<\textbf{Visualización de camas}>>. 
+Este menú solo está disponible si el usuario tiene un rol de administrador. En él se puede escoger a qué función de la aplicación deseas acceder: <<\textbf{Gestión de usuarios}>>, <<\textbf{Gestión de camas}>> o <<\textbf{Visualización de camas}>>. 
 
 \begin{figure}[H]
 	\centering
-	\includegraphics[width=0.4\textwidth]{../img/menudeadministracion.png}
+	\includegraphics[width=0.5\textwidth]{../img/menudeadministracion.png}
 	\caption{Menú de administración.}
 	\label{fig:menudeadministracion}
 \end{figure}
@@ -82,7 +94,7 @@ Esta pantalla solo está disponible si el usuario tiene un rol de administrador.
 
 \begin{figure}[H]
 	\centering
-	\includegraphics[width=0.7\textwidth]{../img/eliminaranadir.png}
+	\includegraphics[width=0.8\textwidth]{../img/eliminaranadir.png}
 	\caption{Gestión de usuarios, eliminar y añadir usuarios.}
 	\label{fig:eliminaranadir}
 \end{figure}
@@ -91,33 +103,33 @@ Esta pantalla solo está disponible si el usuario tiene un rol de administrador.
 
 Esta pantalla solo está disponible si el usuario tiene un rol de administrador. En esta pantalla se muestra una lista de todas las camas registradas en el sistema. Al mantener pulsada una de ellas queda seleccionada y se muestran las opciones disponibles: <<\textbf{Modificar}>>, <<\textbf{Eliminar}>> y <<\textbf{Asignar usuarios}>>.  
 
-De estas tres funciones, en esta versión de la aplicación solo está disponible la de \textbf{Asignar usuarios}, al seleccionar el resto solo se muestra un cuadro de diálogo informativo. Seleccionar la opción <<Asignar usuarios>> lleva a una pantalla donde se muestra una lista de todos los usuarios del sistema. En esta lista se pueden marcar aquellos que se desea que puedan ver la cama seleccionada y desmarcar los que no.
+De estas tres funciones, en esta versión de la aplicación solo está disponible la de \textbf{Asignar usuarios}, al seleccionar el resto solo se muestra un cuadro de diálogo informativo.\footnote{El resto de funciones no se ha implementado debido a la forma en la que se simula la recogida de datos en tiempo real desde el servidor, no por falta de tiempo.} Seleccionar la opción <<Asignar usuarios>> lleva a una pantalla donde se muestra una lista de todos los usuarios del sistema. En esta lista se pueden marcar aquellos que se desea que puedan ver la cama seleccionada y desmarcar los que no.
 
 Según la figura~\ref{fig:gestiondecamas} el usuario <<joselu>> tendría acceso a los datos de la <<Cama 1>> pero el usuario <<alicia>> no. 
 
 \begin{figure}[H]
 	\centering
-	\includegraphics[width=0.9\textwidth]{../img/gestiondecamas.png}
+	\includegraphics[width=1\textwidth]{../img/gestiondecamas.png}
 	\caption{Gestión de camas, asignar usuarios.}
 	\label{fig:gestiondecamas}
 \end{figure}
 
 \subsection{Visualización de camas}
 
-Esta pantalla está disponible para usuarios con un rol de administrador y con un rol de usuario normal. Los administradores tendrán visibles todas las camas del sistema, los usuarios normales solo aquellas que el administrador les haya asignado. 
+Esta pantalla está disponible para usuarios con un rol de administrador y con un rol de usuario genérico. Los administradores tendrán visibles todas las camas del sistema, los usuarios genéricos solo aquellas que el administrador les haya asignado. 
 
 La pantalla muestra una lista de camas junto con el estado del paciente asociado en tiempo real (<<dormido>>, <<crisis epiléptica>>, <<cama vacía>> o <<datos insuficientes>>). Al pulsar una de las camas se accede a la pantalla de <<\textbf{Visualización de los datos de una cama en tiempo real}>>. 
 
 \begin{figure}[H]
 	\centering
-	\includegraphics[width=0.4\textwidth]{../img/visualizaciondecamas.png}
+	\includegraphics[width=0.5\textwidth]{../img/visualizaciondecamas.png}
 	\caption{Visualización de camas.}
 	\label{fig:visualizaciondecamas}
 \end{figure}
 
 \subsection{Visualización de los datos de una cama en tiempo real}
 
-Esta pantalla está disponible para usuarios con un rol de administrador y con un rol de usuario normal. Un usuario normal solo podrá acceder a la pantalla asociada a una cama concreta si tiene permisos para visualizar esa cama. 
+Esta pantalla está disponible para usuarios con un rol de administrador y con un rol de usuario genérico. Un usuario genérico solo podrá acceder a la pantalla asociada a una cama concreta si tiene permisos para visualizar esa cama. 
 
 Como se aprecia en la figura~\ref{fig:datoscama}, esta pantalla se divide en tres pestañas que contienen distintas gráficas cuyos datos se actualizan en tiempo real: 
 
@@ -143,14 +155,16 @@ Como se aprecia en la figura~\ref{fig:datoscama}, esta pantalla se divide en tre
 
 \subsection{Menú de navegación}
 
-En las pantallas en las que se puede ver un icono de menú en la esquina superior izquierda es posible desplegar un menú de navegación pulsando el icono o deslizando el dedo por la pantalla de izquierda a derecha. Como se aprecia en la figura~\ref{fig:menunavegacion}, este menú contiene opciones distintas si se trata de un usuario con rol de administrador o un usuario normal. 
+En las pantallas en las que se puede ver un icono de menú en la esquina superior izquierda es posible desplegar un menú de navegación pulsando el icono o deslizando el dedo por la pantalla de izquierda a derecha. Como se aprecia en la figura~\ref{fig:menunavegacion}, este menú contiene opciones distintas si se trata de un usuario con rol de administrador o un usuario genérico. 
 
-Para un usuario administrador incluye las mismas opciones que para un usuario normal y adicionalmente, las opciones del menú de administración. De esta forma se proporciona al administrador otra forma de navegar por la aplicación. Además de estas opciones se muestran tres más: <<\textbf{Modificar contraseña}>>, <<\textbf{Acerca de}>> y <<\textbf{Cerrar sesión}>>. La opción <<Cerrar sesión>> devuelve al usuario a la página inicial, las otras dos opciones llevan a sus respectivas pantallas.  
+Para un usuario administrador incluye las mismas opciones que para un usuario genérico y adicionalmente, las opciones del menú de administración. De esta forma se proporciona al administrador otra forma de navegar por la aplicación. Además de estas opciones se muestran tres más: <<\textbf{Modificar contraseña}>>, <<\textbf{Acerca de}>> y <<\textbf{Cerrar sesión}>>. 
+
+La opción <<Cerrar sesión>> devuelve al usuario a la página inicial, las otras dos opciones llevan a sus respectivas pantallas.  
 
 \begin{figure}[H]
 	\centering
 	\includegraphics[width=0.7\textwidth]{../img/menunavegacion.png}
-	\caption{Menú de navegación para un administrador y para un usuario normal.}
+	\caption{Menú de navegación para un administrador y para un usuario genérico.}
 	\label{fig:menunavegacion}
 \end{figure} 
 
@@ -171,7 +185,7 @@ Mediante la opción <<Acerca de>> del menú de navegación se permite acceder a 
 
 \begin{figure}[H]
 	\centering
-	\includegraphics[width=0.35\textwidth]{../img/acercade.png}
+	\includegraphics[width=0.4\textwidth]{../img/acercade.png}
 	\caption{Acerca de la aplicación.}
 	\label{fig:acercade}
 \end{figure}
