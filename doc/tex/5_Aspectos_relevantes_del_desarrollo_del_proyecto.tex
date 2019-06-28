@@ -10,13 +10,13 @@ Cabe destacar que la fase de investigación se hizo de forma conjunta con mi com
 
 \subsection{Exploración del estado del arte}
 
-Como en cualquier proyecto de investigación, el paso inicial consistió en realizar una exploración del estado del arte sobre métodos y técnicas empleados para la detección automática de ataque epilépticos o de otros problemas similares, como la detección de caídas. En esta exploración se encontró que aunque la detección automática de ataques epilépticos es un campo muy explorado, la mayoría de las técnicas que se encuentran se basan en el uso de Electroencefalogramas (EEG) y pulseras inteligentes basadas en la monitorización de las constantes vitales. Por otro lado, no se encontraron artículos relativos a técnicas o metodologías de aprendizaje a partir de los datos de sensores de presión instalados en colchones o similares.
+Como en cualquier proyecto de investigación, el paso inicial consistió en realizar una exploración del estado del arte sobre métodos y técnicas empleados para la detección automática de ataque epilépticos o de otros problemas similares, como la detección de caídas. En esta exploración se encontró que, aunque la detección automática de ataques epilépticos es un campo muy explorado, la mayoría de las técnicas que se encuentran se basan en el uso de Electroencefalogramas (EEG) y pulseras inteligentes basadas en la monitorización de las constantes vitales. Por otro lado, no se encontraron artículos relativos a técnicas o metodologías de aprendizaje a partir de los datos de sensores de presión instalados en colchones o similares.
 
-Por otro lado, dado que el conjunto de datos disponibles es claramente desequilibrado (se tienen muchas más instancias de <<no crisis>> que de <<crisis>>) también se realizó una búsqueda de técnicas aplicadas a este tipo de problemas, lo que nos llevó a los modelos de clasificación expuestos en el apartado~\ref{conceptos teoricos} de Conceptos teóricos. 
+Por otro lado, dado que el conjunto de datos disponibles es claramente desequilibrado (se tienen muchas más instancias de <<no crisis>> que de <<crisis>>) también se realizó una búsqueda de técnicas aplicadas a este tipo de problemas, lo que nos llevó a los modelos de clasificación expuestos en el apartado~\ref{conceptos teoricos} (Conceptos teóricos). 
 
 \subsection{Etiquetado de los datos}
 
-Uno de los principales problemas que se tuvo que afrontar fue el del etiquetado de los datos, ya que, aunque los proveedores de los datos indicaron también un rango de horas en los que supuestamente tuvo lugar una crisis epiléptica, estos rangos eran muy aproximados y demasiado amplios para lo que dura una crisis epiléptica, según la bibliografía, sin que se produzcan consecuencias fatales o irreversibles~\cite{epilepsia}. 
+Uno de los principales problemas que se tuvo que afrontar fue el del etiquetado de los datos. Aunque los proveedores de los datos indicaron también un rango de horas en los que supuestamente tuvo lugar una crisis epiléptica, estos rangos eran muy aproximados y demasiado amplios para lo que dura una crisis epiléptica, según la bibliografía, sin que se produzcan consecuencias fatales o irreversibles~\cite{epilepsia}. 
 
 Esto nos obligó a realizar una inspección visual de los datos, y ajustar los tiempos de la crisis teniendo en cuenta: 
 
@@ -33,7 +33,7 @@ Esto nos obligó a realizar una inspección visual de los datos, y ajustar los t
 	\label{fig:mdsetiquetado}
 \end{figure}
 
-En la figura~\ref{fig:mdsetiquetado} se muestra la aplicación de la técnica de transformación MDS para el etiquetado de la primera crisis. Las instancias se han dividido en colores en función de su instante de tiempo respecto al rango proporcionado por los proveedores de los datos. Azul: antes de la crisis, Negro: después de la crisis, Verde: primeros 5 minutos de la crisis, Rojo: minutos centrales de la crisis, Naranja: últimos 5 minutos de la crisis. Como se puede observar, las instancias rojas presentan una separación mucho mayor con el resto, y además coinciden con aquellas cuyas señales de presión mostraban una diferencia más significativa dentro de su entorno, por lo que esas fueron las instancias etiquetadas como <<crisis>>. 
+En la figura~\ref{fig:mdsetiquetado} se muestra la aplicación de la técnica de transformación MDS para el etiquetado de la primera crisis. Las instancias se han dividido en colores en función de su instante de tiempo respecto al rango proporcionado por los proveedores de los datos. (Azul: antes de la crisis, Negro: después de la crisis, Verde: primeros 5 minutos de la crisis, Rojo: minutos centrales de la crisis, Naranja: últimos 5 minutos de la crisis). Como se puede observar, las instancias rojas presentan una separación mucho mayor con el resto, y además coinciden con aquellas cuyas señales de presión mostraban una diferencia más significativa dentro de su entorno, por lo que esas fueron las instancias etiquetadas como <<crisis>>. 
 
 Se debe tener en cuenta que, aunque se realizaron estos ajustes, el etiquetado de los datos no puede ser considerado otra cosa que aproximado, y se asume que por esta razón los datos tendrán cierto grado de ruido. Este motivo junto con la escasez de datos de <<crisis>> en el conjunto de datos disponible, representan los mayores problemas a los que me he tenido que enfrentar en el proyecto. 
 
@@ -47,16 +47,16 @@ En esta inspección también se advirtió que los atributos referentes a las con
 
 \subsection{Selección de atributos}
 
-A continuación se detectaron los datos con baja variabilidad para su eliminación. Tras llevar a cabo este proceso se eliminaron los atributos P7, P8, P9, P10, P11 y P12. Esto tiene sentido ya que esos campos corresponden con la matriz de tubos de presión de una de las mitades del modelo de colchón de matrimonio, y el colchón con el que se trabaja en este proyecto es individual. Por esta razón eliminar estos datos no supone ninguna pérdida de información, y además, reduce a la mitad la cantidad de datos con la que deben tratar los modelos, lo que repercute positivamente en los tiempos. 
+A continuación se detectaron los atributos con baja variabilidad para su eliminación. Tras llevar a cabo este proceso se eliminaron los atributos P7, P8, P9, P10, P11 y P12. Esto tiene sentido ya que esos campos corresponden con la matriz de tubos de presión de una de las mitades del modelo de colchón de matrimonio, y el colchón con el que se trabaja en este proyecto es individual. Por esta razón eliminar estos datos no supone ninguna pérdida de información y, además, reduce a la mitad la cantidad de datos con la que deben tratar los modelos, lo que repercute positivamente en los tiempos. 
 
 \subsection{Transformadores}
 
-Una vez seleccionado el abanico de operaciones que íbamos a tener en cuenta para la búsqueda de un preprocesado óptimo, se codificaron estas operaciones como transformadores compatibles con sklearn para poder aplicarlas de forma sencilla y sistemática. Para ello se generaron una serie de clases que heredaban la clase \texttt{sklearn.base.TransformerMixin}. En total se codificaron 9 transformadores. 
+Una vez seleccionado el abanico de operaciones que íbamos a tener en cuenta para la búsqueda de un preprocesado óptimo, se codificaron estas operaciones como transformadores compatibles con sklearn para poder aplicarlas de forma sencilla y sistemática. Para ello se generaron una serie de clases que heredaban de la clase \texttt{sklearn.base.TransformerMixin}. En total se codificaron 9 transformadores. 
 
 
 \subsection{Elección del tamaño de ventana}
 
-Como se ha comentado en el apartado~\ref{conceptos teoricos} de Conceptos teóricos, para calcular estadísticas móviles del conjunto de datos debemos escoger un tamaño de ventana. Para determinar el valor óptimo para este problema, se realizó un barrido de tamaños aplicados a la media y la desviación móviles, datos que se usaron para entrenar y testear un clasificador \textit{Random Forest}. El proceso que se siguió se explica también con detenimiento y detalle en el cuaderno de investigación. 
+Como se ha comentado en el apartado~\ref{conceptos teoricos} de Conceptos teóricos, para calcular estadísticas móviles del conjunto de datos debemos escoger un tamaño de ventana. Para determinar el valor óptimo para este problema, se realizó un barrido de tamaños aplicados a la media y la desviación móviles, datos que se usaron para entrenar y evaluar un clasificador \textit{Random Forest}. El proceso que se siguió se explica también con detenimiento y detalle en el apéndice del cuaderno de investigación. 
 
 Para calcular las estadísticas móviles durante la exploración se usó nuestro transformador \texttt{StatisticsTransformer} que utiliza internamente las funciones  \texttt{df.rolling(window\_length).mean()} o \texttt{.std()} según el caso, donde \texttt{df} es el \texttt{pandas.DataFrame} que contiene los datos originales. Esta función devuelve un nuevo \texttt{pandas.DataFrame} con las estadísticas móviles calculadas para cada una de las ventanas (una fila por cada desplazamiento de la ventana). De esta forma, nos evita ir desplazando la ventana manualmente mediante un bucle. 
 
@@ -67,11 +67,11 @@ Para calcular las estadísticas móviles durante la exploración se usó nuestro
 	\label{fig:heatmap}
 \end{figure}
 
-Para cada una de las métricas de evaluación del clasificador (AUC y Precisión media) se hicieron una serie de barridos de parámetros, centrándose cada vez más en los rangos en los que se lograba un mejor rendimiento, y llegando finalmente a los resultados que se muestran en la figura~\ref{fig:heatmap}. Como se puede observar, los mejores valores se lograron para un tamaño de ventana de 90 tanto para la desviación típica como para la media, y también para ambas métricas de evaluación. Por esta razón se usó este valor en los experimentos y también como tamaño de ventana para la extracción de características de series temporales. 
+Para cada una de las métricas de evaluación del clasificador (AUC y Precisión media) se hicieron una serie de barridos de parámetros, centrándose cada vez más en los rangos en los que se lograba un mejor rendimiento, y llegando finalmente a los resultados que se muestran en la figura~\ref{fig:heatmap}. Como se puede observar, los mejores valores se lograron para un tamaño de ventana de 90 instancias, tanto para la desviación típica como para la media, y también para ambas métricas de evaluación. Por esta razón se usó este valor en los experimentos y también como tamaño de ventana para la extracción de características de series temporales. 
 
 \subsection{Extracción de características de series temporales para una ventana de datos}
 
-La extracción de características de series temporales aplicada a un cierto tamaño de ventana no es tan sencilla y merece un comentario sobre cómo se ha resuelto. La función encargada de la extracción de características pertenece a la biblioteca \texttt{tsfresh} y se llama \texttt{extract\_features}. Esta función recibe un \texttt{pandas.DataFrame} como parámetro y devuelve una fila de características por cada grupo de filas con el mismo <<id>> (debemos añadir un atributo <<id>> a nuestro conjunto de datos en bruto). Puedes indicarle mediante un diccionario pasado como parámetro el conjunto de características concreto que se desea calcular, o por el contrario, hacer que calcule todo su repertorio de características. Esta misma biblioteca ofrece una función llamada \texttt{utilities.dataframe\_functions.roll\_time\_series()} que, a efectos prácticos, permite la extracción de características aplicada a una ventana, pero lo hace con un coste de memoria tan grande que no resulta práctica para conjuntos de datos como el nuestro. Básicamente, crea un \texttt{pandas.DataFrame} con un <<id>> distinto para cada ventana. Pongamos un ejemplo para comprender su funcionamiento: si tenemos un conjunto de datos con 10 filas y queremos aplicar una ventana de tamaño 3, esta función devuelve: 
+La extracción de características de series temporales aplicada a un cierto tamaño de ventana no es tan sencilla y merece un comentario sobre cómo se ha resuelto. La función encargada de la extracción de características pertenece a la biblioteca \texttt{tsfresh} y se llama \texttt{extract\_features}. Esta función recibe un \texttt{pandas.DataFrame} como parámetro y devuelve una fila de características por cada grupo de filas con el mismo <<id>> (debemos añadir un atributo <<id>> a nuestro conjunto de datos en bruto). Puedes indicarle mediante un diccionario pasado como parámetro el conjunto de características concreto que se desea calcular o, por el contrario, hacer que calcule todo su repertorio de características. Esta misma biblioteca ofrece una función llamada \texttt{utilities.dataframe\_functions.roll\_time\_series()} que, a efectos prácticos, permite la extracción de características aplicada a una ventana, pero lo hace con un coste de memoria tan grande que no resulta práctica para conjuntos de datos como el nuestro. Básicamente, crea un \texttt{pandas.DataFrame} con un <<id>> distinto para cada ventana. Pongamos un ejemplo para comprender su funcionamiento: si tenemos un conjunto de datos con 10 filas y queremos aplicar una ventana de tamaño 3, esta función devuelve: 
 \begin{itemize}
 	\item 3 filas correspondientes a las filas 1, 2, y 3 del conjunto original y con un <<id>>=1. 
 	\item 3 filas correspondientes a las filas 2, 3, y 4 del conjunto original y con un <<id>>=2. 
@@ -135,13 +135,13 @@ Las características seleccionadas mediante el algoritmo genético no se probaro
 
 En resumen, aquí se pueden exponer los resultados conseguidos al utilizar, como datos de entrenamiento, el conjunto de características seleccionado por el algoritmo genético usando la métrica de la precisión media en la función de adaptación, ya que, según la bibliografía~\cite{Davis2006RPR, saito2015pr}, esta métrica es más adecuada para la evaluación de clasificadores en conjuntos de datos desequilibrados. 
 
-Como se explica en el cuaderno de investigación, tras una exploración más amplia de varios tipos de clasificador, finalmente se escogen y comparan 3 métodos de remuestreo junto con 3 tipos de \textit{ensembles} distintos. Los métodos de remuestreo son: \textit{Random Balance} (RB)~\cite{diez2015random}, \textit{SMOTE} (SM)~\cite{galar2012review} y \textit{Random under sampling} (RUS)~\cite{diez2015diversity}. Los \textit{ensembles} son: \textit{Bagging} (Bag)~\cite{galar2012review}, \textit{Rotation Forest} (RotF)~\cite{rodriguez2006rotation} y \textit{RandomCommittee} (RC)~\cite{diez2015diversity}. Las tablas~\ref{tab:crisis1} y~\ref{tab:crisis2} muestran los resultado medios obtenidos para 10 ejecuciones con cada una de las combinaciones de remuestreo-\textit{ensemble}. Cada fila corresponde con un método distinto y cada columna con una métrica de rendimiento, donde \textit{TPR}=tasa de verdaderos positivos, \textit{FPR}=tasa de falsos positivos, \textit{TNR}=tasa de verdaderos negativos, \textit{FNR}=tasa de falsos negativos, \textit{PRC}=\textit{Precision-Recall} (precisión media), \textit{ACC}=área bajo la curva ROC y \textit{ACC}=\textit{accuracy}. 
+Como se explica en el apéndice del cuaderno de investigación, tras una exploración más amplia de varios tipos de clasificador, finalmente se escogen y comparan 3 métodos de remuestreo junto con 3 tipos de \textit{ensembles} distintos. Los métodos de remuestreo son: \textit{Random Balance} (RB)~\cite{diez2015random}, \textit{SMOTE} (SM)~\cite{galar2012review} y \textit{Random under sampling} (RUS)~\cite{diez2015diversity}. Los \textit{ensembles} son: \textit{Bagging} (Bag)~\cite{galar2012review}, \textit{Rotation Forest} (RotF)~\cite{rodriguez2006rotation} y \textit{RandomCommittee} (RC)~\cite{diez2015diversity}. Las tablas~\ref{tab:crisis1} y~\ref{tab:crisis2} muestran los resultado medios obtenidos para 10 ejecuciones con cada una de las combinaciones de remuestreo-\textit{ensemble}. Cada fila corresponde con un método distinto y cada columna con una métrica de rendimiento, donde \textit{TPR}=tasa de verdaderos positivos, \textit{FPR}=tasa de falsos positivos, \textit{TNR}=tasa de verdaderos negativos, \textit{FNR}=tasa de falsos negativos, \textit{PRC}=\textit{Precision-Recall} (precisión media), \textit{ACC}=área bajo la curva ROC y \textit{ACC}=\textit{accuracy}. 
 
 \begin{table}\scriptsize
 	\begin{center}
 		\begin{tabular}{llllllll}
 			\toprule
-			{} & TPR &          FPR &       TNR & FNR &       PRC &       AUC &       ACC \\
+			{}Algoritmo & TPR &          FPR &       TNR & FNR &       PRC &       AUC &       ACC \\
 			\midrule
 			RB - Bag                &   0 &            0 &         1 &   1 &  0.984425 &  0.552363 &   0.98178 \\
 			RB - RC       &   0 &            0 &         1 &   1 &  0.981267 &  0.485675 &   0.98178 \\
@@ -163,7 +163,7 @@ Como se explica en el cuaderno de investigación, tras una exploración más amp
 	\begin{center}
 		\begin{tabular}{llllllll}
 			\toprule
-			{} & TPR &         FPR &       TNR & FNR &       PCR &       AUC &       ACC \\
+			{}Algoritmo & TPR &         FPR &       TNR & FNR &       PCR &       AUC &       ACC \\
 			\midrule
 			RB - Bag                &   0 &   0.0109634 &  0.989037 &   1 &  0.995225 &  0.491511 &  0.983616 \\
 			RB - RC       &   0 &  0.00571683 &  0.994283 &   1 &  0.993912 &  0.446135 &  0.988834 \\
@@ -183,7 +183,7 @@ Como se explica en el cuaderno de investigación, tras una exploración más amp
 
 \subsection{Ejecución remota de experimentos con \textit{tmux}}
 
-Como ya se ha explicado al hablar de tmux en el apartado \ref{tecnicas y herramientas} de Técnicas y herramientas, nos hemos topado con un problema al tratar de ejecutar experimentos computacionalmente costosos en el equipo de cómputo del grupo de investigación de los tutores. 
+Como ya se ha explicado al hablar de tmux en el apartado \ref{tecnicas y herramientas} (Técnicas y herramientas), nos hemos topado con un problema al tratar de ejecutar experimentos computacionalmente costosos en el equipo de cómputo del grupo de investigación de los tutores. 
 
 Normalmente, para lanzar los experimentos en el equipo, nos hemos conectado mediante ssh, y hemos lanzado el proceso de jupyter notebook sin interfaz gráfica mediante el comando \texttt{jupyter notebook ---no-browser}. Este comando devuelve una URL que podemos copiar en nuestro navegador local para acceder a la interfaz gráfica del proceso y ejecutar los experimentos. Para ejecutar notebooks sin necesidad de acceder a la interfaz gráfica se ha usado el comando \texttt{jupyter nbconvert}. 
 
@@ -300,7 +300,7 @@ Android ofrece varias alternativas para abordar este problema, y en mi caso he u
 
 De forma adicional a los test unitarios y los test de interfaz, se realizó un test de usabilidad tanto de la aplicación web generada por mi compañero José Luis Garrido Labrador como de mi aplicación Android. Este tipo de test involucra a los usuarios finales, y tiene como objetivo comprobar en qué medida el producto final cumple el propósito para el que fue diseñado y resulta adecuado y fácil de usar para los usuarios. 
 
-Este test se realizó mediante una encuesta de Google que se difundió entre personas con perfiles sanitarios, educativos y tecnológicos principalmente. En esta encuesta se le proporcionaba un nombre de usuario y una contraseña al participante y se le pedía que realizara las siguientes tareas tanto en la aplicación web como en la aplicación Android: 
+Este test se realizó mediante una encuesta de Google~\cite{encuesta} que se difundió entre personas con perfiles sanitarios, educativos y tecnológicos principalmente. En esta encuesta se le proporcionaba un nombre de usuario y una contraseña al participante y se le pedía que realizara las siguientes tareas tanto en la aplicación web como en la aplicación Android: 
 
 \begin{enumerate}
 	\item Iniciar sesión con el usuario y contraseña que te hemos proporcionado. 
@@ -310,7 +310,7 @@ Este test se realizó mediante una encuesta de Google que se difundió entre per
 	\item Cerrar sesión. 
 \end{enumerate}
 
-Para recoger las opiniones sobre cada una de las aplicaciones se pedía al usuario que valorara las siguientes afirmaciones dos veces: una sobre la aplicación web y otra sobre la aplicación Android. Las valoraciones se daban entre 1 y 5 siendo 1=\textit{completamente en desacuerdo} y 5=\textit{completamente de acuerdo}. 
+Para recoger las opiniones sobre cada una de las aplicaciones, se pedía al usuario que valorara las siguientes afirmaciones dos veces: una sobre la aplicación web y otra sobre la aplicación Android. Las valoraciones se daban entre 1 y 5 siendo 1=\textit{completamente en desacuerdo} y 5=\textit{completamente de acuerdo}. 
 
 \begin{enumerate}
 	\item Me ha resultado fácil realizar las tareas propuestas. (\textbf{Facilidad de uso})
@@ -323,35 +323,37 @@ Para recoger las opiniones sobre cada una de las aplicaciones se pedía al usuar
 
 En total, sobre las preguntas relativas a la aplicación Android respondieron 10 personas, cuyos perfiles profesionales se distribuyen como se muestra en la figura~\ref{fig:mobile_proportion}. 
 
-En la figura~\ref{fig:mobile_general} se representa la valoración general de todos los usuarios en cada una de las afirmaciones. Como se puede ver, la valoración en general es muy positiva a excepción del caso de la Interpretabilidad. Esto se puede deber a que en la encuesta se pide a los usuarios que realicen las tareas sin proporcionar demasiada información previa sobre la finalidad de la aplicación, más allá de que sirve para monitorizar el estado de pacientes con epilepsia mediante camas con sensores. Probablemente los usuarios finales de la aplicación necesitarían información adicional sobre qué representa cada gráfica y cómo interpretarlas. 
+En la figura~\ref{fig:mobile_general} se representa la valoración general de todos los usuarios en cada una de las afirmaciones. Como se puede ver, la valoración en general es muy positiva a excepción del caso de la interpretabilidad. Esto se puede deber a que en la encuesta se pide a los usuarios que realicen las tareas sin proporcionar demasiada información previa sobre la finalidad de la aplicación, más allá de que sirve para monitorizar el estado de pacientes con epilepsia mediante camas con sensores. Probablemente los usuarios finales de la aplicación necesitarían información adicional sobre qué representa cada gráfica y cómo interpretarlas. 
 
-En la figura~\ref{fig:mobile_comparation} se comparan las valoraciones de los participantes con un perfil tecnológico con las de los participantes con un perfil no tecnológico (sanitario o educativo). Las valoraciones del perfil tecnológico son algo superiores que las del perfil no tecnológico, a excepción de la opinión global de la aplicación, que es muy buena en los dos casos. 
+En la figura~\ref{fig:mobile_comparation} se comparan las valoraciones de los participantes con un perfil tecnológico con las de los participantes con un perfil no tecnológico (sanitario o educativo). Las valoraciones del perfil tecnológico son algo superiores que las del perfil no tecnológico, a excepción de la facilidad de uso de la aplicación, que es muy buena en los dos casos. 
 
 \begin{figure}
 	\centering
-	\includegraphics[width=0.9\textwidth]{../img/mobile_proportion.png}
+	\includegraphics[width=0.7\textwidth]{../img/mobile_proportion.png}
 	\caption{Proporción del perfil profesional de los participantes.}
 	\label{fig:mobile_proportion}
 \end{figure}
 
 \begin{figure}
 	\centering
-	\includegraphics[width=0.7\textwidth]{../img/mobile_general.pdf}
-	\caption{Valoraciones de todos los encuestados.}
+	\includegraphics[width=0.7\textwidth]{../img/mobile_general.png}
+	\caption[Valoraciones de todos los encuestados.]{Valoraciones de todos los encuestados. Los bigotes a izquierda y derecha de cada caja corresponden con los valores mínimo y máximo respectivamente. Los límites izquierdo y derecho de cada caja corresponden con el primer y tercer cuartil respectivamente. La línea roja corresponde con la mediana.}
 	\label{fig:mobile_general}
 \end{figure}
 
 \begin{figure}
 	\centering
-	\includegraphics[width=1\textwidth]{../img/mobile_comparation.pdf}
-	\caption{Comparación de valoraciones entre personas con perfil tecnológico y no tecnológico.}
+	\includegraphics[width=1\textwidth]{../img/mobile_comparation.png}
+	\caption[Comparación de valoraciones entre personas con perfil tecnológico y no tecnológico.]{Comparación de valoraciones entre personas con perfil tecnológico y no tecnológico. Los bigotes a izquierda y derecha de cada caja corresponden con los valores mínimo y máximo respectivamente. Los límites izquierdo y derecho de cada caja corresponden con el primer y tercer cuartil respectivamente. La línea roja corresponde con la mediana.}
 	\label{fig:mobile_comparation}
 \end{figure}
 
 \section{Aspectos relevantes generales}
 
-Este proyecto se me asignó gracias a la concesión de la \textbf{beca de colaboración de estudiantes en departamentos universitarios}, en este caso en el departamento de Ingeniería Civil. Esta beca tiene como objetivo la implicación del estudiante en un proyecto de investigación, ofreciendo la posibilidad de ampliar sus conocimiento y concretar sus intereses para la posible incorporación a futuras tareas docentes o investigadoras. 
+Este proyecto se me asignó gracias a la concesión de la \textbf{beca de colaboración de estudiantes en departamentos universitarios} del Ministerio de Educación, en este caso en el departamento de Ingeniería Civil. Esta beca tiene como objetivo la implicación del estudiante en un proyecto de investigación, ofreciendo la posibilidad de ampliar sus conocimiento y concretar sus intereses para la posible incorporación a futuras tareas docentes o investigadoras. 
 
 La realización de este proyecto me ha permitido experimentar a grandes rasgos en qué consiste la labor de un investigador, y la experiencia, definitivamente, me ha llevado a considerar muy positivamente esta salida laboral. 
+
+Otro aspecto relevante a señalar es que para la realización de este proyecto he trabajado junto con José Luis Garrido Labrador, de forma que muchas de las decisiones y las formas de trabajo se han decidido de forma conjunta, y en muchas partes del trabajo individual de cada uno se ha dependido en mayor o menor medida del trabajo del otro. Por un lado, su trabajo de investigación, relativo a la búsqueda del mejor \textit{ensemble} para la clasificación, se ha basado en mi extracción, filtrado y selección de características de series temporales, finalmente, mediante un algoritmo genético. Por otro lado, el desarrollo de mi aplicación Android depende directamente de la API del servidor remoto desarrollada por mi compañero. En este sentido, se puede considerar que este proyecto nos ha proporcionado cierta experiencia sobre el trabajo en equipo que se lleva a cabo en el día a día de una empresa real. 
 
 
