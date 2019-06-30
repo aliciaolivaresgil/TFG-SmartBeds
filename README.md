@@ -39,3 +39,5 @@ Additionally, an Android application was developed to show the applicability of 
 ### Instalación de la aplicación de Android: 
 
 El archivo .apk para la instalación y la distribución de la aplicación se encuentra en la carpeta **/android/app/release**
+
+![Pantallas de la aplicación](doc/img/interfaces.png)
